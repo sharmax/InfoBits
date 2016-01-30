@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">InfoBits</string>
+    <string name="action_settings">Settings</string>
+    <string name="Username">Username</string>
+    <string name="Password">Password</string>
+    <string name="emptystring" />
+    <string name="emptyString" />
+    <string name="forgot">Enter your BITS mail</string>
+</resources>
