@@ -46,7 +46,7 @@ public class Login extends AppCompatActivity {
     }
 
     public void OnClickForgot(View view){
-        if (view.getId() == R.id.bt_forgot) {
+        if (view.getId() == R.id.tx_forgotpass) {
 
             Intent i = new Intent(Login.this, forgot_pass.class);
             startActivity(i);
@@ -54,7 +54,7 @@ public class Login extends AppCompatActivity {
     }
 
     public void OnClickHomepage(View view){
-        if (view.getId() == R.id.bt_forgot) {
+        if (view.getId() == R.id.bt_homepage) {
 
             Intent i = new Intent(Login.this, homepage.class);
             startActivity(i);

@@ -6,4 +6,6 @@
     <string name="emptystring" />
     <string name="emptyString" />
     <string name="forgot">Enter your BITS mail</string>
+    <string name="forgot_pass">Forgot Password</string>
+    <string name="Login">Login</string>
 </resources>
