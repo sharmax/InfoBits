@@ -20,6 +20,9 @@
         </activity>
         <activity android:name=".splash_home"></activity>
         <activity android:name=".forgot_pass"></activity>
+
+        <activity android:name=".homepage"></activity>
+
     </application>
 
 </manifest>

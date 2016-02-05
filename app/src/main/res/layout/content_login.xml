@@ -86,4 +86,15 @@
         android:layout_above="@+id/ed_user"
         android:layout_centerHorizontal="true" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Homepage"
+        android:id="@+id/bt_homepage"
+        android:layout_below="@+id/bt_login"
+        android:layout_toRightOf="@+id/tx_user"
+        android:layout_toEndOf="@+id/tx_user"
+        android:layout_marginTop="35dp"
+        android:onClick="OnClickHomepage" />
+
 </RelativeLayout>

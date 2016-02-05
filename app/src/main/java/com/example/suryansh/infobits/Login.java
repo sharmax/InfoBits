@@ -53,6 +53,14 @@ public class Login extends AppCompatActivity {
         }
     }
 
+    public void OnClickHomepage(View view){
+        if (view.getId() == R.id.bt_forgot) {
+
+            Intent i = new Intent(Login.this, homepage.class);
+            startActivity(i);
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
