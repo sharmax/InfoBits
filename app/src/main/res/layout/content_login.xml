@@ -80,9 +80,12 @@
         android:text="Sign in as Guest"
         android:id="@+id/bt_homepage"
         android:onClick="OnClickHomepage"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/tx_user"
-        android:layout_toEndOf="@+id/tx_user" />
+        android:layout_marginTop="41dp"
+        android:layout_below="@+id/tx_forgotpass"
+        android:layout_alignRight="@+id/tx_forgotpass"
+        android:layout_alignEnd="@+id/tx_forgotpass"
+        android:layout_alignLeft="@+id/tx_forgotpass"
+        android:layout_alignStart="@+id/tx_forgotpass" />
 
     <Button
         android:layout_width="wrap_content"
@@ -103,8 +106,9 @@
         android:id="@+id/tx_forgotpass"
         android:height="25dp"
         android:onClick="OnClickForgot"
-        android:layout_above="@+id/bt_homepage"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="41dp" />
+        android:layout_below="@+id/bt_login"
+        android:layout_toRightOf="@+id/tx_pass"
+        android:layout_toEndOf="@+id/tx_pass"
+        android:layout_marginTop="41dp" />
 
 </RelativeLayout>
