@@ -42,8 +42,8 @@
         android:layout_alignTop="@+id/bt_signup"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/bt_homepage"
-        android:layout_alignEnd="@+id/bt_homepage" />
+        android:layout_toLeftOf="@+id/tx_sign"
+        android:layout_toStartOf="@+id/tx_sign" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -77,13 +77,12 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Homepage"
+        android:text="Sign in as Guest"
         android:id="@+id/bt_homepage"
         android:onClick="OnClickHomepage"
-        android:layout_below="@+id/tx_forgotpass"
-        android:layout_toLeftOf="@+id/tx_sign"
-        android:layout_toStartOf="@+id/tx_sign"
-        android:layout_marginTop="50dp" />
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/tx_user"
+        android:layout_toEndOf="@+id/tx_user" />
 
     <Button
         android:layout_width="wrap_content"
@@ -103,9 +102,9 @@
         android:text="@string/forgot_pass"
         android:id="@+id/tx_forgotpass"
         android:height="25dp"
-        android:layout_below="@+id/bt_login"
+        android:onClick="OnClickForgot"
+        android:layout_above="@+id/bt_homepage"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="36dp"
-        android:onClick="OnClickForgot" />
+        android:layout_marginBottom="41dp" />
 
 </RelativeLayout>
