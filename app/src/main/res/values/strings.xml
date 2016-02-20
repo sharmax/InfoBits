@@ -3,7 +3,8 @@
     <string name="Username">Username</string>
     <string name="Password">Password</string>
     <string name="emptystring" />
-    <string name="emptyString" />
+    <string name="drawer_open">drawer_open</string>
+    <string name="drawer_close">drawer_close</string>
     <string name="forgot">Enter your BITS mail</string>
     <string name="forgot_pass">Forgot Password</string>
     <string name="Login">Log In</string>
