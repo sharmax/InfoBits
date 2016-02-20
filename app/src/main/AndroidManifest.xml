@@ -1,29 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.suryansh.infobits" >
+    package="com.example.suryansh.infobits">
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/infobits"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
-            android:name=".Login"
-            android:icon="@mipmap/infobits"
+            android:name=".homepage"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:icon="@mipmap/logo"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".splash_home" />
-        <activity android:name=".forgot_pass" />
-        <activity
-            android:name=".homepage"
-            android:icon="@mipmap/logo" />
+        <activity android:name=".Login"></activity>
+        <activity android:name=".splash_home"></activity>
+        <activity android:name=".forgot_pass"></activity>
         <activity
             android:name=".CommunicationPanel"
             android:icon="@mipmap/logo"
@@ -34,6 +32,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.suryansh.infobits.homepage" />
         </activity>
+
     </application>
 
 </manifest>

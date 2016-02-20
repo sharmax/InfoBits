@@ -1,19 +1,16 @@
 package com.example.suryansh.infobits;
 
 import android.content.Context;
-import android.graphics.LinearGradient;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.app.Activity;
 
 /**
- * Created by Suryansh on 2/4/2016.
+ * Created by Suryansh on 2/10/2016.
  */
 public class Swipe_adapter extends PagerAdapter {
     private int[] image_resources = {R.drawable.sample_1,R.drawable.sample_2,R.drawable.sample_3,R.drawable.sample_4,R.drawable.sample_5};
@@ -21,7 +18,7 @@ public class Swipe_adapter extends PagerAdapter {
     private LayoutInflater layoutinflator;
 
     public Swipe_adapter(Context ctx){
-      this.ctx = ctx;
+        this.ctx = ctx;
     }
 
 
@@ -55,3 +52,4 @@ public class Swipe_adapter extends PagerAdapter {
         super.destroyItem(container, position, object);
     }
 }
+
