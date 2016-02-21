@@ -41,7 +41,7 @@ public class Swipe_adapter extends PagerAdapter {
         ImageView imageView = (ImageView)item_view.findViewById(R.id.image_view);
         TextView textView = (TextView)item_view.findViewById(R.id.image_count);
         imageView.setImageResource(image_resources[position]);
-        textView.setText("Image: " + position);
+        //textView.setText("Image: " + position);
         container.addView(item_view);
         return item_view;
     }
