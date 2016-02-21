@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">InfoBits</string>
+<<<<<<< 92290b405a441269f365fa619107df895519c755
     <string name="Username">Username</string>
     <string name="Password">Password</string>
     <string name="emptystring" />
@@ -10,4 +11,6 @@
     <string name="logout">Log Out</string>
     <string name="account">Account</string>
     <string name="title_activity_communication_panel">Communication Panel</string>
+=======
+>>>>>>> Updates
 </resources>

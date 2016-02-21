@@ -7,18 +7,24 @@
         android:icon="@mipmap/infobits"
         android:label="@string/app_name"
         android:supportsRtl="true"
+<<<<<<< 92290b405a441269f365fa619107df895519c755
         android:theme="@style/AppTheme" >
         <activity
             android:name=".Login"
             android:icon="@mipmap/infobits"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" >
+=======
+        android:theme="@style/AppTheme">
+        <activity android:name=".homepage">
+>>>>>>> Updates
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+<<<<<<< 92290b405a441269f365fa619107df895519c755
         <activity android:name=".splash_home" />
         <activity android:name=".forgot_pass" />
         <activity
@@ -34,6 +40,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.suryansh.infobits.homepage" />
         </activity>
+=======
+>>>>>>> Updates
     </application>
 
 </manifest>
