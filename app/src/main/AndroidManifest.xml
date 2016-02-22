@@ -11,7 +11,6 @@
         <activity
             android:name=".homepage"
             android:label="@string/app_name"
-            android:icon="@mipmap/logo"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,20 +18,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Login"></activity>
-        <activity android:name=".splash_home"></activity>
-        <activity android:name=".forgot_pass"></activity>
         <activity
             android:name=".CommunicationPanel"
             android:icon="@mipmap/logo"
             android:label="@string/title_activity_communication_panel"
+            android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".homepage"
-            android:theme="@style/AppTheme.NoActionBar" >
+            >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.suryansh.infobits.homepage" />
         </activity>
 
     </application>
-
 </manifest>

@@ -1,5 +1,6 @@
 package com.example.suryansh.infobits;
 
+import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -83,8 +84,8 @@ public class homepage extends AppCompatActivity {
     }
 
     public void onClickFinder(View view){
-
-
+        Intent i = new Intent(homepage.this, CommunicationPanel.class);
+        startActivity(i);
     }
 
 
