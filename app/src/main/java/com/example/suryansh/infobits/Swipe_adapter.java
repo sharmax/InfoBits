@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -31,7 +31,7 @@ public class Swipe_adapter extends PagerAdapter {
     @Override
     public boolean isViewFromObject(View view, Object object) {
 
-        return (view == object);
+        return (view == (RelativeLayout)object);
     }
 
     @Override
@@ -41,15 +41,14 @@ public class Swipe_adapter extends PagerAdapter {
         ImageView imageView = (ImageView)item_view.findViewById(R.id.image_view);
         TextView textView = (TextView)item_view.findViewById(R.id.image_count);
         imageView.setImageResource(image_resources[position]);
-        textView.setText("Image: " + position);
+        //textView.setText("Image: " + position);
         container.addView(item_view);
         return item_view;
     }
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        container.removeView((LinearLayout)object);
-        super.destroyItem(container, position, object);
+        container.removeView((RelativeLayout)object);
     }
 }
 
