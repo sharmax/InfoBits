@@ -2,8 +2,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.suryansh.infobits.CommunicationPanel">
-    <item android:id="@+id/account" android:title="@string/account"
+    <item android:id="@+id/account" android:title="account"
         android:orderInCategory="1" app:showAsAction="always" />
-    <item android:id="@+id/logout" android:title="@string/logout"
+    <item android:id="@+id/logout" android:title="logout"
         android:orderInCategory="2" app:showAsAction="always" />
 </menu>
