@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    //Responsible for menu items
+//Responsible for menu items
 
     <group android:checkableBehavior="single">
         <item
@@ -44,7 +44,7 @@
                 android:icon="@drawable/icon4"
                 ></item>
 
-        </menu>
+            </menu>
     </item>
 
 </menu>
