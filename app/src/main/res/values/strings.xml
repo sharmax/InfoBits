@@ -11,4 +11,15 @@
     <string name="logout">Log Out</string>
     <string name="account">Account</string>
     <string name="title_activity_communication_panel">Communication Panel</string>
+    <string name="title_activity_user_settings">User Settings</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="mobile">Mobile</string>
+    <string name="update">UPDATE</string>
+    <string name="mailID_sample">f20111ID@pilani.bits-pilani.ac.in</string>
+    <string name="change_password">Change password</string>
+    <string name="old_password">Old Password</string>
+    <string name="new_password">New Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="upload_image">Upload Image</string>
 </resources>

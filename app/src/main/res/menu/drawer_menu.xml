@@ -22,6 +22,11 @@
             android:icon="@drawable/icon3"
             ></item>
 
+        <item
+            android:id="@+id/settings_id"
+            android:title="Settings"
+            android:icon="@drawable/settings"
+            ></item>
     </group>
 
     <item
