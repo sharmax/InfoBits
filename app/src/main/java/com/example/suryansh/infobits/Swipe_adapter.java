@@ -24,13 +24,11 @@ public class Swipe_adapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-
         return image_resources.length;
     }
 
     @Override
     public boolean isViewFromObject(View view, Object object) {
-
         return (view == (RelativeLayout)object);
     }
 

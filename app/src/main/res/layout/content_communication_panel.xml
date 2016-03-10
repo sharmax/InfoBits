@@ -9,6 +9,7 @@
     tools:context="com.example.suryansh.infobits.CommunicationPanel">
 
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin" />
+        android:layout_margin="@dimen/text_margin"
+        android:id="@+id/comms" />
 
 </android.support.v4.widget.NestedScrollView>

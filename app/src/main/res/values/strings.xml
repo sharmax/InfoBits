@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">InfoBits</string>
+    <string name="app_name">Library</string>
     <string name="Username">Username</string>
     <string name="Password">Password</string>
     <string name="emptystring" />
@@ -8,6 +8,7 @@
     <string name="forgot">Enter your BITS mail</string>
     <string name="forgot_pass">Forgot Password</string>
     <string name="Login">Log In</string>
+    <string name="Signup">Sign Up</string>
     <string name="logout">Log Out</string>
     <string name="account">Account</string>
     <string name="title_activity_communication_panel">Communication Panel</string>
