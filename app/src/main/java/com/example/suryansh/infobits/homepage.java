@@ -24,9 +24,9 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
     DrawerLayout drawerlayout;
     ActionBarDrawerToggle actionBarDrawerToggle;
 
-    public final static String username = "F2011637p";
-    public final static String password = "Andromeda";
-    public final static String apiURL = "http://library/apis/";
+    public final static String username = "library";
+    public final static String password = "123456789";
+    public final static String apiURL = "http://172.21.1.15/apis/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

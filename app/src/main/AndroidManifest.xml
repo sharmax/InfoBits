@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.suryansh.infobits">
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/infobits"
@@ -59,18 +61,6 @@
             android:name=".user_settings"
             android:icon="@mipmap/logo"
             android:label="@string/title_activity_user_settings"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".homepage"
-            >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.suryansh.infobits.homepage" />
-        </activity>
-
-        <activity
-            android:name=".login"
-            android:icon="@mipmap/logo"
-            android:label="@string/Login"
             android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".homepage"
             >

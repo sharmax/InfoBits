@@ -7,9 +7,70 @@
     tools:showIn="@layout/activity_communication_panel" android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.suryansh.infobits.CommunicationPanel">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="550dp"
+        android:orientation="vertical"
+        android:background="#fff"
+        android:id="@+id/commlayout"
+        android:nestedScrollingEnabled="false">
+            <ProgressBar
+                android:id="@+id/progressBar1"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:visibility="visible" />
 
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:id="@+id/comms" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:id="@+id/error"
+                android:visibility="invisible"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="15dp" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/comm1"
+                android:clickable="true"
+                android:onClick="conversation"
+                android:visibility="visible"
+                android:layout_below="@+id/error"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/comm2"
+                android:clickable="true"
+                android:onClick="conversation"
+                android:visibility="visible"
+                android:layout_below="@+id/comm1"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/comm3"
+                android:clickable="true"
+                android:onClick="conversation"
+                android:visibility="visible"
+                android:layout_below="@+id/comm2"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/comm4"
+                android:clickable="true"
+                android:onClick="conversation"
+                android:visibility="visible"
+                android:layout_below="@+id/comm3"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+    </RelativeLayout>
 
 </android.support.v4.widget.NestedScrollView>

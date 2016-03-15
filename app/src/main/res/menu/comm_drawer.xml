@@ -7,7 +7,9 @@
         <item
             android:id="@+id/home"
             android:title="Book Recommendation"
+            android:checked="true"
             ></item>
+
         <item
             android:id="@+id/breco"
             android:title="Book Recommendation"
