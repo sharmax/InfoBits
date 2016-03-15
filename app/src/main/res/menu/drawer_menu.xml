@@ -9,47 +9,68 @@
             android:title="Home"
             android:icon="@drawable/icon1"
             ></item>
-
+    </group>
+    <group android:checkableBehavior="single">
         <item
-            android:id="@+id/service1_id"
-            android:title="Service1"
+            android:id="@+id/os_id"
+            android:title="One Search"
+            android:icon="@drawable/icon2"
+            ></item>
+        <item
+            android:id="@+id/comm_id"
+            android:title="Communication Panel"
             android:icon="@drawable/icon2"
             ></item>
 
         <item
-            android:id="@+id/service2_id"
-            android:title="Service3"
+            android:id="@+id/news_id"
+            android:title="Daily News"
             android:icon="@drawable/icon3"
             ></item>
 
         <item
-            android:id="@+id/settings_id"
-            android:title="Settings"
+            android:id="@+id/ibb_id"
+            android:title="InfoBITS Bulletin"
+            android:icon="@drawable/settings"
+            ></item>
+
+        <item
+            android:id="@+id/ill_id"
+            android:title="Inter Library Loan"
+            android:icon="@drawable/settings"
+            ></item>
+
+        <item
+            android:id="@+id/lf_id"
+            android:title="Lost and Found"
+            android:icon="@drawable/settings"
+            >
+        </item>
+    </group>
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/qp_id"
+            android:title="Question Papers"
+            android:icon="@drawable/icon2"
+            ></item>
+
+        <item
+            android:id="@+id/eb_id"
+            android:title="EBooks"
+            android:icon="@drawable/icon3"
+            ></item>
+
+        <item
+            android:id="@+id/od_id"
+            android:title="Online Databases"
+            android:icon="@drawable/settings"
+            ></item>
+
+        <item
+            android:id="@+id/opac_id"
+            android:title="WEB OPAC"
             android:icon="@drawable/settings"
             ></item>
     </group>
-
-    <item
-        android:title="Social">
-        <menu>
-            <item
-                android:title="Add to group"
-                android:id="@+id/addgroup_id"
-                android:icon="@drawable/icon4"
-                ></item>
-            <item
-                android:title="Like group"
-                android:id="@+id/likegroup_id"
-                android:icon="@drawable/icon4"
-                ></item>
-
-            <item
-                android:title="Share"
-                android:id="@+id/share_id"
-                android:icon="@drawable/icon4"
-                ></item>
-
-            </menu>
-    </item>
-
 </menu>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    //Responsible for menu items
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/home"
+            android:title="Book Recommendation"
+            android:checked="true"
+            ></item>
+
+        <item
+            android:id="@+id/breco"
+            android:title="Book Recommendation"
+            ></item>
+
+        <item
+            android:id="@+id/dlost"
+            android:title="Lost Documents"
+            ></item>
+
+        <item
+            android:id="@+id/database"
+            android:title="Inaccessible Database"
+            ></item>
+
+        <item
+            android:id="@+id/service"
+            android:title="Service Issues"
+            ></item>
+
+        <item
+        android:id="@+id/breview"
+        android:title="Book Review"
+        ></item>
+
+        <item
+            android:id="@+id/feedback"
+            android:title="Feedback"
+            ></item>
+
+    </group>
+
+</menu>
