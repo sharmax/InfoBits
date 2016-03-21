@@ -1,5 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#fff">
 
-</TableLayout>
+    <android.support.design.widget.AppBarLayout android:id="@+id/app_bar"
+        android:fitsSystemWindows="true" android:layout_height="@dimen/app_bar_height"
+        android:layout_width="match_parent" android:theme="@style/AppTheme.AppBarOverlay"
+        android:baselineAligned="false"
+        android:background="@color/colorPrimaryDark">
+
+        <android.support.v7.widget.Toolbar android:id="@+id/toolbar"
+            android:layout_height="?attr/actionBarSize" android:layout_width="match_parent"
+            app:layout_collapseMode="pin" app:logo="@mipmap/logo"
+            android:title="I Just Read This Book!"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            android:indeterminate="false" android:textColor="#fff" />
+    </android.support.design.widget.AppBarLayout>
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:background="#ddd"
+        android:layout_below="@+id/app_bar"
+        android:layout_margin="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Please fill in the details:"
+            android:id="@+id/header"
+            android:layout_gravity="left"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="15dp"
+            android:textSize="28sp"
+            android:textColor="@color/colorPrimaryDark" />
+
+        <EditText
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:id="@+id/title"
+            android:layout_gravity="right"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/header"
+            android:textColor="@color/colorPrimaryDark"
+            android:background="#fff"
+            android:layout_margin="15dp"
+            android:padding="5dp"
+            android:textSize="25sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Title"
+            android:id="@+id/titleText"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/header"
+            android:layout_toStartOf="@+id/title"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_alignBottom="@+id/title"
+            android:textSize="28sp"
+            android:textAlignment="gravity" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Author"
+            android:id="@+id/authorText"
+            android:textSize="28sp"
+            android:textAlignment="gravity"
+            android:layout_below="@+id/title"
+            android:layout_alignLeft="@+id/titleText"
+            android:layout_alignStart="@+id/titleText"
+            android:layout_toStartOf="@+id/newConv"
+            android:layout_alignRight="@+id/titleText"
+            android:layout_alignEnd="@+id/titleText" />
+
+        <EditText
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:id="@+id/editText2"
+            android:layout_gravity="right"
+            android:layout_alignLeft="@+id/authorText"
+            android:layout_alignStart="@+id/title"
+            android:textColor="@color/colorPrimaryDark"
+            android:background="#fff"
+            android:layout_below="@+id/title"
+            android:padding="5dp"
+            android:textSize="25sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Review"
+            android:id="@+id/reviewText"
+            android:textSize="28sp"
+            android:textAlignment="gravity"
+            android:layout_below="@+id/authorText"
+            android:layout_alignLeft="@+id/authorText"
+            android:layout_alignStart="@+id/authorText"
+            android:layout_marginTop="20dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/newConv"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="false"
+            android:layout_alignWithParentIfMissing="false"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="20dp"
+            android:clickable="true"
+            android:text="Send"
+            android:background="@color/colorPrimary"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="25sp"
+            android:onClick="newConv" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
+            android:inputType="textMultiLine"
+            android:ems="10"
+            android:id="@+id/review"
+            android:layout_below="@+id/reviewText"
+            android:layout_alignLeft="@+id/reviewText"
+            android:layout_alignStart="@+id/reviewText"
+            android:layout_alignRight="@+id/editText2"
+            android:layout_alignEnd="@+id/editText2"
+            android:layout_alignParentEnd="false"
+            android:textSize="20sp"
+            android:textColor="@color/colorPrimaryDark"
+            android:background="#fff"
+            android:autoText="true"
+            android:padding="5dp"
+            android:gravity="top"
+            android:textAlignment="gravity" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

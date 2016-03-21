@@ -1,8 +1,6 @@
 package com.example.suryansh.infobits;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.text.Layout;
 import android.view.View;
 
 /**
@@ -15,6 +13,12 @@ public class CommForms extends CommunicationPanel {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(Forms[convform]);
+        Bundle b = getIntent().getExtras();
+        int cat = b.getInt("cat");
+        setContentView(Forms[cat-1]);
+    }
+
+    public void newConv(View view){
+
     }
 }

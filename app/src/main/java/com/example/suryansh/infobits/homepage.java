@@ -26,6 +26,7 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
 
     public final static String username = "library";
     public final static String password = "123456789";
+    public final static String usercat = "Student";
     public final static String apiURL = "http://172.21.1.15/apis/";
 
     @Override
