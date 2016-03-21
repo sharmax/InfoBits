@@ -34,18 +34,6 @@
         </activity>
 
         <activity
-            android:name=".conversation"
-            android:icon="@mipmap/logo"
-            android:label="@string/title_activity_conversation"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".CommunicationPanel"
-            >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.suryansh.infobits.CommunicationPanel" />
-        </activity>
-
-        <activity
             android:name=".CommForms"
             android:icon="@mipmap/logo"
             android:label="CommForm"
