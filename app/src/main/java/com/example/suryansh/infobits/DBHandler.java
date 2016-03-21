@@ -69,7 +69,7 @@ public class DBHandler extends SQLiteOpenHelper {
             values.put(COLUMNS[table][VAR_COLUMNS[table][i]], data[i]);
         }
         SQLiteDatabase db = getWritableDatabase();
-        db.update(TABLES[table],values,"id = " + id, null);
+        db.update(TABLES[table], values, "id = " + id, null);
         db.close();
     }
 
@@ -77,6 +77,14 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("DELETE FROM " + TABLES[table] + " WHERE " + id + " = '" + id + "';");
         db.close();
+    }
+
+    public int getNum(int table, String sql){
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT id from " + TABLES[table] + " where " + sql, null);
+        int count = c.getCount();
+        db.close();
+        return count;
     }
 
     public JSONObject selectData(int table, String sql){
@@ -87,7 +95,7 @@ public class DBHandler extends SQLiteOpenHelper {
         JSONObject json = new JSONObject();
         JSONObject data = new JSONObject();
         while(!c.isAfterLast()){
-            for(int i = 0; i < TABLES.length; i++){
+            for(int i = 0; i < COLUMNS[table].length; i++){
                 try {
                     data.put(COLUMNS[table][i], c.getString(c.getColumnIndex(COLUMNS[table][i])));
                 } catch (JSONException e) {

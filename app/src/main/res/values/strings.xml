@@ -12,6 +12,7 @@
     <string name="logout">Log Out</string>
     <string name="account">Account</string>
     <string name="title_activity_communication_panel">Communication Panel</string>
+    <string name="title_activity_conversation">Communication Panel</string>
     <string name="title_activity_user_settings">User Settings</string>
     <string name="name">Name</string>
     <string name="email">Email</string>
