@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#fff">
 
     <android.support.design.widget.AppBarLayout android:id="@+id/app_bar"
         android:fitsSystemWindows="true" android:layout_height="@dimen/app_bar_height"
@@ -13,9 +14,126 @@
         <android.support.v7.widget.Toolbar android:id="@+id/toolbar"
             android:layout_height="?attr/actionBarSize" android:layout_width="match_parent"
             app:layout_collapseMode="pin" app:logo="@mipmap/logo"
-            android:title="Database Not Accessible"
+            android:title="I Just Read This Book!"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             android:indeterminate="false" android:textColor="#fff" />
     </android.support.design.widget.AppBarLayout>
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:background="#ddd"
+        android:layout_below="@+id/app_bar"
+        android:layout_margin="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Please fill in the details:"
+            android:id="@+id/header"
+            android:layout_gravity="left"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="15dp"
+            android:textSize="28sp"
+            android:textColor="@color/colorPrimaryDark" />
+
+        <EditText
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:id="@+id/database"
+            android:layout_gravity="right"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/header"
+            android:textColor="@color/colorPrimaryDark"
+            android:background="#fff"
+            android:layout_margin="15dp"
+            android:padding="5dp"
+            android:textSize="25sp"
+            android:layout_toRightOf="@+id/databaseText" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Database"
+            android:id="@+id/databaseText"
+            android:textSize="28sp"
+            android:textAlignment="gravity"
+            android:layout_below="@+id/header"
+            android:layout_margin="15dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Journal"
+            android:id="@+id/journalText"
+            android:textSize="28sp"
+            android:textAlignment="gravity"
+            android:layout_alignTop="@+id/journal"
+            android:layout_alignLeft="@+id/databaseText"
+            android:layout_alignStart="@+id/databaseText" />
+
+        <EditText
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:id="@+id/journal"
+            android:layout_gravity="right"
+            android:textColor="@color/colorPrimaryDark"
+            android:background="#fff"
+            android:padding="5dp"
+            android:textSize="25sp"
+            android:layout_toRightOf="@+id/databaseText"
+            android:layout_below="@+id/database"
+            android:layout_margin="15dp"
+            android:layout_alignParentRight="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Location"
+            android:id="@+id/locationText"
+            android:textSize="28sp"
+            android:textAlignment="gravity"
+            android:layout_centerVertical="true"
+            android:layout_alignLeft="@+id/journalText"
+            android:layout_alignStart="@+id/journalText" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/newConv"
+            android:layout_alignWithParentIfMissing="false"
+            android:clickable="true"
+            android:text="Send"
+            android:background="@color/colorPrimary"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="25sp"
+            android:onClick="newConv"
+            android:layout_below="@+id/location"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp" />
+
+        <EditText
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:id="@+id/location"
+            android:layout_gravity="right"
+            android:textColor="@color/colorPrimaryDark"
+            android:background="#fff"
+            android:padding="5dp"
+            android:textSize="25sp"
+            android:layout_alignBottom="@+id/locationText"
+            android:layout_alignLeft="@+id/journal"
+            android:layout_alignStart="@+id/journal"
+            android:layout_alignRight="@+id/journal"
+            android:layout_alignEnd="@+id/journal" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

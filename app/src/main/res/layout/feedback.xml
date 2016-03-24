@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#fff">
 
     <android.support.design.widget.AppBarLayout android:id="@+id/app_bar"
         android:fitsSystemWindows="true" android:layout_height="@dimen/app_bar_height"
@@ -13,9 +14,115 @@
         <android.support.v7.widget.Toolbar android:id="@+id/toolbar"
             android:layout_height="?attr/actionBarSize" android:layout_width="match_parent"
             app:layout_collapseMode="pin" app:logo="@mipmap/logo"
-            android:title="Feedback"
+            android:title="I Just Read This Book!"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             android:indeterminate="false" android:textColor="#fff" />
     </android.support.design.widget.AppBarLayout>
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:background="#ddd"
+        android:layout_below="@+id/app_bar"
+        android:layout_margin="10dp"
+        android:id="@+id/relativeLayout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Please fill in the details:"
+            android:id="@+id/header"
+            android:layout_gravity="left"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="15dp"
+            android:textSize="28sp"
+            android:textColor="@color/colorPrimaryDark" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/newConv"
+            android:layout_alignWithParentIfMissing="false"
+            android:clickable="true"
+            android:text="Send"
+            android:background="@color/colorPrimary"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="25sp"
+            android:onClick="newConv"
+            android:layout_below="@+id/feedback"
+            android:layout_centerHorizontal="true" />
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/header"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:id="@+id/feedbackType">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Suggestions"
+                android:id="@+id/radioSuggest"
+                android:checked="true"
+                android:layout_alignTop="@+id/radioCompliment"
+                android:layout_toLeftOf="@+id/newConv"
+                android:layout_toStartOf="@+id/newConv"
+                android:textSize="25sp"
+                android:buttonTint="#211d70" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Complaints"
+                android:id="@+id/radioComplain"
+                android:checked="false"
+                android:layout_alignTop="@+id/radioCompliment"
+                android:layout_toRightOf="@+id/radioCompliment"
+                android:layout_toEndOf="@+id/radioCompliment"
+                android:textSize="25sp"
+                android:buttonTint="#211d70" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Compliments"
+                android:id="@+id/radioCompliment"
+                android:checked="false"
+                android:layout_below="@+id/header"
+                android:layout_toRightOf="@+id/radioSuggest"
+                android:layout_toEndOf="@+id/radioSuggest"
+                android:textSize="25sp"
+                android:buttonTint="#211d70" />
+
+        </RadioGroup>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:inputType="textMultiLine"
+            android:ems="10"
+            android:id="@+id/feedback"
+            android:textSize="20sp"
+            android:textColor="@color/colorPrimaryDark"
+            android:background="#fff"
+            android:autoText="true"
+            android:padding="5dp"
+            android:gravity="top"
+            android:textAlignment="gravity"
+            android:layout_below="@+id/feedbackType"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_margin="20dp"
+            android:maxLength="100"
+            android:hint="Maximum 100 words" />
+
+    </RelativeLayout>
+
 
 </RelativeLayout>

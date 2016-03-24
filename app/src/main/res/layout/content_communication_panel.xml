@@ -7,12 +7,14 @@
     tools:showIn="@layout/activity_communication_panel" android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.suryansh.infobits.CommunicationPanel"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:nestedScrollingEnabled="false">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="5dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:id="@+id/CommScroll">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -109,7 +111,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/convList"
-        android:background="#eee" />
+        android:background="#eee"
+        android:stackFromBottom="true"
+        android:scrollbars="vertical"
+        android:layout_margin="10dp"
+        android:clickable="false"
+        android:cacheColorHint="#211D70"
+        android:divider="#211d70"
+        android:dividerHeight="2dp"
+        android:layout_above="@+id/convMenu"
+        android:focusable="false" />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -173,9 +184,9 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:id="@+id/convMenu"
-        android:layout_alignParentBottom="true"
         android:layout_gravity="center"
-        android:visibility="gone">
+        android:visibility="visible"
+        android:layout_alignParentBottom="true">
         <android.support.design.widget.FloatingActionButton android:id="@+id/back"
             android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin" android:src="@android:drawable/ic_media_previous"
