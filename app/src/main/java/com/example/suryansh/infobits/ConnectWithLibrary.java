@@ -1,6 +1,7 @@
 package com.example.suryansh.infobits;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -14,10 +15,12 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import org.json.JSONException;
@@ -31,20 +34,23 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
-public class CommunicationPanel extends homepage {
+public class ConnectWithLibrary extends homepage {
 
     DrawerLayout drawerlayout;
     NavigationView navigationView;
-    MenuItem cat;
+    int cat;
     ListView convlist;
     DBHandler dbhandler;
     TextView msg;
     String id, status;
     JSONObject internal = new JSONObject();
-    String[] cats = {"breco","ill","ao","grieve","breview","feedback"}, catnames = {"Book Recommendation","Lost Documents","Inaccessible Database","Service Issues","Book Review","Feedback"};
-    public ArrayList<String> talks = new ArrayList<String>();
+    public final static String[] cats = {"breco","ill","ao","grieve","breview","feedback"}, catnames = {"Book Recommendation","Lost Documents","Inaccessible Database","Service Issues","Book Review","Feedback"};
+    //public ArrayList<String> talks = new ArrayList<String>();
+    public ArrayList<HashMap<String,String>> talks = new ArrayList<HashMap<String,String>>();
     String urlString = "", message = "", error = "", category = cats[0];
     ProgressBar spinner;
     int[] comms = {R.id.comm1, R.id.comm2, R.id.comm3, R.id.comm4};
@@ -54,6 +60,13 @@ public class CommunicationPanel extends homepage {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle b = getIntent().getExtras();
+        try{
+            catint = b.getInt("cat");
+            category = cats[catint-1];
+        }catch(NullPointerException e){
+            e.printStackTrace();
+        }
         setContentView(R.layout.activity_communication_panel);
         spinner = (ProgressBar) findViewById(R.id.progressBar1);
         spinner.setVisibility(View.VISIBLE);
@@ -64,17 +77,18 @@ public class CommunicationPanel extends homepage {
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
         setSupportActionBar(toolbar);
         navigationView.setNavigationItemSelectedListener(this);
+        cat = navigationView.getMenu().getItem(0).getItemId();
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerlayout,toolbar,R.string.drawer_open,R.string.drawer_close);
         drawerlayout.setDrawerListener(actionBarDrawerToggle);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(CommunicationPanel.this, CommForms.class);
+                Intent i = new Intent(ConnectWithLibrary.this, CommForms.class);
                 Bundle b = new Bundle();
                 b.putInt("cat", catint);
                 i.putExtras(b);
-                startActivity(i);
+                startActivityForResult(i, 1);
             }
         });
         FloatingActionButton prev = (FloatingActionButton) findViewById(R.id.prev);
@@ -101,7 +115,7 @@ public class CommunicationPanel extends homepage {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setComm();
+                setComm(false);
             }
         });
         FloatingActionButton reply = (FloatingActionButton) findViewById(R.id.reply);
@@ -112,7 +126,7 @@ public class CommunicationPanel extends homepage {
                     findViewById(R.id.replyLayout).setVisibility(View.VISIBLE);
                 }
                 else{
-                    Toast.makeText(CommunicationPanel.this,"The conversation has been terminated by Administrator",Toast.LENGTH_LONG).show();
+                    Toast.makeText(ConnectWithLibrary.this,"The conversation has been terminated by Administrator",Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -124,13 +138,13 @@ public class CommunicationPanel extends homepage {
                 try {
                     urlString = apiURL + actString + ".php?username=" + username + "&password=" + password + "&action=reply&id=" + id + "&cat=" + catint + "&reply=" + URLEncoder.encode(replied, "UTF-8");
                 }catch(UnsupportedEncodingException e){
-                    Toast.makeText(CommunicationPanel.this,e.getMessage(),Toast.LENGTH_LONG).show();
+                    Toast.makeText(ConnectWithLibrary.this,e.getMessage(),Toast.LENGTH_LONG).show();
                 }
                 if (isConnected()) {
                     new APICall().execute(urlString);
                 }
                 else{
-                    Toast.makeText(CommunicationPanel.this,"Not Connected to BITS Intranet!",Toast.LENGTH_LONG).show();
+                    Toast.makeText(ConnectWithLibrary.this,"Not Connected to BITS Intranet!",Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -143,21 +157,22 @@ public class CommunicationPanel extends homepage {
                     new APICall().execute(urlString);
                 }
                 else{
-                    Toast.makeText(CommunicationPanel.this,"Not Connected to BITS Intranet!",Toast.LENGTH_LONG).show();
+                    Toast.makeText(ConnectWithLibrary.this,"Not Connected to BITS Intranet!",Toast.LENGTH_LONG).show();
                     printComms();
                 }
             }
         });
         actionBarDrawerToggle.syncState();
         dbhandler = new DBHandler(this,null,null);
-        setComm();
+        setComm(true);
         // Delete data after 2 months
     }
 
-    public void setComm(){
+    public void setComm(Boolean update){
         id = "";
         spinner.setVisibility(View.VISIBLE);
         convlist.setVisibility(View.GONE);
+        findViewById(R.id.CommScroll).setVisibility(View.VISIBLE);
         findViewById(R.id.replyLayout).setVisibility(View.GONE);
         findViewById(R.id.commMenu).setVisibility(View.GONE);
         findViewById(R.id.convMenu).setVisibility(View.GONE);
@@ -171,27 +186,30 @@ public class CommunicationPanel extends homepage {
             id = internal.keys().next();
         }
         urlString = apiURL + actString + ".php?username=" + username + "&password=" + password + "&action=update&id=" + id + "&cat=" + catint;
-        if(isConnected()) {
+        if(update && isConnected()) {
             new APICall().execute(urlString);
         }
-        else{
-            Toast.makeText(CommunicationPanel.this,"Not Connected to BITS Intranet!",Toast.LENGTH_LONG).show();
-            printComms();
+        else if(update){
+            Toast.makeText(ConnectWithLibrary.this,"Not Connected to BITS Intranet!",Toast.LENGTH_LONG).show();
         }
+        printComms();
     }
 
     public void setConv(){
-        findViewById(R.id.message).setVisibility(View.GONE);
         findViewById(R.id.replyLayout).setVisibility(View.GONE);
-        findViewById(R.id.comm1).setVisibility(View.GONE);
-        findViewById(R.id.comm2).setVisibility(View.GONE);
-        findViewById(R.id.comm3).setVisibility(View.GONE);
-        findViewById(R.id.comm4).setVisibility(View.GONE);
+        findViewById(R.id.CommScroll).setVisibility(View.GONE);
         findViewById(R.id.commMenu).setVisibility(View.GONE);
         findViewById(R.id.convMenu).setVisibility(View.VISIBLE);
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, android.R.id.text1, talks);
+        MyAdapter adapter = new MyAdapter(this, talks,
+                android.R.layout.two_line_list_item,
+                new String[] { "info","talk" },
+                new int[] {android.R.id.text1, android.R.id.text2
+        });
         convlist.setVisibility(View.VISIBLE);
         convlist.setAdapter(adapter);
+//        for(int i = convlist.getFirstVisiblePosition(); i < convlist.getChildCount(); i++){
+//            setViewByPosition(i, convlist);
+//        }
     }
 
     public boolean isConnected(){
@@ -208,7 +226,7 @@ public class CommunicationPanel extends homepage {
             status = data.get("status").toString();
             getConv(data.get("talk").toString(), data.get("admins").toString());
         }catch(JSONException e){
-            Toast.makeText(CommunicationPanel.this,e.toString(),Toast.LENGTH_LONG).show();
+            Toast.makeText(ConnectWithLibrary.this,e.toString(),Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
     }
@@ -220,7 +238,7 @@ public class CommunicationPanel extends homepage {
             status = data.get("status").toString();
             getConv(data.get("talk").toString(),data.get("admins").toString());
         }catch(JSONException e){
-            Toast.makeText(CommunicationPanel.this,e.toString(),Toast.LENGTH_LONG).show();
+            Toast.makeText(ConnectWithLibrary.this,e.toString(),Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
     }
@@ -232,7 +250,7 @@ public class CommunicationPanel extends homepage {
             status = data.get("status").toString();
             getConv(data.get("talk").toString(), data.get("admins").toString());
         }catch(JSONException e){
-            Toast.makeText(CommunicationPanel.this,e.toString(),Toast.LENGTH_LONG).show();
+            Toast.makeText(ConnectWithLibrary.this,e.toString(),Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
     }
@@ -244,57 +262,41 @@ public class CommunicationPanel extends homepage {
             status = data.get("status").toString();
             getConv(data.get("talk").toString(),data.get("admins").toString());
         }catch(JSONException e){
-            Toast.makeText(CommunicationPanel.this,e.toString(),Toast.LENGTH_LONG).show();
+            Toast.makeText(ConnectWithLibrary.this,e.toString(),Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
     }
 
     public void getConv(String data, String admins){
-        ArrayList<String> adminsarr = new ArrayList<String>();
-        int i = 0;
         int p = 0;
-        int x = admins.indexOf(";", 0);
-        while(x > 0 && !admins.isEmpty()){
-            adminsarr.add(i, admins.substring(p, x));
-            p = x + 2;
-            x = admins.indexOf(";", p);
-            i = i + 1;
-        }
-        i = 0;
-        p = 0;
+        int x;
+//        int x = admins.indexOf(";", 0);
+//        while(x > 0 && !admins.isEmpty()){
+//            adminsarr.add(i, admins.substring(p, x));
+//            p = x + 2;
+//            x = admins.indexOf(";", p);
+//            i = i + 1;
+//        }
+//        i = 0;
+//        p = 0;
         int x1, x2, x3;
-        ArrayList<String> date = new ArrayList<String>();
-        ArrayList<String> time = new ArrayList<String>();
-        ArrayList<String> name = new ArrayList<String>();
-        ArrayList<String> talk = new ArrayList<String>();
-        while(data.indexOf("//", p) >= 0){
+        talks.clear();
+        while(data.indexOf("//", p) >= 0) {
+            HashMap<String,String> talk = new HashMap<>();
             x = data.indexOf(")|", p);
             x1 = data.indexOf("//", p);
             x2 = data.indexOf("(Date-", p);
             x3 = data.indexOf(",Time-", p);
-            date.add(i, data.substring(x2 + 6,x3));
-            time.add(i, data.substring(x3 + 6, x));
-            name.add(i, data.substring(p,x2));
-            try{
-                talk.add(i, URLDecoder.decode(data.substring(x+3,x1-1), "UTF-8"));
-            }catch(UnsupportedEncodingException e){
-                Toast.makeText(CommunicationPanel.this,e.getMessage(),Toast.LENGTH_LONG).show();
+            if (!(data.substring(p, x2).equals("From Library") && usercat.equals("Admin"))){
+                    talk.put("info", data.substring(p, x2) + "\nDate: " + data.substring(x2 + 6, x3) + "  Time: " + data.substring(x3 + 6, x));
+                try {
+                    talk.put("talk", "\n" + URLDecoder.decode(data.substring(x + 3, x1 - 1).replaceAll("<br />", "\n"), "UTF-8"));
+                    talks.add(talk);
+                } catch (UnsupportedEncodingException e) {
+                    Toast.makeText(ConnectWithLibrary.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                }
             }
             p = x1 + 3;
-            i++;
-        }
-        talks.clear();
-        int m = 0;
-        for(int j = i; j >= 1; j--){
-            if(name.get(j-1).equals("From Library") && usercat.equals("Admin")){
-                m = 2;
-            }
-            if(m == 0){
-                talks.add(i - j, name.get(j - 1) + "\nDate: " + date.get(j - 1) + "  Time: " + time.get(j - 1) + "\n\n" + talk.get(j - 1));
-            }
-            else{
-                i--;
-            }
         }
         setConv();
     }
@@ -303,7 +305,7 @@ public class CommunicationPanel extends homepage {
             if(json.has("err_message") && !json.get("err_message").toString().isEmpty()){
                 spinner.setVisibility(View.GONE);
                 error = json.get("err_message").toString();
-                Toast.makeText(CommunicationPanel.this,json.get("err_message").toString(),Toast.LENGTH_LONG).show();
+                Toast.makeText(ConnectWithLibrary.this,json.get("err_message").toString(),Toast.LENGTH_LONG).show();
             }
             if(json.has("message") && !json.get("message").toString().isEmpty()){
                 message = json.get("message").toString();
@@ -352,7 +354,7 @@ public class CommunicationPanel extends homepage {
                     JSONObject dataval = (JSONObject) dbhandler.selectData(0,"id = " + id).get(id);
                     String[] updatevalues = {dataval.get("admins").toString(), dataval.get("talk").toString(), "inactive"};
                     dbhandler.updateData(0, updatevalues, Integer.parseInt(id));
-                    Toast.makeText(CommunicationPanel.this,message,Toast.LENGTH_LONG).show();
+                    Toast.makeText(ConnectWithLibrary.this,message,Toast.LENGTH_LONG).show();
                     printComms();
                     message = "";
                 }
@@ -365,7 +367,7 @@ public class CommunicationPanel extends homepage {
                 String[] updatevalues = {data.get("admins").toString(), data.get("talk").toString(), data.get("status").toString()};
                 dbhandler.updateData(0, updatevalues, Integer.parseInt(id));
                 if(error.isEmpty()){
-                    Toast.makeText(CommunicationPanel.this,message,Toast.LENGTH_LONG).show();
+                    Toast.makeText(ConnectWithLibrary.this,message,Toast.LENGTH_LONG).show();
                     message = "";
                 }
                 else{
@@ -373,8 +375,22 @@ public class CommunicationPanel extends homepage {
                 }
                 getConv(data.get("talk").toString(),data.get("admins").toString());
             }
+            else if(action.equals("new")){
+                if(error.isEmpty()){
+                    JSONObject data = (JSONObject) json.get("data");
+                    String id = data.keys().next();
+                    JSONObject dataval = (JSONObject) data.get(id);
+                    String[] updatevalues = {id, dataval.get("bitsid").toString(), dataval.get("category").toString(), dataval.get("name").toString(),dataval.get("topic").toString(),dataval.get("date").toString(),dataval.get("time").toString(),dataval.get("admins").toString(),dataval.get("talk").toString(),dataval.get("cat").toString(),dataval.get("status").toString()};
+                    dbhandler.addData(0, updatevalues);
+                    Toast.makeText(ConnectWithLibrary.this,message,Toast.LENGTH_LONG).show();
+                    message = "";
+                }
+                else{
+                    error = "";
+                }
+            }
         } catch (JSONException e) {
-            Toast.makeText(CommunicationPanel.this,e.toString(),Toast.LENGTH_LONG).show();
+            Toast.makeText(ConnectWithLibrary.this,e.toString(),Toast.LENGTH_LONG).show();
         }
     }
 
@@ -406,12 +422,12 @@ public class CommunicationPanel extends homepage {
                     JSONObject json = new JSONObject(result);
                     updateInternalData(json, json.get("action").toString());
                 } catch (Exception e) {
-                    Toast.makeText(CommunicationPanel.this,e.getMessage(),Toast.LENGTH_LONG).show();
+                    Toast.makeText(ConnectWithLibrary.this,e.getMessage(),Toast.LENGTH_LONG).show();
                 }
             }else{
                 if(!err.isEmpty()){
                     spinner.setVisibility(View.GONE);
-                    Toast.makeText(CommunicationPanel.this,err,Toast.LENGTH_LONG).show();
+                    Toast.makeText(ConnectWithLibrary.this,err,Toast.LENGTH_LONG).show();
                     if(urlString.contains("action=update")) {
                         printComms();
                     }
@@ -425,6 +441,7 @@ public class CommunicationPanel extends homepage {
         spinner.setVisibility(View.GONE);
         findViewById(R.id.message).setVisibility(View.GONE);
         findViewById(R.id.commMenu).setVisibility(View.VISIBLE);
+        findViewById(R.id.CommScroll).setVisibility(View.VISIBLE);
         convlist.setVisibility(View.GONE);
         findViewById(R.id.replyLayout).setVisibility(View.GONE);
         findViewById(R.id.convMenu).setVisibility(View.GONE);
@@ -464,15 +481,10 @@ public class CommunicationPanel extends homepage {
             }
             else{
                 msg.setVisibility(View.VISIBLE);
-                if(isConnected() && !message.isEmpty()){
-                    msg.setText(message);
-                }
-                else{
-                    msg.setText("No Conversations Found");
-                }
+                msg.setText("No Conversations Found");
             }
         } catch (JSONException e) {
-            Toast.makeText(CommunicationPanel.this,e.toString(),Toast.LENGTH_LONG).show();
+            Toast.makeText(ConnectWithLibrary.this,e.toString(),Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
     }
@@ -489,12 +501,93 @@ public class CommunicationPanel extends homepage {
             item.setChecked(true);
         else
             return false;
-        catint = Arrays.asList(catnames).indexOf(item.toString()) + 1;
-        start = 0;
-        category = cats[catint-1];
-        setComm();
+        if(item.toString().equals("Refresh Data")){
+            item.setChecked(false);
+            navigationView.setCheckedItem(cat);
+        }
+        else {
+            cat = item.getItemId();
+            catint = Arrays.asList(catnames).indexOf(item.toString()) + 1;
+            start = 0;
+            category = cats[catint - 1];
+        }
+        setComm(true);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+            case (1) : {
+                if (resultCode == Activity.RESULT_OK) {
+                    String newText = data.getStringExtra("update");
+                    if(newText.equals("yes")){
+                        printComms();
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (this.drawerlayout.isDrawerOpen(GravityCompat.START)) {
+            this.drawerlayout.closeDrawer(GravityCompat.START);
+        }
+        else if(!id.equals("")){
+            setComm(false);
+        } else{
+            super.onBackPressed();
+        }
+    }
+
+    public class MyAdapter extends SimpleAdapter{
+
+        List<HashMap<String,String>> talks;
+
+        public MyAdapter(Context context, List<HashMap<String, String>> items, int resource, String[] from, int[] to) {
+            super(context, items, resource, from, to);
+            talks = items;
+        }
+
+        public class ViewHolder{
+
+            public TextView info;
+            public TextView talk;
+            public WebView table;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View vi = convertView;
+            ViewHolder holder;
+            if(convertView==null){
+                vi = getLayoutInflater().inflate(R.layout.convlistitem, null);
+                holder = new ViewHolder();
+                holder.info = (TextView) vi.findViewById(R.id.Info);
+                holder.talk = (TextView) vi.findViewById(R.id.Talk);
+                holder.table = (WebView) vi.findViewById(R.id.Table);
+                vi.setTag( holder );
+            }
+            else
+                holder=(ViewHolder)vi.getTag();
+            HashMap<String,String> data = talks.get(position);
+            holder.info.setText(data.get("info"));
+            if(data.get("talk").contains("<table>")){
+                holder.talk.setVisibility(View.GONE);
+                holder.table.loadData(data.get("talk"),"text/html",null);
+                holder.table.setVisibility(View.VISIBLE);
+            }
+            else {
+                holder.talk.setVisibility(View.VISIBLE);
+                holder.table.setVisibility(View.GONE);
+                holder.talk.setText(data.get("talk"));
+            }
+            return vi;
+        }
     }
 }

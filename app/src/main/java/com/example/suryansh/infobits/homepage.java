@@ -99,7 +99,7 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://search.ebscohost.com/login.aspx?authtype=uid&user=bits2015&password=pilani&profile=eds"));
             startActivity(browserIntent);
         } else if (id == R.id.comm_id) {
-            Intent i = new Intent(homepage.this, CommunicationPanel.class);
+            Intent i = new Intent(homepage.this, ConnectWithLibrary.class);
             startActivity(i);
         } else if (id == R.id.news_id) {
 
@@ -142,8 +142,17 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
     }
 
     public void onClickFinder(View view) {
-        Intent i = new Intent(homepage.this, CommunicationPanel.class);
+        Intent i = new Intent(homepage.this, ConnectWithLibrary.class);
         startActivity(i);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (this.drawerlayout.isDrawerOpen(GravityCompat.START)) {
+            this.drawerlayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
 

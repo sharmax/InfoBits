@@ -17,5 +17,910 @@
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             android:indeterminate="false" android:textColor="#fff" />
     </android.support.design.widget.AppBarLayout>
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/recommendations"
+        android:visibility="visible"
+        android:layout_below="@+id/app_bar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="100dp">
+
+        <RelativeLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:background="#ddd"
+            android:layout_below="@+id/app_bar"
+            android:layout_margin="10dp"
+            android:scrollIndicators="left">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Book Recommendation #1"
+                android:id="@+id/header1"
+                android:layout_gravity="left"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_margin="10dp"
+                android:textSize="25sp"
+                android:textColor="@color/colorPrimaryDark"
+                android:background="@color/colorPrimary"
+                android:padding="15dp"
+                android:clickable="true"
+                android:onClick="showbrecoform" />
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Book Recommendation #2"
+                android:id="@+id/header2"
+                android:layout_gravity="left"
+                android:textSize="25sp"
+                android:textColor="@color/colorPrimaryDark"
+                android:background="@color/colorPrimary"
+                android:padding="15dp"
+                android:layout_below="@+id/recommendation1"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_alignLeft="@+id/header1"
+                android:layout_alignStart="@+id/header1"
+                android:layout_alignRight="@+id/header1"
+                android:layout_alignEnd="@+id/header1"
+                android:visibility="gone"
+                android:clickable="true"
+                android:onClick="showbrecoform"
+                android:nestedScrollingEnabled="false" />
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Book Recommendation #3"
+                android:id="@+id/header3"
+                android:layout_gravity="left"
+                android:textSize="25sp"
+                android:textColor="@color/colorPrimaryDark"
+                android:background="@color/colorPrimary"
+                android:padding="15dp"
+                android:layout_below="@+id/recommendation2"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_alignLeft="@+id/header2"
+                android:layout_alignStart="@+id/header2"
+                android:layout_alignRight="@+id/header2"
+                android:layout_alignEnd="@+id/header2"
+                android:visibility="gone"
+                android:clickable="true"
+                android:onClick="showbrecoform" />
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Book Recommendation #4"
+                android:id="@+id/header4"
+                android:layout_gravity="left"
+                android:textSize="25sp"
+                android:textColor="@color/colorPrimaryDark"
+                android:background="@color/colorPrimary"
+                android:padding="15dp"
+                android:layout_below="@+id/recommendation3"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_alignLeft="@+id/header3"
+                android:layout_alignStart="@+id/header3"
+                android:visibility="gone"
+                android:clickable="true"
+                android:onClick="showbrecoform" />
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Book Recommendation #5"
+                android:id="@+id/header5"
+                android:layout_gravity="left"
+                android:textSize="25sp"
+                android:textColor="@color/colorPrimaryDark"
+                android:background="@color/colorPrimary"
+                android:padding="15dp"
+                android:layout_below="@+id/recommendation4"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_alignLeft="@+id/header4"
+                android:layout_alignStart="@+id/header4"
+                android:visibility="gone"
+                android:clickable="true"
+                android:onClick="showbrecoform"
+                android:nestedScrollingEnabled="false" />
+
+            <ScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/recommendation1"
+                android:visibility="visible"
+                android:layout_below="@+id/header1"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true">
+                <RelativeLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#ddd"
+                    android:layout_below="@+id/radioGroup"
+                    android:padding="10dp"
+                    android:id="@+id/bookreco1"
+                    android:visibility="visible">
+
+                    <EditText
+                        android:layout_width="200dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/title1"
+                        android:layout_gravity="right"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:background="#fff"
+                        android:padding="5dp"
+                        android:textSize="25sp"
+                        android:layout_alignTop="@+id/titleText1"
+                        android:layout_alignLeft="@+id/edition1"
+                        android:layout_alignStart="@+id/edition1" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Title"
+                        android:id="@+id/titleText1"
+                        android:textSize="25sp"
+                        android:textAlignment="gravity"
+                        android:layout_margin="10dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Author"
+                        android:id="@+id/authorText1"
+                        android:textSize="25sp"
+                        android:textAlignment="gravity"
+                        android:layout_below="@+id/title1"
+                        android:layout_alignParentLeft="false"
+                        android:layout_alignParentStart="false"
+                        android:layout_margin="10dp" />
+
+                    <EditText
+                        android:layout_width="200dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/author1"
+                        android:layout_gravity="right"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:background="#fff"
+                        android:padding="5dp"
+                        android:textSize="25sp"
+                        android:layout_below="@+id/title1"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_alignRight="@+id/title1"
+                        android:layout_alignEnd="@+id/title1"
+                        android:layout_alignLeft="@+id/title1"
+                        android:layout_alignStart="@+id/title1" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Edition"
+                        android:id="@+id/editionText1"
+                        android:textSize="25sp"
+                        android:textAlignment="gravity"
+                        android:layout_below="@+id/authorText1"
+                        android:layout_margin="10dp" />
+
+                    <EditText
+                        android:layout_width="200dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/edition1"
+                        android:layout_gravity="right"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:background="#fff"
+                        android:padding="5dp"
+                        android:textSize="25sp"
+                        android:layout_below="@+id/author1"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Publisher"
+                        android:id="@+id/publisherText1"
+                        android:textSize="25sp"
+                        android:textAlignment="gravity"
+                        android:layout_below="@+id/editionText1"
+                        android:layout_margin="10dp" />
+
+                    <EditText
+                        android:layout_width="200dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/publisher1"
+                        android:layout_gravity="right"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:background="#fff"
+                        android:padding="5dp"
+                        android:textSize="25sp"
+                        android:layout_above="@+id/yearText1"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Year"
+                        android:id="@+id/yearText1"
+                        android:textSize="25sp"
+                        android:textAlignment="gravity"
+                        android:layout_below="@+id/publisherText1"
+                        android:layout_margin="10dp" />
+
+                    <EditText
+                        android:layout_width="200dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/year1"
+                        android:layout_gravity="right"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:background="#fff"
+                        android:padding="5dp"
+                        android:textSize="25sp"
+                        android:inputType="number"
+                        android:maxLength="4"
+                        android:numeric="integer"
+                        android:layout_alignTop="@+id/yearText1"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true" />
+
+                </RelativeLayout>
+            </ScrollView>
+
+            <ScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/recommendation2"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="false"
+                android:layout_below="@+id/header2"
+                android:visibility="gone">
+                <RelativeLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#ddd"
+                    android:layout_below="@+id/radioGroup"
+                    android:padding="10dp"
+                    android:id="@+id/bookreco2"
+                    android:visibility="visible">
+
+                    <EditText
+                        android:layout_width="200dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/title2"
+                        android:layout_gravity="right"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:background="#fff"
+                        android:padding="5dp"
+                        android:textSize="25sp"
+                        android:layout_alignTop="@+id/titleText2"
+                        android:layout_alignLeft="@+id/edition2"
+                        android:layout_alignStart="@+id/edition2" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Title"
+                        android:id="@+id/titleText2"
+                        android:textSize="25sp"
+                        android:textAlignment="gravity"
+                        android:layout_margin="10dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Author"
+                        android:id="@+id/authorText2"
+                        android:textSize="25sp"
+                        android:textAlignment="gravity"
+                        android:layout_below="@+id/title2"
+                        android:layout_alignParentLeft="false"
+                        android:layout_alignParentStart="false"
+                        android:layout_margin="10dp" />
+
+                    <EditText
+                        android:layout_width="200dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/author2"
+                        android:layout_gravity="right"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:background="#fff"
+                        android:padding="5dp"
+                        android:textSize="25sp"
+                        android:layout_below="@+id/title2"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_alignRight="@+id/title2"
+                        android:layout_alignEnd="@+id/title2"
+                        android:layout_alignLeft="@+id/title2"
+                        android:layout_alignStart="@+id/title2" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Edition"
+                        android:id="@+id/editionText2"
+                        android:textSize="25sp"
+                        android:textAlignment="gravity"
+                        android:layout_below="@+id/authorText2"
+                        android:layout_margin="10dp" />
+
+                    <EditText
+                        android:layout_width="200dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/edition2"
+                        android:layout_gravity="right"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:background="#fff"
+                        android:padding="5dp"
+                        android:textSize="25sp"
+                        android:layout_below="@+id/author2"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Publisher"
+                        android:id="@+id/publisherText2"
+                        android:textSize="25sp"
+                        android:textAlignment="gravity"
+                        android:layout_below="@+id/editionText2"
+                        android:layout_margin="10dp" />
+
+                    <EditText
+                        android:layout_width="200dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/publisher2"
+                        android:layout_gravity="right"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:background="#fff"
+                        android:padding="5dp"
+                        android:textSize="25sp"
+                        android:layout_alignTop="@+id/publisherText2"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Year"
+                        android:id="@+id/yearText2"
+                        android:textSize="25sp"
+                        android:textAlignment="gravity"
+                        android:layout_below="@+id/publisherText2"
+                        android:layout_margin="10dp" />
+
+                    <EditText
+                        android:layout_width="200dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/year2"
+                        android:layout_gravity="right"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:background="#fff"
+                        android:padding="5dp"
+                        android:textSize="25sp"
+                        android:maxLength="4"
+                        android:linksClickable="false"
+                        android:inputType="number"
+                        android:numeric="integer"
+                        android:layout_alignTop="@+id/yearText2"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true" />
+
+                </RelativeLayout>
+            </ScrollView>
+
+            <ScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/recommendation3"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="false"
+                android:layout_below="@+id/header3"
+                android:visibility="gone">
+                <RelativeLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#ddd"
+                    android:layout_below="@+id/radioGroup"
+                    android:padding="10dp"
+                    android:id="@+id/bookreco3"
+                    android:visibility="visible">
+
+                    <EditText
+                        android:layout_width="200dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/title3"
+                        android:layout_gravity="right"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:background="#fff"
+                        android:padding="5dp"
+                        android:textSize="25sp"
+                        android:layout_alignTop="@+id/titleText3"
+                        android:layout_alignLeft="@+id/edition3"
+                        android:layout_alignStart="@+id/edition3" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Title"
+                        android:id="@+id/titleText3"
+                        android:textSize="25sp"
+                        android:textAlignment="gravity"
+                        android:layout_margin="10dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Author"
+                        android:id="@+id/authorText3"
+                        android:textSize="25sp"
+                        android:textAlignment="gravity"
+                        android:layout_below="@+id/title3"
+                        android:layout_alignParentLeft="false"
+                        android:layout_alignParentStart="false"
+                        android:layout_margin="10dp" />
+
+                    <EditText
+                        android:layout_width="200dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/author3"
+                        android:layout_gravity="right"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:background="#fff"
+                        android:padding="5dp"
+                        android:textSize="25sp"
+                        android:layout_below="@+id/title3"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_alignRight="@+id/title3"
+                        android:layout_alignEnd="@+id/title3"
+                        android:layout_alignLeft="@+id/title3"
+                        android:layout_alignStart="@+id/title3" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Edition"
+                        android:id="@+id/editionText3"
+                        android:textSize="25sp"
+                        android:textAlignment="gravity"
+                        android:layout_below="@+id/authorText3"
+                        android:layout_margin="10dp" />
+
+                    <EditText
+                        android:layout_width="200dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/edition3"
+                        android:layout_gravity="right"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:background="#fff"
+                        android:padding="5dp"
+                        android:textSize="25sp"
+                        android:layout_below="@+id/author3"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Publisher"
+                        android:id="@+id/publisherText3"
+                        android:textSize="25sp"
+                        android:textAlignment="gravity"
+                        android:layout_below="@+id/editionText3"
+                        android:layout_margin="10dp" />
+
+                    <EditText
+                        android:layout_width="200dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/publisher3"
+                        android:layout_gravity="right"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:background="#fff"
+                        android:padding="5dp"
+                        android:textSize="25sp"
+                        android:layout_alignBottom="@+id/publisherText3"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Year"
+                        android:id="@+id/yearText3"
+                        android:textSize="25sp"
+                        android:textAlignment="gravity"
+                        android:layout_below="@+id/publisherText3"
+                        android:layout_margin="10dp" />
+
+                    <EditText
+                        android:layout_width="200dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/year3"
+                        android:layout_gravity="right"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:background="#fff"
+                        android:padding="5dp"
+                        android:textSize="25sp"
+                        android:layout_below="@+id/publisherText3"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
+                        android:inputType="number"
+                        android:numeric="integer"
+                        android:maxLength="4" />
+
+                </RelativeLayout>
+            </ScrollView>
+
+            <ScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/recommendation4"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="false"
+                android:layout_below="@+id/header4"
+                android:visibility="gone">
+                <RelativeLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#ddd"
+                    android:layout_below="@+id/radioGroup"
+                    android:padding="10dp"
+                    android:id="@+id/bookreco4"
+                    android:visibility="visible">
+
+                    <EditText
+                        android:layout_width="200dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/title4"
+                        android:layout_gravity="right"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:background="#fff"
+                        android:padding="5dp"
+                        android:textSize="25sp"
+                        android:layout_alignTop="@+id/titleText4"
+                        android:layout_alignLeft="@+id/edition4"
+                        android:layout_alignStart="@+id/edition4" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Title"
+                        android:id="@+id/titleText4"
+                        android:textSize="25sp"
+                        android:textAlignment="gravity"
+                        android:layout_margin="10dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Author"
+                        android:id="@+id/authorText4"
+                        android:textSize="25sp"
+                        android:textAlignment="gravity"
+                        android:layout_below="@+id/title4"
+                        android:layout_alignParentLeft="false"
+                        android:layout_alignParentStart="false"
+                        android:layout_margin="10dp" />
+
+                    <EditText
+                        android:layout_width="200dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/author4"
+                        android:layout_gravity="right"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:background="#fff"
+                        android:padding="5dp"
+                        android:textSize="25sp"
+                        android:layout_below="@+id/title4"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_alignRight="@+id/title4"
+                        android:layout_alignEnd="@+id/title4"
+                        android:layout_alignLeft="@+id/title4"
+                        android:layout_alignStart="@+id/title4" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Edition"
+                        android:id="@+id/editionText4"
+                        android:textSize="25sp"
+                        android:textAlignment="gravity"
+                        android:layout_below="@+id/authorText4"
+                        android:layout_margin="10dp" />
+
+                    <EditText
+                        android:layout_width="200dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/edition4"
+                        android:layout_gravity="right"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:background="#fff"
+                        android:padding="5dp"
+                        android:textSize="25sp"
+                        android:layout_below="@+id/author4"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Publisher"
+                        android:id="@+id/publisherText4"
+                        android:textSize="25sp"
+                        android:textAlignment="gravity"
+                        android:layout_below="@+id/editionText4"
+                        android:layout_margin="10dp" />
+
+                    <EditText
+                        android:layout_width="200dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/publisher4"
+                        android:layout_gravity="right"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:background="#fff"
+                        android:padding="5dp"
+                        android:textSize="25sp"
+                        android:layout_alignBottom="@+id/publisherText4"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Year"
+                        android:id="@+id/yearText4"
+                        android:textSize="25sp"
+                        android:textAlignment="gravity"
+                        android:layout_below="@+id/publisherText4"
+                        android:layout_margin="10dp" />
+
+                    <EditText
+                        android:layout_width="200dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/year4"
+                        android:layout_gravity="right"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:background="#fff"
+                        android:padding="5dp"
+                        android:textSize="25sp"
+                        android:layout_below="@+id/publisherText4"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
+                        android:inputType="number"
+                        android:maxLength="4"
+                        android:numeric="integer" />
+
+                </RelativeLayout>
+            </ScrollView>
+
+            <ScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/recommendation5"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="false"
+                android:layout_below="@+id/header5"
+                android:visibility="gone">
+                <RelativeLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#ddd"
+                    android:layout_below="@+id/radioGroup"
+                    android:padding="10dp"
+                    android:id="@+id/bookreco5"
+                    android:visibility="visible">
+
+                    <EditText
+                        android:layout_width="200dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/title5"
+                        android:layout_gravity="right"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:background="#fff"
+                        android:padding="5dp"
+                        android:textSize="25sp"
+                        android:layout_alignTop="@+id/titleText5"
+                        android:layout_alignLeft="@+id/edition5"
+                        android:layout_alignStart="@+id/edition5" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Title"
+                        android:id="@+id/titleText5"
+                        android:textSize="25sp"
+                        android:textAlignment="gravity"
+                        android:layout_margin="10dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Author"
+                        android:id="@+id/authorText5"
+                        android:textSize="25sp"
+                        android:textAlignment="gravity"
+                        android:layout_below="@+id/title5"
+                        android:layout_alignParentLeft="false"
+                        android:layout_alignParentStart="false"
+                        android:layout_margin="10dp" />
+
+                    <EditText
+                        android:layout_width="200dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/author5"
+                        android:layout_gravity="right"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:background="#fff"
+                        android:padding="5dp"
+                        android:textSize="25sp"
+                        android:layout_below="@+id/title5"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_alignRight="@+id/title5"
+                        android:layout_alignEnd="@+id/title5"
+                        android:layout_alignLeft="@+id/title5"
+                        android:layout_alignStart="@+id/title5" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Edition"
+                        android:id="@+id/editionText5"
+                        android:textSize="25sp"
+                        android:textAlignment="gravity"
+                        android:layout_below="@+id/authorText5"
+                        android:layout_margin="10dp" />
+
+                    <EditText
+                        android:layout_width="200dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/edition5"
+                        android:layout_gravity="right"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:background="#fff"
+                        android:padding="5dp"
+                        android:textSize="25sp"
+                        android:layout_below="@+id/author5"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Publisher"
+                        android:id="@+id/publisherText5"
+                        android:textSize="25sp"
+                        android:textAlignment="gravity"
+                        android:layout_below="@+id/editionText5"
+                        android:layout_margin="10dp" />
+
+                    <EditText
+                        android:layout_width="200dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/publisher5"
+                        android:layout_gravity="right"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:background="#fff"
+                        android:padding="5dp"
+                        android:textSize="25sp"
+                        android:layout_alignBottom="@+id/publisherText5"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Year"
+                        android:id="@+id/yearText5"
+                        android:textSize="25sp"
+                        android:textAlignment="gravity"
+                        android:layout_below="@+id/publisherText5"
+                        android:layout_margin="10dp" />
+
+                    <EditText
+                        android:layout_width="200dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/year5"
+                        android:layout_gravity="right"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:background="#fff"
+                        android:padding="5dp"
+                        android:textSize="25sp"
+                        android:layout_below="@+id/publisherText5"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
+                        android:inputType="number"
+                        android:maxLength="4"
+                        android:numeric="integer" />
+                </RelativeLayout>
+            </ScrollView>
+        </RelativeLayout>
+    </ScrollView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:id="@+id/commMenu"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center"
+        android:visibility="visible">
+        <android.support.design.widget.FloatingActionButton android:id="@+id/add"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin" android:src="@android:drawable/ic_input_add"
+            app:layout_anchorGravity="bottom|end"
+            android:clickable="true" />
+
+        <android.support.design.widget.FloatingActionButton android:id="@+id/delete"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            app:layout_anchorGravity="bottom|end" android:src="@android:drawable/ic_delete"
+            android:layout_alignTop="@+id/add"
+            android:layout_centerHorizontal="true"
+            android:clickable="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/newConv"
+            android:layout_alignWithParentIfMissing="false"
+            android:clickable="true"
+            android:text="Send"
+            android:background="#dadada"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="25sp"
+            android:onClick="newConv"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="false"
+            android:layout_centerInParent="true"
+            android:layout_margin="@dimen/fab_margin" />
+    </RelativeLayout>
 
 </RelativeLayout>
