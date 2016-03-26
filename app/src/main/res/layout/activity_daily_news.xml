@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <android.support.design.widget.AppBarLayout android:id="@+id/app_bar"
+        android:fitsSystemWindows="true" android:layout_height="@dimen/app_bar_height"
+        android:layout_width="match_parent" android:theme="@style/AppTheme.AppBarOverlay"
+        android:baselineAligned="false"
+        android:background="@color/colorPrimaryDark">
+
+        <android.support.v7.widget.Toolbar android:id="@+id/toolbar"
+            android:layout_height="?attr/actionBarSize" android:layout_width="match_parent"
+            app:layout_collapseMode="pin" app:logo="@mipmap/logo"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            android:indeterminate="false" android:textColor="#fff" />
+    </android.support.design.widget.AppBarLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/app_bar">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/search_message"
+            android:visibility="gone"
+            android:layout_alignParentTop="true"
+            android:layout_margin="15dp" />
+
+        <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/newsList"
+        android:background="#eee"
+        android:scrollbars="vertical"
+        android:layout_margin="10dp"
+        android:clickable="true"
+        android:cacheColorHint="#211D70"
+        android:divider="#211d70"
+        android:dividerHeight="2dp"
+        android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_below="@+id/search_message" />
+
+        <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/message"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:visibility="gone" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:visibility="visible" />
+
+        <android.support.design.widget.FloatingActionButton android:id="@+id/search"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin" android:src="@android:drawable/ic_search_category_default"
+        app:layout_anchorGravity="bottom|end"
+        android:layout_alignParentBottom="true"
+        app:backgroundTint="#211d70" />
+
+        <android.support.design.widget.FloatingActionButton android:id="@+id/refresh"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        app:layout_anchorGravity="bottom|end" android:src="@android:drawable/stat_notify_sync"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/fab_margin"
+        android:layout_alignParentBottom="true"
+        app:backgroundTint="#211d70" />
+    </RelativeLayout>
+</RelativeLayout>

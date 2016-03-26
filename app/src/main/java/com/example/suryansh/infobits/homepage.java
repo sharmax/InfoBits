@@ -33,8 +33,7 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
-
-        toolbar = (Toolbar)findViewById(R.id.nav_toolbar);
+        toolbar = (Toolbar) findViewById(R.id.nav_toolbar);
         drawerlayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         setSupportActionBar(toolbar);
 
@@ -102,7 +101,8 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
             Intent i = new Intent(homepage.this, ConnectWithLibrary.class);
             startActivity(i);
         } else if (id == R.id.news_id) {
-
+            Intent i = new Intent(homepage.this, DailyNews.class);
+            startActivity(i);
         } else if (id == R.id.ibb_id) {
 
         } else if (id == R.id.ill_id) {
@@ -128,12 +128,20 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
 
     public void onClickLibr(View view) {
 
-
     }
 
     public void onClickLibs(View view) {
 
+    }
 
+    public void onClickOs(View view) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://search.ebscohost.com/login.aspx?authtype=uid&user=bits2015&password=pilani&profile=eds"));
+        startActivity(browserIntent);
+    }
+
+    public void onClickDN(View view) {
+        Intent i = new Intent(homepage.this, DailyNews.class);
+        startActivity(i);
     }
 
     public void onClickOPAC(View view) {
@@ -141,7 +149,7 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
         startActivity(browserIntent);
     }
 
-    public void onClickFinder(View view) {
+    public void onClickCWL(View view) {
         Intent i = new Intent(homepage.this, ConnectWithLibrary.class);
         startActivity(i);
     }

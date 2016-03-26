@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:padding="5dp"
+    android:background="#e0dfeb">
+
+    <DatePicker
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/startDatePicker"
+        android:spinnersShown="true"
+        android:datePickerMode="spinner"
+        android:calendarViewShown="false"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/startDateText"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="From"
+        android:id="@+id/startDateText"
+        android:textColor="#211d70"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/startDatePicker"
+        android:layout_alignStart="@+id/startDatePicker"
+        android:textSize="18sp"
+        android:layout_marginLeft="6dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="To"
+        android:id="@+id/endDateText"
+        android:textColor="#211d70"
+        android:layout_below="@+id/startDatePicker"
+        android:layout_alignLeft="@+id/endDatePicker"
+        android:layout_alignStart="@+id/endDatePicker"
+        android:textSize="18sp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginTop="-6dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/keywords"
+        android:layout_below="@+id/endDatePicker"
+        android:hint="Keywords"
+        android:textSize="20sp"
+        android:textColor="#211d70"
+        android:background="#fff"
+        android:padding="5dp"
+        android:layout_alignRight="@+id/endDatePicker"
+        android:layout_alignEnd="@+id/endDatePicker"
+        android:layout_alignLeft="@+id/endDatePicker"
+        android:layout_alignStart="@+id/endDatePicker" />
+
+    <DatePicker
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/endDatePicker"
+        android:spinnersShown="true"
+        android:datePickerMode="spinner"
+        android:calendarViewShown="false"
+        android:layout_below="@+id/startDatePicker"
+        android:layout_alignParentRight="true" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SEARCH"
+        android:id="@+id/searchNews"
+        android:background="@color/colorPrimary"
+        android:padding="10dp"
+        android:onClick="getSearchNews"
+        android:layout_below="@+id/keywords"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="5dp" />
+
+</RelativeLayout>
