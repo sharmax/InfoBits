@@ -27,7 +27,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.DateFormatSymbols;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class CommForms extends ConnectWithLibrary {
 
@@ -89,6 +92,16 @@ public class CommForms extends ConnectWithLibrary {
                     e.printStackTrace();
                 }
             }
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            Date today = new Date();
+            Date last = new Date(0);
+            try {
+                last = df.parse("1800-01-01");
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            datePicker.setMaxDate(today.getTime() + 19800000);
+            datePicker.setMinDate(last.getTime());
         }
         if(cat == 1) {
             FloatingActionButton add = (FloatingActionButton) findViewById(R.id.add);

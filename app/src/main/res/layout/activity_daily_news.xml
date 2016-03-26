@@ -41,7 +41,6 @@
         android:divider="#211d70"
         android:dividerHeight="2dp"
         android:focusable="true"
-        android:layout_alignParentTop="true"
             android:focusableInTouchMode="true"
             android:layout_below="@+id/search_message" />
 

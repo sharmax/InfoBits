@@ -40,6 +40,7 @@ public class DailyNews extends homepage{
     TextView msg, smsg;
     ProgressBar spinner;
     JSONObject internal;
+    DatePicker start, end;
     String urlString = "", message = "", search_message = "", error = "";
     ArrayList<Item> news = new ArrayList<Item>();
     public ArrayList<String> urls = new ArrayList<String>();
@@ -67,6 +68,19 @@ public class DailyNews extends homepage{
                 dialog.setContentView(R.layout.newssearch);
                 dialog.setTitle("Search News ...");
                 dialog.show();
+                start = ((DatePicker) dialog.findViewById(R.id.startDatePicker));
+                end = ((DatePicker) dialog.findViewById(R.id.endDatePicker));
+                Date today = new Date();
+                Date last = new Date(0);
+                try {
+                    last = df.parse("1800-01-01");
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                start.setMaxDate(today.getTime() + 19800000);
+                end.setMaxDate(today.getTime() + 19800000);
+                start.setMinDate(last.getTime());
+                start.setMinDate(last.getTime());
             }
         });
         refresh.setOnClickListener(new View.OnClickListener() {
@@ -110,10 +124,10 @@ public class DailyNews extends homepage{
         getNews("(JULIANDAY('" + df.format(today) + "') - JULIANDAY(date)) <= 7 ORDER BY date DESC");
         if(msg.getVisibility() == View.GONE) {
             MyAdapter adapter = new MyAdapter(this, news);
-            spinner.setVisibility(View.GONE);
             newscast.setVisibility(View.VISIBLE);
             newscast.setAdapter(adapter);
         }
+        spinner.setVisibility(View.GONE);
     }
 
     public void getNews(String sql){
@@ -174,51 +188,55 @@ public class DailyNews extends homepage{
     }
 
     public void getSearchNews(View view){
-        String start = getStringDate(((DatePicker) dialog.findViewById(R.id.startDatePicker)));
-        String end = getStringDate(((DatePicker) dialog.findViewById(R.id.endDatePicker)));
-        if(start.equals(end)){
-            Toast.makeText(DailyNews.this,"Dates can't be same!",Toast.LENGTH_LONG).show();
+        String s = getStringDate(start);
+        String e = getStringDate(end);
+        Boolean incorrect = false;
+        try {
+            incorrect = df.parse(s).after(df.parse(e));
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+        }
+        if(incorrect){
+            Toast.makeText(DailyNews.this,"Start Date can't be greater than End Date!",Toast.LENGTH_LONG).show();
         }
         else {
             String keyword = ((EditText) dialog.findViewById(R.id.keywords)).getText().toString() + " ";
             dialog.dismiss();
-            search.setVisibility(View.VISIBLE);
-            refresh.setVisibility(View.VISIBLE);
+            spinner.setVisibility(View.VISIBLE);
             newscast.setVisibility(View.GONE);
             smsg.setVisibility(View.GONE);
             msg.setVisibility(View.GONE);
-            spinner.setVisibility(View.VISIBLE);
             if (isConnected()) {
-                urlString = apiURL + actString + ".php?username=" + username + "&password=" + password + "&action=search&startDate=" + start + "&endDate=" + end + "&keyword=" + keyword;
+                urlString = apiURL + actString + ".php?username=" + username + "&password=" + password + "&action=search&startDate=" + s + "&endDate=" + e + "&keyword=" + keyword;
                 new APICall().execute(urlString);
             } else {
                 Toast.makeText(DailyNews.this, "Not Connected to BITS Intranet!", Toast.LENGTH_LONG).show();
             }
             String sql = "";
-            if(!keyword.equals("")){
-                int s = 0;
-                int e = keyword.indexOf(" ", s);
-                for(int i = 0; e >= 0; i++){
+            if(!keyword.equals("") && !keyword.equals(" ") && !keyword.isEmpty()){
+                int st = 0;
+                int en = keyword.indexOf(" ", st);
+                for(int i = 0; en >= 0; i++){
                     if(i > 0){
                         sql = sql + " OR ";
                     }
-                    sql = sql + "keywords LIKE '%" + keyword.substring(s, e) + "%'";
-                    s = e + 1;
-                    e = keyword.indexOf(" ", s);
+                    sql = sql + "keywords LIKE '%" + keyword.substring(st, en) + "%'";
+                    st = en + 1;
+                    en = keyword.indexOf(" ", st);
                 }
             }
-            if(!sql.isEmpty()){
+            if(!sql.equals("")){
                 sql =  " and (" + sql + ")";
             }
             news.clear();
             urls.clear();
-            getNews("(JULIANDAY(date) - JULIANDAY('" + start + "')) >= 0 and (JULIANDAY(date) - JULIANDAY('" + end + "')) <= 0" + sql + " ORDER BY date DESC");
-        }
-        if(msg.getVisibility() == View.GONE) {
-            MyAdapter adapter = new MyAdapter(this, news);
+            getNews("(JULIANDAY(date) - JULIANDAY('" + s + "')) >= 0 and (JULIANDAY(date) - JULIANDAY('" + e + "')) <= 0" + sql + " ORDER BY date DESC");
+            if(msg.getVisibility() == View.GONE) {
+                MyAdapter adapter = new MyAdapter(this, news);
+                newscast.setVisibility(View.VISIBLE);
+                newscast.setAdapter(adapter);
+            }
             spinner.setVisibility(View.GONE);
-            newscast.setVisibility(View.VISIBLE);
-            newscast.setAdapter(adapter);
         }
     }
 
