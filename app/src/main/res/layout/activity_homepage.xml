@@ -67,23 +67,29 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/imgbt_service2"
-                android:src="@drawable/librx"
+                android:src="@mipmap/libr"
                 android:onClick="onClickLibr"
                 android:padding="0dp"
                 android:clickable="true"
-                android:layout_margin="12dp"
-                android:layout_toRightOf="@+id/imgbt_service1" />
+                android:layout_toRightOf="@+id/imgbt_service1"
+                android:minWidth="96dp"
+                android:minHeight="96dp"
+                android:scaleType="fitCenter"
+                android:layout_margin="12dp" />
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/imgbt_service3"
-                android:src="@drawable/libsx"
+                android:src="@mipmap/libs"
                 android:onClick="onClickLibs"
                 android:padding="0dp"
                 android:clickable="true"
                 android:layout_margin="12dp"
-                android:layout_toRightOf="@+id/imgbt_service2" />
+                android:layout_toRightOf="@+id/imgbt_service2"
+                android:scaleType="fitCenter"
+                android:minWidth="96dp"
+                android:minHeight="96dp" />
 
             <ImageButton
                 android:layout_width="wrap_content"

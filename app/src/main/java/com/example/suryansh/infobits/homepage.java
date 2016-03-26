@@ -37,6 +37,7 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
         drawerlayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         setSupportActionBar(toolbar);
 
+
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         adapter = new Swipe_adapter(this);
         viewPager.setAdapter(adapter);
@@ -91,7 +92,6 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
         if (id == R.id.home_id) {
             // Handle the camera action
         } else if (id == R.id.os_id) {
@@ -127,7 +127,8 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
         //Methods to handle button clicks on homescreen
 
     public void onClickLibr(View view) {
-
+        Intent i = new Intent(homepage.this, LibRes.class);
+        startActivity(i);
     }
 
     public void onClickLibs(View view) {

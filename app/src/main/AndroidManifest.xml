@@ -23,6 +23,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".LibRes"
+            android:label="@string/libres"
+            android:logo="@mipmap/libr"
+            android:theme="@style/AppTheme.NoActionBar" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.suryansh.infobits.homepage" />
+        </activity>
+
         <activity
             android:name=".ConnectWithLibrary"
             android:icon="@drawable/cwlx"
