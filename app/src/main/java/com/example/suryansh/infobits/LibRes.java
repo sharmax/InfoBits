@@ -49,4 +49,12 @@ public class LibRes extends homepage{
     public void onClickQP(View view) {
 
     }
+
+    public void onClickIR(View view) {
+
+    }
+
+    public void onClickDOT(View view) {
+
+    }
 }
