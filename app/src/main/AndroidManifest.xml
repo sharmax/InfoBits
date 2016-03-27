@@ -11,12 +11,20 @@
         android:icon="@mipmap/infobits"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
+
+        <activity
+            android:name=".Cover"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
+        </activity>
+
         <activity
             android:name=".homepage"
-            android:label="@string/homepage"
+            android:label="@string/app_name"
             android:logo="@mipmap/infobits"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,7 +36,8 @@
             android:name=".LibRes"
             android:label="@string/libres"
             android:logo="@mipmap/libr"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.suryansh.infobits.homepage" />
@@ -36,10 +45,9 @@
 
         <activity
             android:name=".ConnectWithLibrary"
-            android:icon="@drawable/cwlx"
             android:label="@string/title_activity_communication_panel"
             android:parentActivityName=".homepage"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar" android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.suryansh.infobits.homepage" />
@@ -47,10 +55,9 @@
 
         <activity
             android:name=".DailyNews"
-            android:icon="@drawable/dnx"
             android:label="@string/title_activity_daily_news"
             android:parentActivityName=".homepage"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar" android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.suryansh.infobits.homepage" />
@@ -58,40 +65,36 @@
 
         <activity
             android:name=".CommForms"
-            android:icon="@drawable/cwlx"
             android:label="CommForm"
             android:parentActivityName=".ConnectWithLibrary"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar" android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.suryansh.infobits.homepage" />
         </activity>
         <activity
             android:name=".login"
-            android:icon="@mipmap/logo"
             android:label="@string/Login"
             android:parentActivityName=".homepage"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar" android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.suryansh.infobits.homepage" />
         </activity>
         <activity
             android:name=".user_settings"
-            android:icon="@mipmap/logo"
             android:label="@string/title_activity_user_settings"
             android:parentActivityName=".homepage"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar" android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.suryansh.infobits.homepage" />
         </activity>
         <activity
             android:name=".signup"
-            android:icon="@mipmap/logo"
             android:label="@string/Signup"
             android:parentActivityName=".homepage"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar" android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.suryansh.infobits.homepage" />

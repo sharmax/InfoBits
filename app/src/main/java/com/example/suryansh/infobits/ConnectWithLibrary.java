@@ -48,7 +48,7 @@ public class ConnectWithLibrary extends homepage {
     TextView msg;
     String id, status;
     JSONObject internal = new JSONObject();
-    public final static String[] cats = {"breco","ill","ao","grieve","breview","feedback"}, catnames = {"Book Recommendation","Lost Documents","Inaccessible Database","Service Issues","Book Review","Feedback"};
+    public final static String[] cats = {"breco","ill","ao","grieve","breview","feedback"}, catnames = {"Book Recommendation","Documents Not Found","Inaccessible Database","Service Issues","Book Review","Feedback"};
     public ArrayList<HashMap<String,String>> talks = new ArrayList<HashMap<String,String>>();
     String urlString = "", message = "", error = "", category = cats[0];
     ProgressBar spinner;
@@ -59,13 +59,15 @@ public class ConnectWithLibrary extends homepage {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle b = getIntent().getExtras();
-        try{
-            catint = b.getInt("cat");
-            category = cats[catint-1];
-        }catch(NullPointerException e){
-            e.printStackTrace();
-        }
+//        Bundle b = getIntent().getExtras();
+//        if(b != null && b.containsKey("cat")) {
+//            try {
+//                catint = b.getInt("cat");
+//                category = cats[catint - 1];
+//            } catch (NullPointerException e) {
+//                e.printStackTrace();
+//            }
+//        }
         setContentView(R.layout.activity_communication_panel);
         spinner = (ProgressBar) findViewById(R.id.progressBar1);
         convlist = (ListView) findViewById(R.id.convList);
@@ -139,6 +141,10 @@ public class ConnectWithLibrary extends homepage {
                     Toast.makeText(ConnectWithLibrary.this,e.getMessage(),Toast.LENGTH_LONG).show();
                 }
                 if (isConnected()) {
+                    findViewById(R.id.convList).setVisibility(View.GONE);
+                    findViewById(R.id.convMenu).setVisibility(View.GONE);
+                    findViewById(R.id.replyLayout).setVisibility(View.GONE);
+                    spinner.setVisibility(View.VISIBLE);
                     new APICall().execute(urlString);
                 }
                 else{
@@ -152,11 +158,14 @@ public class ConnectWithLibrary extends homepage {
             public void onClick(View view) {
                 urlString = apiURL + actString + ".php?username=" + username + "&password=" + password + "&action=delete&id=" + id + "&cat=" + catint;
                 if (isConnected()) {
+                    findViewById(R.id.convList).setVisibility(View.GONE);
+                    findViewById(R.id.convMenu).setVisibility(View.GONE);
+                    findViewById(R.id.replyLayout).setVisibility(View.GONE);
+                    spinner.setVisibility(View.VISIBLE);
                     new APICall().execute(urlString);
                 }
                 else{
                     Toast.makeText(ConnectWithLibrary.this,"Not Connected to BITS Intranet!",Toast.LENGTH_LONG).show();
-                    printComms();
                 }
             }
         });
@@ -189,8 +198,11 @@ public class ConnectWithLibrary extends homepage {
         }
         else if(update){
             Toast.makeText(ConnectWithLibrary.this,"Not Connected to BITS Intranet!",Toast.LENGTH_LONG).show();
+            printComms();
         }
-        printComms();
+        else{
+            printComms();
+        }
     }
 
     public void setConv(){
@@ -355,6 +367,9 @@ public class ConnectWithLibrary extends homepage {
                     message = "";
                 }
                 else{
+                    findViewById(R.id.convList).setVisibility(View.VISIBLE);
+                    findViewById(R.id.convMenu).setVisibility(View.VISIBLE);
+                    findViewById(R.id.replyLayout).setVisibility(View.VISIBLE);
                     error = "";
                 }
             }
@@ -365,11 +380,14 @@ public class ConnectWithLibrary extends homepage {
                 if(error.isEmpty()){
                     Toast.makeText(ConnectWithLibrary.this,message,Toast.LENGTH_LONG).show();
                     message = "";
+                    getConv(data.get("talk").toString(),data.get("admins").toString());
                 }
                 else{
+                    findViewById(R.id.convList).setVisibility(View.VISIBLE);
+                    findViewById(R.id.convMenu).setVisibility(View.VISIBLE);
+                    findViewById(R.id.replyLayout).setVisibility(View.VISIBLE);
                     error = "";
                 }
-                getConv(data.get("talk").toString(),data.get("admins").toString());
             }
             else if(action.equals("new")){
                 if(error.isEmpty()){
@@ -414,6 +432,7 @@ public class ConnectWithLibrary extends homepage {
 
         @Override
         protected void onPostExecute(String result) {
+            spinner.setVisibility(View.GONE);
             if(!result.isEmpty()) {
                 try {
                     JSONObject json = new JSONObject(result);
@@ -424,11 +443,15 @@ public class ConnectWithLibrary extends homepage {
                 }
             }else{
                 if(!err.isEmpty()){
-                    spinner.setVisibility(View.GONE);
                     Toast.makeText(ConnectWithLibrary.this,err,Toast.LENGTH_LONG).show();
-                    if(urlString.contains("action=update")) {
-                        printComms();
-                    }
+                }
+                if(urlString.contains("action=update")) {
+                    printComms();
+                }
+                else{
+                    findViewById(R.id.convList).setVisibility(View.VISIBLE);
+                    findViewById(R.id.convMenu).setVisibility(View.VISIBLE);
+                    findViewById(R.id.replyLayout).setVisibility(View.VISIBLE);
                 }
             }
         }
@@ -489,15 +512,11 @@ public class ConnectWithLibrary extends homepage {
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        if(!item.isChecked())
-            item.setChecked(true);
-        else
-            return false;
-        if(item.toString().equals("Refresh Data")){
-            item.setChecked(false);
-            navigationView.setCheckedItem(cat);
-        }
-        else {
+        if(!item.toString().equals("Refresh Data")) {
+            if(!item.isChecked())
+                item.setChecked(true);
+            else
+                return false;
             cat = item.getItemId();
             catint = Arrays.asList(catnames).indexOf(item.toString()) + 1;
             start = 0;
@@ -530,9 +549,13 @@ public class ConnectWithLibrary extends homepage {
         if (this.drawerlayout.isDrawerOpen(GravityCompat.START)) {
             this.drawerlayout.closeDrawer(GravityCompat.START);
         }
+        else if(findViewById(R.id.replyLayout) != null && findViewById(R.id.replyLayout).getVisibility() == View.VISIBLE){
+            findViewById(R.id.replyLayout).setVisibility(View.GONE);
+        }
         else if(!id.equals("")){
             setComm(false);
-        } else{
+        }
+        else{
             super.onBackPressed();
         }
     }

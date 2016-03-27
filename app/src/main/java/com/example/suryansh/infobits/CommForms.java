@@ -12,8 +12,10 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +41,7 @@ public class CommForms extends ConnectWithLibrary {
     int[] headers = {R.id.header1, R.id.header2, R.id.header3, R.id.header4, R.id.header5};
     int cat;
     int reconum = 0;
+    ProgressBar progress;
     String urlString  = apiURL + "newConv.php?username=" + username + "&password=" + password;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +49,8 @@ public class CommForms extends ConnectWithLibrary {
         Bundle b = getIntent().getExtras();
         cat = b.getInt("cat");
         setContentView(Forms[cat - 1]);
-        setTitle(catnames[cat-1]);
+        setTitle(catnames[cat - 1]);
+        progress = (ProgressBar) findViewById(R.id.progressBar);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if(cat == 2){
@@ -96,7 +100,7 @@ public class CommForms extends ConnectWithLibrary {
             Date today = new Date();
             Date last = new Date(0);
             try {
-                last = df.parse("1800-01-01");
+                last = df.parse("1900-01-01");
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -110,10 +114,8 @@ public class CommForms extends ConnectWithLibrary {
                 public void onClick(View view) {
                     if (reconum < 4) {
                         reconum++;
-                        findViewById(R.id.delete).setClickable(true);
                         adjustreco();
                     } else {
-                        findViewById(R.id.add).setClickable(false);
                         Toast.makeText(CommForms.this, "Maximum 5 recommendations can be given.", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -124,13 +126,11 @@ public class CommForms extends ConnectWithLibrary {
                 public void onClick(View view) {
                     if (reconum > 0) {
                         reconum--;
-                        findViewById(R.id.add).setClickable(true);
                         adjustreco();
                         if (reconum == 0) {
                             findViewById(brecos[0]).setVisibility(View.VISIBLE);
                         }
                     } else {
-                        findViewById(R.id.delete).setClickable(false);
                         Toast.makeText(CommForms.this, "Minimum 1 recommendation is required.", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -381,6 +381,11 @@ public class CommForms extends ConnectWithLibrary {
                 break;
         }
         if(isConnected()){
+            if(cat == 1){
+                findViewById(R.id.commMenu).setVisibility(View.GONE);
+            }
+            findViewById(R.id.CommForm).setVisibility(View.GONE);
+            progress.setVisibility(View.VISIBLE);
             if(!url.isEmpty()) {
                 new APICall().execute(url);
             }
@@ -429,6 +434,11 @@ public class CommForms extends ConnectWithLibrary {
                 setResult(Activity.RESULT_OK, resultIntent);
                 finish();
             }else{
+                if(cat == 1){
+                    findViewById(R.id.commMenu).setVisibility(View.VISIBLE);
+                }
+                findViewById(R.id.CommForm).setVisibility(View.VISIBLE);
+                progress.setVisibility(View.GONE);
                 if(!err.isEmpty()){
                     Toast.makeText(CommForms.this,err,Toast.LENGTH_LONG).show();
                 }

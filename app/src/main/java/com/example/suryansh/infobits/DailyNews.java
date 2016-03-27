@@ -41,12 +41,12 @@ public class DailyNews extends homepage{
     ProgressBar spinner;
     JSONObject internal;
     DatePicker start, end;
-    String urlString = "", message = "", search_message = "", error = "";
+    String urlString = "", message = "", search_message = "", error = "", s = "", e = "", keyword = "", action = "update";
     ArrayList<Item> news = new ArrayList<Item>();
     public ArrayList<String> urls = new ArrayList<String>();
     public final static String actString = "daily_news";
     Dialog dialog;
-    FloatingActionButton search, refresh, close;
+    FloatingActionButton search, refresh;
     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
     @Override
@@ -73,7 +73,7 @@ public class DailyNews extends homepage{
                 Date today = new Date();
                 Date last = new Date(0);
                 try {
-                    last = df.parse("1800-01-01");
+                    last = df.parse("1900-01-01");
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -107,17 +107,22 @@ public class DailyNews extends homepage{
     }
 
     public void setNews(boolean update){
+        action = "update";
         newscast.setVisibility(View.GONE);
         spinner.setVisibility(View.VISIBLE);
         smsg.setVisibility(View.GONE);
-        msg.setVisibility(View.GONE);
+        //msg.setVisibility(View.GONE);
         if(update && isConnected()) {
             urlString = apiURL + actString + ".php?username=" + username + "&password=" + password + "&action=update";
             new APICall().execute(urlString);
         }
         else if(update){
             Toast.makeText(DailyNews.this,"Not Connected to BITS Intranet!",Toast.LENGTH_LONG).show();
+            showNews();
         }
+    }
+
+    public void showNews(){
         Date today = new Date();
         news.clear();
         urls.clear();
@@ -134,7 +139,8 @@ public class DailyNews extends homepage{
         internal = dbhandler.selectData(1,sql);
         Iterator iter = internal.keys();
         String pH = "";
-        int i = 0;
+        msg.setVisibility(View.GONE);
+        int i = 0, j = 0;
         while(iter.hasNext()){
             String key = iter.next().toString();
             try {
@@ -149,6 +155,7 @@ public class DailyNews extends homepage{
                         pH = nDS;
                         urls.add(i, "header");
                         i++;
+                        j++;
                     }
                     news.add(i, new EntryItem(dataval.get("title").toString(), dataval.get("newspaper").toString() + ", pg. " + dataval.get("pages").toString()));
                     urls.add(i, dataval.get("url").toString());
@@ -160,36 +167,45 @@ public class DailyNews extends homepage{
             }
             i++;
         }
-        if(i == 0 && !message.isEmpty()){
+        if(action.equals("search")) {
+            if (!search_message.equals("") && !search_message.isEmpty()) {
+                smsg.setText(search_message);
+                search_message = "";
+            } else {
+                search_message = (i - j) + " headline(s) found from" + " '" + s + "' to '" + e + "' for keywords ' " + keyword + " '";
+            }
+        }
+        if (i == 0 && !message.isEmpty()) {
             msg.setText(message);
             msg.setVisibility(View.VISIBLE);
             message = "";
-        }
-        else if(i == 0){
-            msg.setText("No Headlines Found");
+        } else if (i == 0) {
+            msg.setText(R.string.no_news);
             msg.setVisibility(View.VISIBLE);
-        }
-        if(!search_message.isEmpty()){
-            smsg.setText(search_message);
-            smsg.setVisibility(View.VISIBLE);
-            search_message = "";
         }
     }
 
     public String getStringDate(DatePicker date){
-        String s;
+        String sdate;
         if(date.getMonth() + 1 > 9){
-            s = String.valueOf(date.getYear()) + "-" + String.valueOf(date.getMonth() + 1) + "-" + String.valueOf(date.getDayOfMonth());
+           sdate  = String.valueOf(date.getYear()) + "-" + String.valueOf(date.getMonth() + 1);
         }
         else{
-            s = String.valueOf(date.getYear()) + "-" + "0" + String.valueOf(date.getMonth() + 1) + "-" + String.valueOf(date.getDayOfMonth());
+            sdate = String.valueOf(date.getYear()) + "-" + "0" + String.valueOf(date.getMonth() + 1);
         }
-        return s;
+        if(date.getDayOfMonth() > 9){
+            sdate = sdate + "-" + String.valueOf(date.getDayOfMonth());
+        }
+        else{
+            sdate = sdate + "-" + "0" + String.valueOf(date.getDayOfMonth());
+        }
+        return sdate;
     }
 
     public void getSearchNews(View view){
-        String s = getStringDate(start);
-        String e = getStringDate(end);
+        s = getStringDate(start);
+        e = getStringDate(end);
+        action = "search";
         Boolean incorrect = false;
         try {
             incorrect = df.parse(s).after(df.parse(e));
@@ -200,7 +216,7 @@ public class DailyNews extends homepage{
             Toast.makeText(DailyNews.this,"Start Date can't be greater than End Date!",Toast.LENGTH_LONG).show();
         }
         else {
-            String keyword = ((EditText) dialog.findViewById(R.id.keywords)).getText().toString() + " ";
+            keyword = ((EditText) dialog.findViewById(R.id.keywords)).getText().toString() + " ";
             dialog.dismiss();
             spinner.setVisibility(View.VISIBLE);
             newscast.setVisibility(View.GONE);
@@ -211,33 +227,39 @@ public class DailyNews extends homepage{
                 new APICall().execute(urlString);
             } else {
                 Toast.makeText(DailyNews.this, "Not Connected to BITS Intranet!", Toast.LENGTH_LONG).show();
+                showSearchNews();
             }
-            String sql = "";
-            if(!keyword.equals("") && !keyword.equals(" ") && !keyword.isEmpty()){
-                int st = 0;
-                int en = keyword.indexOf(" ", st);
-                for(int i = 0; en >= 0; i++){
-                    if(i > 0){
-                        sql = sql + " OR ";
-                    }
-                    sql = sql + "keywords LIKE '%" + keyword.substring(st, en) + "%'";
-                    st = en + 1;
-                    en = keyword.indexOf(" ", st);
-                }
-            }
-            if(!sql.equals("")){
-                sql =  " and (" + sql + ")";
-            }
-            news.clear();
-            urls.clear();
-            getNews("(JULIANDAY(date) - JULIANDAY('" + s + "')) >= 0 and (JULIANDAY(date) - JULIANDAY('" + e + "')) <= 0" + sql + " ORDER BY date DESC");
-            if(msg.getVisibility() == View.GONE) {
-                MyAdapter adapter = new MyAdapter(this, news);
-                newscast.setVisibility(View.VISIBLE);
-                newscast.setAdapter(adapter);
-            }
-            spinner.setVisibility(View.GONE);
         }
+    }
+
+    public void showSearchNews(){
+        String sql = "";
+        if(!keyword.equals("") && !keyword.equals(" ") && !keyword.isEmpty()){
+            int st = 0;
+            int en = keyword.indexOf(" ", st);
+            for(int i = 0; en >= 0; i++){
+                if(i > 0){
+                    sql = sql + " OR ";
+                }
+                sql = sql + "keywords LIKE '%" + keyword.substring(st, en) + "%'";
+                st = en + 1;
+                en = keyword.indexOf(" ", st);
+            }
+        }
+        if(!sql.equals("") && !sql.isEmpty()){
+            sql =  " and (" + sql + ")";
+        }
+        news.clear();
+        urls.clear();
+        getNews("(JULIANDAY(date) - JULIANDAY('" + s + "')) >= 0 and (JULIANDAY(date) - JULIANDAY('" + e + "')) <= 0" + sql + " ORDER BY date DESC");
+        if(msg.getVisibility() == View.GONE) {
+            MyAdapter adapter = new MyAdapter(this, news);
+            newscast.setVisibility(View.VISIBLE);
+            newscast.setAdapter(adapter);
+        }
+        smsg.setVisibility(View.VISIBLE);
+        spinner.setVisibility(View.GONE);
+        search_message = "";
     }
 
     public boolean isConnected(){
@@ -276,6 +298,12 @@ public class DailyNews extends homepage{
         } catch (JSONException e) {
             Toast.makeText(DailyNews.this,e.toString(),Toast.LENGTH_LONG).show();
         }
+        if(action.equals("search")){
+            showSearchNews();
+        }
+        else{
+            showNews();
+        }
     }
 
     private class APICall extends AsyncTask<String,Integer,String> {
@@ -312,6 +340,12 @@ public class DailyNews extends homepage{
                 if(!err.isEmpty()){
                     spinner.setVisibility(View.GONE);
                     Toast.makeText(DailyNews.this,err,Toast.LENGTH_LONG).show();
+                }
+                if(action.equals("search")){
+                    showSearchNews();
+                }
+                else{
+                    showNews();
                 }
             }
         }
