@@ -13,7 +13,7 @@
 
         <android.support.v7.widget.Toolbar android:id="@+id/toolbar"
             android:layout_height="?attr/actionBarSize" android:layout_width="match_parent"
-            app:layout_collapseMode="pin" app:logo="@mipmap/logo"
+            app:layout_collapseMode="pin" app:logo="@mipmap/cwl"
             android:title="I Just Read This Book!"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             android:indeterminate="false" android:textColor="#fff" />
@@ -26,7 +26,8 @@
         android:layout_centerHorizontal="true"
         android:background="#ddd"
         android:layout_below="@+id/app_bar"
-        android:layout_margin="10dp">
+        android:layout_margin="10dp"
+        android:id="@+id/CommForm">
 
         <TextView
             android:layout_width="wrap_content"
@@ -110,22 +111,6 @@
             android:layout_alignStart="@+id/authorText"
             android:layout_marginTop="20dp" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/newConv"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="false"
-            android:layout_alignWithParentIfMissing="false"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="20dp"
-            android:clickable="true"
-            android:text="Send"
-            android:background="@color/colorPrimary"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="25sp"
-            android:onClick="newConv" />
-
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="150dp"
@@ -145,9 +130,31 @@
             android:padding="5dp"
             android:gravity="top"
             android:textAlignment="gravity"
-            android:maxLength="100"
-            android:hint="Maximum 100 words" />
+            android:maxLength="300"
+            android:hint="Maximum 50 words" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/newConv"
+            app:layout_anchorGravity="bottom|end" android:src="@android:drawable/ic_menu_send"
+            android:layout_alignWithParentIfMissing="false"
+            android:clickable="true"
+            android:onClick="newConv"
+            app:backgroundTint="@color/colorPrimaryDark"
+            android:layout_below="@+id/review"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/fab_margin" />
 
     </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone" />
 
 </RelativeLayout>

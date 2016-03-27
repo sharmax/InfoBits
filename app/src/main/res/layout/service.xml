@@ -13,7 +13,7 @@
 
         <android.support.v7.widget.Toolbar android:id="@+id/toolbar"
             android:layout_height="?attr/actionBarSize" android:layout_width="match_parent"
-            app:layout_collapseMode="pin" app:logo="@mipmap/logo"
+            app:layout_collapseMode="pin" app:logo="@mipmap/cwl"
             android:title="I Just Read This Book!"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             android:indeterminate="false" android:textColor="#fff" />
@@ -27,7 +27,7 @@
         android:background="#ddd"
         android:layout_below="@+id/app_bar"
         android:layout_margin="10dp"
-        android:id="@+id/relativeLayout">
+        android:id="@+id/CommForm">
 
         <TextView
             android:layout_width="wrap_content"
@@ -42,18 +42,17 @@
             android:textSize="28sp"
             android:textColor="@color/colorPrimaryDark" />
 
-        <Button
+        <android.support.design.widget.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/newConv"
+            app:layout_anchorGravity="bottom|end" android:src="@android:drawable/ic_menu_send"
             android:clickable="true"
-            android:text="Send"
-            android:background="@color/colorPrimary"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="25sp"
             android:onClick="newConv"
+            app:backgroundTint="@color/colorPrimaryDark"
             android:layout_centerHorizontal="true"
-            android:layout_below="@+id/grievance" />
+            android:layout_below="@+id/grievance"
+            android:layout_margin="@dimen/fab_margin" />
 
         <RadioGroup
             android:layout_width="match_parent"
@@ -141,7 +140,7 @@
 
         <EditText
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="100dp"
             android:ems="10"
             android:id="@+id/grievance"
             android:textSize="20sp"
@@ -151,12 +150,23 @@
             android:padding="5dp"
             android:textAlignment="gravity"
             android:layout_below="@+id/services"
-            android:layout_margin="20dp"
             android:gravity="top"
             android:inputType="textMultiLine"
-            android:maxLength="100"
-            android:hint="Maximum 100 words" />
+            android:maxLength="150"
+            android:hint="Maximum 25 words"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp" />
     </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone" />
 
 
 </RelativeLayout>
