@@ -100,7 +100,7 @@ public class CommForms extends ConnectWithLibrary {
             Date today = new Date();
             Date last = new Date(0);
             try {
-                last = df.parse("1800-01-01");
+                last = df.parse("1900-01-01");
             } catch (ParseException e) {
                 e.printStackTrace();
             }
