@@ -33,7 +33,7 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
-
+        
         toolbar = (Toolbar)findViewById(R.id.nav_toolbar);
         drawerlayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         setSupportActionBar(toolbar);

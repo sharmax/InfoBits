@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.View;
@@ -15,28 +16,46 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
+import android.widget.Toast;
+import android.app.ProgressDialog;
+import java.util.Map;
+import java.util.HashMap;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.example.suryansh.infobits.Responses.UserSettingsResponse;
+import com.example.suryansh.infobits.network.VolleySingleton;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.VolleyError;
 
-
+import android.graphics.Bitmap;
+import java.io.ByteArrayOutputStream;
+import android.util.Base64;
+import java.util.Hashtable;
+import com.android.volley.AuthFailureError;
+import android.graphics.drawable.BitmapDrawable;
 /**
  * Created by SowmyaY on 24/02/16.
  */
 public class user_settings extends homepage implements View.OnClickListener {
     private static final int RESULT_LOAD_IMAGE =1;
-
     EditText mobile;
-    LinearLayout oldPassword;
-    LinearLayout newPassword;
-    LinearLayout confirmPassword;
+    TextInputLayout oldPassword;
+    TextInputLayout newPassword;
+    TextInputLayout confirmPassword;
     Button uploadBtn;
     Button updateMobile;
     Button updatePassword;
     TextView changePassword;
     ImageButton imageButton;
     ImageView image;
+    LinearLayout nameLayout;
+    LinearLayout emailLayout;
+    LinearLayout mobileLayout;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -56,13 +75,17 @@ public class user_settings extends homepage implements View.OnClickListener {
         image = (ImageView) findViewById(R.id.profile);
         mobile = (EditText) findViewById(R.id.mobileText);
         changePassword = (TextView) findViewById(R.id.changePassword);
-        oldPassword = (LinearLayout) findViewById(R.id.oldPassLayout);
-        newPassword = (LinearLayout) findViewById(R.id.newPassLayout);
-        confirmPassword = (LinearLayout) findViewById(R.id.confirmPassLayout);
+        oldPassword = (TextInputLayout) findViewById(R.id.oldPassLayout);
+        newPassword = (TextInputLayout) findViewById(R.id.newPassLayout);
+        confirmPassword = (TextInputLayout) findViewById(R.id.confirmPassLayout);
         uploadBtn = (Button) findViewById(R.id.upload);
         updateMobile = (Button) findViewById(R.id.update1);
         updatePassword = (Button) findViewById(R.id.update2);
         imageButton = (ImageButton) findViewById(R.id.imageButton);
+        nameLayout = (LinearLayout) findViewById(R.id.NameLayout);
+        emailLayout = (LinearLayout)findViewById(R.id.EmailLayout);
+        mobileLayout = (LinearLayout) findViewById(R.id.MobileLayout);
+
         uploadBtn.setOnClickListener(this);
         updateMobile.setOnClickListener(this);
         updatePassword.setOnClickListener(this);
@@ -73,6 +96,10 @@ public class user_settings extends homepage implements View.OnClickListener {
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+
+
+
     }
 
     @Override
@@ -82,33 +109,9 @@ public class user_settings extends homepage implements View.OnClickListener {
 
             case R.id.fab:
                 if (uploadBtn.getVisibility() == Button.VISIBLE) {
-                    imageButton.setVisibility(Button.INVISIBLE);
-                    uploadBtn.setVisibility(Button.INVISIBLE);
-                    updateMobile.setVisibility(Button.INVISIBLE);
-                    updatePassword.setVisibility(Button.INVISIBLE);
-                    oldPassword.setVisibility(LinearLayout.INVISIBLE);
-                    newPassword.setVisibility(LinearLayout.INVISIBLE);
-                    confirmPassword.setVisibility(LinearLayout.INVISIBLE);
-                    changePassword.setVisibility(TextView.INVISIBLE);
-
-                    mobile.setEnabled(false);
-                    mobile.setInputType(InputType.TYPE_NULL);
-                    mobile.setFocusableInTouchMode(false);
-                    mobile.clearFocus();
+                   showHideEdits(true);
                 } else {
-                    imageButton.setVisibility(Button.VISIBLE);
-                    uploadBtn.setVisibility(Button.VISIBLE);
-                    updateMobile.setVisibility(Button.VISIBLE);
-                    updatePassword.setVisibility(Button.VISIBLE);
-                    oldPassword.setVisibility(LinearLayout.VISIBLE);
-                    newPassword.setVisibility(LinearLayout.VISIBLE);
-                    confirmPassword.setVisibility(LinearLayout.VISIBLE);
-                    changePassword.setVisibility(TextView.VISIBLE);
-
-                    mobile.setEnabled(true);
-                    mobile.setInputType(InputType.TYPE_CLASS_NUMBER);
-                    mobile.setFocusableInTouchMode(true);
-                    mobile.requestFocus();
+                    showHideEdits(false);
                 }
 
                 break;
@@ -116,22 +119,26 @@ public class user_settings extends homepage implements View.OnClickListener {
             case R.id.update1:
                 Snackbar.make(v, "Mobile number update Server call", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                serverCalls("Update Mobile");
                 break;
 
             case R.id.update2:
                 Snackbar.make(v, "Password update Server call", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                boolean validity = checkPasswordValidity(newPassword.getEditText().getText().toString(), confirmPassword.getEditText().getText().toString());
+                if (validity){
+                    serverCalls("Change Password");
+                }
                 break;
 
             case R.id.upload:
                 Snackbar.make(v, "Upload Image Server call", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+
+                    uploadImage();
                 break;
             case R.id.imageButton:
-                Snackbar.make(v, "Open Gallery to choose", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(galleryIntent,RESULT_LOAD_IMAGE );
+                    showFileChooser();
                 break;
             default:
                 break;
@@ -188,5 +195,203 @@ public class user_settings extends homepage implements View.OnClickListener {
         client.disconnect();
     }
 
-}
+    public void serverCalls(String type){
+
+        final ProgressDialog mDialog = new ProgressDialog(getApplicationContext());
+        mDialog.setMessage("Please wait...");
+        mDialog.setCancelable(false);
+        mDialog.show();
+
+        // Instantiate the RequestQueue.
+        RequestQueue queue = VolleySingleton.getInstance().getRequestQueue();
+        switch (type){
+            case "User Settings":{
+              String url = apiURL + "get?username="+username +"?password="+ password;
+                // Request a string response from the provided URL.
+
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                // Display the first 500 characters of the response string.
+                                mDialog.dismiss();
+                                image.setVisibility(ImageView.VISIBLE);
+                                nameLayout.setVisibility(LinearLayout.VISIBLE);
+                                mobileLayout.setVisibility(LinearLayout.VISIBLE);
+                                emailLayout.setVisibility(LinearLayout.VISIBLE);
+                                updateUserDetails(response);
+                               // Toast.makeText(getApplicationContext(), "Response is: "+ response, Toast.LENGTH_LONG).show();
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), "ERROR: "+ error.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+
+                // Add the request to the RequestQueue.
+                queue.add(stringRequest);
+                break;
+            }
+
+            case "Change Password":{
+                String url = apiURL + "get?username="+username +"?password="+ newPassword.getEditText().getText().toString() +"?type=0";
+                // Request a string response from the provided URL.
+
+                updateCall(url, mDialog, queue);
+                break;
+
+            }
+            case "Update Mobile":{
+                String url = apiURL + "get?username="+username +"?mobile="+ mobile.getText().toString() +"?type=1";
+                // Request a string response from the provided URL.
+
+                updateCall(url, mDialog, queue);
+                break;
+            }
+            default:
+                break;
+        }
+
+
+    }
+
+    private void updateUserDetails(String json){
+        UserSettingsResponse userResponse = new UserSettingsResponse(json);
+        userResponse.parseJSON();
+        TextView userName = (TextView) findViewById(R.id.textView2);
+        userName.setText(userResponse.name);
+        TextView emailID = (TextView) findViewById(R.id.textView4);
+        emailID.setText(userResponse.email);
+        TextView mobileNo = (TextView) findViewById(R.id.textView6);
+        mobileNo.setText(userResponse.mobile);
+    }
+
+    private boolean checkPasswordValidity(String password, String confirmPassword){
+        if (password == confirmPassword){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    private void showHideEdits(Boolean hide) {
+        if (hide) {
+            imageButton.setVisibility(Button.INVISIBLE);
+            uploadBtn.setVisibility(Button.INVISIBLE);
+            updateMobile.setVisibility(Button.INVISIBLE);
+            updatePassword.setVisibility(Button.INVISIBLE);
+            oldPassword.setVisibility(TextInputLayout.INVISIBLE);
+            newPassword.setVisibility(TextInputLayout.INVISIBLE);
+            confirmPassword.setVisibility(TextInputLayout.INVISIBLE);
+            changePassword.setVisibility(TextView.INVISIBLE);
+
+            mobile.setEnabled(false);
+            mobile.setInputType(InputType.TYPE_NULL);
+            mobile.setFocusableInTouchMode(false);
+            mobile.clearFocus();
+        } else {
+            imageButton.setVisibility(Button.VISIBLE);
+            uploadBtn.setVisibility(Button.VISIBLE);
+            updateMobile.setVisibility(Button.VISIBLE);
+            updatePassword.setVisibility(Button.VISIBLE);
+            oldPassword.setVisibility(TextInputLayout.VISIBLE);
+            newPassword.setVisibility(TextInputLayout.VISIBLE);
+            confirmPassword.setVisibility(TextInputLayout.VISIBLE);
+            changePassword.setVisibility(TextView.VISIBLE);
+
+            mobile.setEnabled(true);
+            mobile.setInputType(InputType.TYPE_CLASS_NUMBER);
+            mobile.setFocusableInTouchMode(true);
+            mobile.requestFocus();
+        }
+    }
+
+        private void updateCall(String url, final ProgressDialog mDialog, RequestQueue queue){
+
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            // Display the first 500 characters of the response string.
+                            mDialog.dismiss();
+                            showHideEdits(true);
+                            Toast.makeText(getApplicationContext(), "Response is: "+ response, Toast.LENGTH_LONG).show();
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(getApplicationContext(), "ERROR: "+ error.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+
+            // Add the request to the RequestQueue.
+            queue.add(stringRequest);
+        }
+
+
+    public String getStringImage(Bitmap bmp){
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] imageBytes = baos.toByteArray();
+        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+        return encodedImage;
+    }
+
+    private void uploadImage(){
+        //Showing the progress dialog
+        final ProgressDialog loading = ProgressDialog.show(this,"Uploading...","Please wait...",false,false);
+
+        String url = apiURL + "get?username="+username +"?type=2";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String s) {
+                        //Disimissing the progress dialog
+                        loading.dismiss();
+                        //Showing toast message of the response
+                        Toast.makeText(getApplicationContext(), s , Toast.LENGTH_LONG).show();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        //Dismissing the progress dialog
+                        loading.dismiss();
+
+                        //Showing toast
+                        Toast.makeText(getApplicationContext(), volleyError.getMessage().toString(), Toast.LENGTH_LONG).show();
+                    }
+                }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                //Converting Bitmap to String
+                String imageString = getStringImage( ((BitmapDrawable)image.getDrawable()).getBitmap());
+
+                //Creating parameters
+                Map<String,String> params = new Hashtable<String, String>();
+
+                //Adding parameters
+                params.put("image", imageString);
+                params.put("username", username);
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Creating a Request Queue
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    private void showFileChooser() {
+
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(Intent.createChooser(galleryIntent, "Select Picture"), RESULT_LOAD_IMAGE);
+    }
+    }
+
 
