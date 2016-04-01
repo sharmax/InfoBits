@@ -14,7 +14,7 @@
 
         <android.support.v7.widget.Toolbar android:id="@+id/toolbar"
             android:layout_height="?attr/actionBarSize" android:layout_width="match_parent"
-            app:layout_collapseMode="pin" app:logo="@mipmap/logo"
+            app:layout_collapseMode="pin" app:logo="@mipmap/cwl"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             android:indeterminate="false" android:textColor="#fff" />
     </android.support.design.widget.AppBarLayout>
@@ -27,7 +27,7 @@
         android:background="#ddd"
         android:layout_below="@+id/app_bar"
         android:layout_margin="10dp"
-        android:id="@+id/dlostForm">
+        android:id="@+id/CommForm">
 
         <TextView
             android:layout_width="wrap_content"
@@ -42,18 +42,17 @@
             android:textSize="28sp"
             android:textColor="@color/colorPrimaryDark" />
 
-        <Button
+        <android.support.design.widget.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/newConv"
+            app:layout_anchorGravity="bottom|end" android:src="@android:drawable/ic_menu_send"
+            android:layout_alignWithParentIfMissing="false"
             android:clickable="true"
-            android:text="Send"
-            android:background="@color/colorPrimary"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="25sp"
             android:onClick="newConv"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/dlostlayout" />
+            app:backgroundTint="@color/colorPrimaryDark"
+            android:layout_below="@+id/dlostlayout"
+            android:layout_centerHorizontal="true" />
 
         <RadioGroup
             android:layout_width="match_parent"
@@ -264,5 +263,14 @@
             android:textSize="12sp" />
 
     </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone" />
 
 </RelativeLayout>

@@ -12,8 +12,10 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,7 +29,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.DateFormatSymbols;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class CommForms extends ConnectWithLibrary {
 
@@ -36,6 +41,7 @@ public class CommForms extends ConnectWithLibrary {
     int[] headers = {R.id.header1, R.id.header2, R.id.header3, R.id.header4, R.id.header5};
     int cat;
     int reconum = 0;
+    ProgressBar progress;
     String urlString  = apiURL + "newConv.php?username=" + username + "&password=" + password;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +49,8 @@ public class CommForms extends ConnectWithLibrary {
         Bundle b = getIntent().getExtras();
         cat = b.getInt("cat");
         setContentView(Forms[cat - 1]);
-        setTitle(catnames[cat-1]);
+        setTitle(catnames[cat - 1]);
+        progress = (ProgressBar) findViewById(R.id.progressBar);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if(cat == 2){
@@ -80,7 +87,6 @@ public class CommForms extends ConnectWithLibrary {
                             Object dayPicker = field.get(datePicker);
                             ((View) dayPicker).setVisibility(View.GONE);
                         }
-
                     }
                 } catch (SecurityException e) {
                     e.printStackTrace();
@@ -90,6 +96,16 @@ public class CommForms extends ConnectWithLibrary {
                     e.printStackTrace();
                 }
             }
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            Date today = new Date();
+            Date last = new Date(0);
+            try {
+                last = df.parse("1900-01-01");
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            datePicker.setMaxDate(today.getTime() + 19800000);
+            datePicker.setMinDate(last.getTime());
         }
         if(cat == 1) {
             FloatingActionButton add = (FloatingActionButton) findViewById(R.id.add);
@@ -98,10 +114,8 @@ public class CommForms extends ConnectWithLibrary {
                 public void onClick(View view) {
                     if (reconum < 4) {
                         reconum++;
-                        findViewById(R.id.delete).setClickable(true);
                         adjustreco();
                     } else {
-                        findViewById(R.id.add).setClickable(false);
                         Toast.makeText(CommForms.this, "Maximum 5 recommendations can be given.", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -112,13 +126,11 @@ public class CommForms extends ConnectWithLibrary {
                 public void onClick(View view) {
                     if (reconum > 0) {
                         reconum--;
-                        findViewById(R.id.add).setClickable(true);
                         adjustreco();
                         if (reconum == 0) {
                             findViewById(brecos[0]).setVisibility(View.VISIBLE);
                         }
                     } else {
-                        findViewById(R.id.delete).setClickable(false);
                         Toast.makeText(CommForms.this, "Minimum 1 recommendation is required.", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -217,7 +229,8 @@ public class CommForms extends ConnectWithLibrary {
                             inputArray.add(5 * i + 2, URLEncoder.encode(edition, "UTF-8"));
                             inputArray.add(5 * i + 3, URLEncoder.encode(pub, "UTF-8"));
                         } catch (UnsupportedEncodingException e) {
-                            Toast.makeText(CommForms.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                            //Toast.makeText(CommForms.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                            e.printStackTrace();
                         }
                         inputArray.add(5 * i + 4, year);
                         url = url + "&inputArray[" + 5*i + "]=" + inputArray.get(5*i) + "&inputArray[" + (5*i + 1) + "]=" + inputArray.get(5*i + 1) + "&inputArray[" + (5*i + 2) + "]=" + inputArray.get(5*i + 2) + "&inputArray[" + (5*i + 3) + "]=" + inputArray.get(5*i + 3) + "&inputArray[" + (5*i + 4) +"]=" + inputArray.get(5*i + 4);
@@ -247,7 +260,8 @@ public class CommForms extends ConnectWithLibrary {
                             inputArray.add(3, URLEncoder.encode(accno, "UTF-8"));
                             url = urlString + "&cat=" + cat + "&inputArray[0]=" + inputArray.get(0) + "&inputArray[1]=" + inputArray.get(1) + "&inputArray[2]=" + inputArray.get(2) + "&inputArray[3]=" + inputArray.get(3);
                         } catch (UnsupportedEncodingException e) {
-                            Toast.makeText(CommForms.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                            //Toast.makeText(CommForms.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                            e.printStackTrace();
                         }
                     }
                 }
@@ -265,7 +279,8 @@ public class CommForms extends ConnectWithLibrary {
                             inputArray.add(3, URLEncoder.encode(year, "UTF-8"));
                             url = urlString + "&cat=" + cat + "&inputArray[0]=" + inputArray.get(0) + "&inputArray[1]=" + inputArray.get(1) + "&inputArray[2]=" + inputArray.get(2) + "&inputArray[3]=" + inputArray.get(3);
                         } catch (UnsupportedEncodingException e) {
-                            Toast.makeText(CommForms.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                            //Toast.makeText(CommForms.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                            e.printStackTrace();
                         }
                     }
                 }
@@ -289,7 +304,8 @@ public class CommForms extends ConnectWithLibrary {
                         inputArray.add(1, URLEncoder.encode(jour, "UTF-8"));
                         inputArray.add(2, URLEncoder.encode(loc, "UTF-8"));
                     } catch (UnsupportedEncodingException e) {
-                        Toast.makeText(CommForms.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                        //Toast.makeText(CommForms.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                        e.printStackTrace();
                     }
                     url = urlString + "&cat=" + cat + "&inputArray[0]=" + inputArray.get(0) + "&inputArray[1]=" + inputArray.get(1) + "&inputArray[2]=" + inputArray.get(2);
                 }
@@ -303,7 +319,8 @@ public class CommForms extends ConnectWithLibrary {
                             inputArray.add(0, URLEncoder.encode(serv, "UTF-8"));
                             inputArray.add(1, URLEncoder.encode(grieve, "UTF-8"));
                         } catch (UnsupportedEncodingException e) {
-                            Toast.makeText(CommForms.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                            //Toast.makeText(CommForms.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                            e.printStackTrace();
                         }
                         url = urlString + "&cat=" + cat + "&inputArray[0]=" + inputArray.get(0) + "&inputArray[1]=" + inputArray.get(1);
                     }
@@ -334,7 +351,8 @@ public class CommForms extends ConnectWithLibrary {
                         inputArray.add(1,URLEncoder.encode(author, "UTF-8"));
                         inputArray.add(2,URLEncoder.encode(review, "UTF-8"));
                     }catch(UnsupportedEncodingException e){
-                        Toast.makeText(CommForms.this,e.getMessage(),Toast.LENGTH_LONG).show();
+                        //Toast.makeText(CommForms.this,e.getMessage(),Toast.LENGTH_LONG).show();
+                        e.printStackTrace();
                     }
                     url = urlString + "&cat=" + cat + "&inputArray[0]=" + inputArray.get(0) + "&inputArray[1]=" + inputArray.get(1) + "&inputArray[2]=" + inputArray.get(2);
                 }
@@ -348,7 +366,8 @@ public class CommForms extends ConnectWithLibrary {
                         try {
                             inputArray.add(1, URLEncoder.encode(back, "UTF-8"));
                         } catch (UnsupportedEncodingException e) {
-                            Toast.makeText(CommForms.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                            //Toast.makeText(CommForms.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                            e.printStackTrace();
                         }
                         url = urlString + "&cat=" + cat + "&inputArray[0]=" + inputArray.get(0) + "&inputArray[1]=" + inputArray.get(1);
                     }
@@ -362,6 +381,11 @@ public class CommForms extends ConnectWithLibrary {
                 break;
         }
         if(isConnected()){
+            if(cat == 1){
+                findViewById(R.id.commMenu).setVisibility(View.GONE);
+            }
+            findViewById(R.id.CommForm).setVisibility(View.GONE);
+            progress.setVisibility(View.VISIBLE);
             if(!url.isEmpty()) {
                 new APICall().execute(url);
             }
@@ -410,6 +434,11 @@ public class CommForms extends ConnectWithLibrary {
                 setResult(Activity.RESULT_OK, resultIntent);
                 finish();
             }else{
+                if(cat == 1){
+                    findViewById(R.id.commMenu).setVisibility(View.VISIBLE);
+                }
+                findViewById(R.id.CommForm).setVisibility(View.VISIBLE);
+                progress.setVisibility(View.GONE);
                 if(!err.isEmpty()){
                     Toast.makeText(CommForms.this,err,Toast.LENGTH_LONG).show();
                 }
