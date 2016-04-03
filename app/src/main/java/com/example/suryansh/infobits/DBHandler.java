@@ -96,16 +96,6 @@ public class DBHandler extends SQLiteOpenHelper {
         return json;
     }
 
-    public JSONObject allRecords(int table){
-        SQLiteDatabase db = getWritableDatabase();
-        String query = "SELECT * FROM " + TABLES[table];
-        db.query(TABLES[table], new String[] {}, null, null, null, null, null);
-        Cursor c = db.rawQuery(query, null);
-        JSONObject json = manageData(c, table);
-        db.close();
-        return json;
-    }
-
     public JSONObject manageData(Cursor c, int table){
         c.moveToFirst();
         JSONObject json = new JSONObject();
