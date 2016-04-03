@@ -3,27 +3,26 @@ package com.example.suryansh.infobits;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.net.Uri;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 import android.content.Intent;
 import android.widget.TextView;
 import android.text.method.LinkMovementMethod;
 import android.text.Html;
 import android.view.View.OnClickListener;
-import android.widget.Toast;
 
 public class ebooks extends homepage implements OnClickListener{
 
+    public Toolbar toolbar;
     Dialog dialog;
    @Override
    protected void onCreate (Bundle savedInstanceState){
        super.onCreate(savedInstanceState);
        setContentView(R.layout.ebooks);
+
+       toolbar = (Toolbar) findViewById(R.id.toolbar);
+       setSupportActionBar(toolbar);
+
        TextView ebscoLink = (TextView) findViewById(R.id.ebscoClickHere);
        ebscoLink.setText(Html.fromHtml("<a href=\"http://www.google.com\">CLICK HERE</a>"));
        ebscoLink.setMovementMethod(LinkMovementMethod.getInstance());
@@ -57,6 +56,8 @@ public class ebooks extends homepage implements OnClickListener{
 
             case R.id.pearsonEducation:
                 Intent i = new Intent(ebooks.this, downloadable_links.class);
+                i.putExtra("title", "Pearson e-Books (Full Text & downloadable)");
+                i.putExtra("reference", "Pearson");
                 startActivity(i);
                 break;
             case R.id.intech:
@@ -69,9 +70,10 @@ public class ebooks extends homepage implements OnClickListener{
                 startActivity(openTBIntent);
                 break;
             case R.id.scienceDirect:
-                Intent scienceIntent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("http://www.bits-pilani.ac.in:12354/index.php"));
-                startActivity(scienceIntent);
+                Intent scI = new Intent(ebooks.this, downloadable_links.class);
+                scI.putExtra("title", "Elsevier e-Books (Full Text & downloadable)");
+                scI.putExtra("reference", "Science Direct");
+                startActivity(scI);
                 break;
             default:
                 Intent defaultIntent = new Intent(Intent.ACTION_VIEW,
@@ -81,15 +83,6 @@ public class ebooks extends homepage implements OnClickListener{
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        if(dialog.isShowing()){
-            dialog.dismiss();
-        }
-        else{
-            super.onBackPressed();
-        }
-    }
 
    }
 

@@ -91,6 +91,8 @@ public class user_settings extends homepage implements View.OnClickListener {
         updatePassword.setOnClickListener(this);
         imageButton.setOnClickListener(this);
 
+        serverCalls("User Settings");
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         // ATTENTION: This was auto-generated to implement the App Indexing API.

@@ -111,8 +111,10 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
         } else if (id == R.id.lf_id) {
 
         } else if (id == R.id.qp_id) {
-            Intent i = new Intent(homepage.this, ebooks.class);
-            startActivity(i);
+            Intent qpI = new Intent(homepage.this, downloadable_links.class);
+            qpI.putExtra("title", "Question Papers");
+            qpI.putExtra("reference", "Question Papers");
+            startActivity(qpI);
 
         }else if (id == R.id.eb_id) {
             Intent i = new Intent(homepage.this, ebooks.class);
