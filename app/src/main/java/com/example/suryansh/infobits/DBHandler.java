@@ -20,8 +20,8 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "bitslib.db";
     private static final String[] TABLES = {"communications","newsfeed","noticeboard"};
     private static final String[][] COLUMNS = {{"bitsid","category","name","topic","date","time","admins","talk","cat","status"},{"news_type","title","url","date","added_by","newspaper","keywords","pages"},{"image","link"}};
-    private static final String[][] TYPES = {{"varchar(12)","varchar(20)","varchar(40)","text","varchar(10)","varchar(10)","text","text","varchar(10)","varchar(10)"},{"varchar(5)","text","text","date","varchar(10)","text","text","varchar(20)"},{"varchar(10)","text"}};
-    private static final int[][] VAR_COLUMNS = {{6,7,9},{},{0,1}};
+    private static final String[][] TYPES = {{"varchar(12)","varchar(20)","varchar(40)","text","varchar(10)","varchar(10)","text","text","varchar(10)","varchar(10)"},{"varchar(5)","text","text","date","varchar(10)","text","text","varchar(20)"},{"text","text"}};
+    private static final int[][] VAR_COLUMNS = {{6,7,9},{},{}};
 
     public DBHandler(Context context, String name, SQLiteDatabase.CursorFactory factory) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
@@ -91,6 +91,22 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         String query = "SELECT * FROM " + TABLES[table] + " WHERE " + sql;
         Cursor c = db.rawQuery(query, null);
+        JSONObject json = manageData(c, table);
+        db.close();
+        return json;
+    }
+
+    public JSONObject allRecords(int table){
+        SQLiteDatabase db = getWritableDatabase();
+        String query = "SELECT * FROM " + TABLES[table];
+        db.query(TABLES[table], new String[] {}, null, null, null, null, null);
+        Cursor c = db.rawQuery(query, null);
+        JSONObject json = manageData(c, table);
+        db.close();
+        return json;
+    }
+
+    public JSONObject manageData(Cursor c, int table){
         c.moveToFirst();
         JSONObject json = new JSONObject();
         JSONObject data = new JSONObject();
@@ -110,7 +126,8 @@ public class DBHandler extends SQLiteOpenHelper {
             c.moveToNext();
             data = new JSONObject();
         }
-        db.close();
         return json;
     }
+
+
 }

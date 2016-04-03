@@ -1,33 +1,56 @@
 package com.example.suryansh.infobits;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.regex.Pattern;
 
 public class homepage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     Toolbar toolbar;
     ViewPager viewPager;
-    Swipe_adapter adapter;
+    Swipe_Adapter adapter;
     DrawerLayout drawerlayout;
     ActionBarDrawerToggle actionBarDrawerToggle;
-
+    DBHandler dbhandler;
+    JSONObject internal;
+    ArrayList<String> urls = new ArrayList<>();
+    ArrayList<Bitmap> images = new ArrayList<>();
     public final static String username = "library";
     public final static String password = "123456789";
     public final static String usercat = "Student";
     public final static String apiURL = "http://172.21.1.15/apis/";
+    public final static String imageApiURL = "http://172.21.1.15/uploads/";
+    File dir;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,20 +59,18 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
         toolbar = (Toolbar) findViewById(R.id.nav_toolbar);
         drawerlayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         setSupportActionBar(toolbar);
-
-
+        dir = getFilesDir();
         viewPager = (ViewPager) findViewById(R.id.view_pager);
-        adapter = new Swipe_adapter(this);
-        viewPager.setAdapter(adapter);
         drawerlayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerlayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         drawerlayout.setDrawerListener(actionBarDrawerToggle);
-
         drawerlayout.setDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
+        dbhandler = new DBHandler(this,null,null);
+        internal = dbhandler.selectData(2,"1 ORDER BY id ASC");
+        getNotices();
     }
 
     @Override
@@ -164,5 +185,98 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
         }
     }
 
+    public void getNotices(){
+        urls.clear();
+        images.clear();
+        internal = dbhandler.selectData(2,"1 ORDER BY id ASC");
+        Iterator iter = internal.keys();
+        try {
+            String url = "";
+            while(iter.hasNext()){
+                String key = iter.next().toString();
+                JSONObject data = (JSONObject) internal.get(key);
+                File image = new File(dir, data.get("image").toString());
+                FileInputStream fileInput = new FileInputStream(image);
+                images.add(BitmapFactory.decodeStream(fileInput));
+                try{
+                    url = URLDecoder.decode(data.get("link").toString(), "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                Boolean m = Pattern.compile("^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$").matcher(url).find();
+                if(!url.isEmpty()) {
+                    if (url.contains("http://")) {
+                        if (!url.contains("www.")) {
+                            if (!m) {
+                                url = "http://www." + url.substring(url.indexOf("http://") + 7);
+                            }
+                        }
+                    } else {
+                        if (url.contains("www.") || m) {
+                            url = "http://" + url;
+                        } else {
+                            url = "http://www." + url;
+                        }
+                    }
+                }
+                urls.add(url);
+                fileInput.close();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        adapter = new Swipe_Adapter(this, images, urls);
+        viewPager.setAdapter(adapter);
+        viewPager.setVisibility(View.VISIBLE);
+    }
 
+    public class Swipe_Adapter extends PagerAdapter {
+        private ArrayList<Bitmap> image_resources = new ArrayList<>();
+        private ArrayList<String> urls = new ArrayList<>();
+        private Context ctx;
+        private LayoutInflater layoutinflator;
+
+        public Swipe_Adapter(Context ctx, ArrayList<Bitmap> images,  ArrayList<String> urls){
+            this.ctx = ctx;
+            this.image_resources = images;
+            this.urls = urls;
+        }
+
+        @Override
+        public int getCount() {
+            return image_resources.size();
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return (view == (RelativeLayout)object);
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, final int position) {
+            layoutinflator =(LayoutInflater)ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View item_view = layoutinflator.inflate(R.layout.swipe_image,container,false);
+            ImageView imageView = (ImageView) item_view.findViewById(R.id.image_view);
+            imageView.setImageBitmap(image_resources.get(position));
+            imageView.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    String url = urls.get(viewPager.getCurrentItem());
+                    if(!url.isEmpty()) {
+                        Intent browserIntent = new Intent("android.intent.action.VIEW", Uri.parse(url));
+                        startActivity(browserIntent);
+                    }
+                }
+            });
+            container.addView(item_view);
+            return item_view;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            container.removeView((RelativeLayout)object);
+        }
+    }
 }
