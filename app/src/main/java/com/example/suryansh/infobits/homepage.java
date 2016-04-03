@@ -111,8 +111,12 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
         } else if (id == R.id.lf_id) {
 
         } else if (id == R.id.qp_id) {
+            Intent i = new Intent(homepage.this, ebooks.class);
+            startActivity(i);
 
         }else if (id == R.id.eb_id) {
+            Intent i = new Intent(homepage.this, ebooks.class);
+            startActivity(i);
 
         }else if (id == R.id.od_id) {
 

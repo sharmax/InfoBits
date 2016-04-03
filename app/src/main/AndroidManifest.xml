@@ -100,6 +100,25 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.suryansh.infobits.homepage" />
         </activity>
+        <activity
+            android:name=".ebooks"
+            android:label="@string/title_activity_ebooks"
+            android:parentActivityName=".homepage"
+            android:theme="@style/AppTheme.NoActionBar" android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.suryansh.infobits.homepage" />
+        </activity>
+        <activity
+            android:name=".downloadable_links"
+            android:label="@string/title_activity_ebooks"
+            android:parentActivityName=".ebooks"
+            android:theme="@style/AppTheme.NoActionBar" android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.suryansh.infobits.homepage" />
+        </activity>
+
         <!--
      ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
