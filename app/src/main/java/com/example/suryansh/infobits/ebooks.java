@@ -1,16 +1,25 @@
 package com.example.suryansh.infobits;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.net.Uri;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.content.Intent;
 import android.widget.TextView;
 import android.text.method.LinkMovementMethod;
 import android.text.Html;
 import android.view.View.OnClickListener;
+import android.widget.Toast;
 
 public class ebooks extends homepage implements OnClickListener{
 
+    Dialog dialog;
    @Override
    protected void onCreate (Bundle savedInstanceState){
        super.onCreate(savedInstanceState);
@@ -71,4 +80,16 @@ public class ebooks extends homepage implements OnClickListener{
                 break;
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        if(dialog.isShowing()){
+            dialog.dismiss();
+        }
+        else{
+            super.onBackPressed();
+        }
+    }
+
    }
+
