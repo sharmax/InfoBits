@@ -11,12 +11,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -28,7 +25,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.Iterator;
 
 public class Cover extends AppCompatActivity {
@@ -40,7 +36,6 @@ public class Cover extends AppCompatActivity {
     ProgressBar spinner;
     DBHandler dbhandler;
     JSONObject internal;
-    ArrayList<String> urls = new ArrayList<>();
     File dir;
 
     @Override
@@ -49,6 +44,8 @@ public class Cover extends AppCompatActivity {
         setContentView(R.layout.activity_cover);
         dir = getFilesDir();
         spinner = (ProgressBar) findViewById(R.id.progressBar);
+        dbhandler = new DBHandler(this,null,null);
+        internal = dbhandler.selectData(2,"1 ORDER BY id ASC");
         updateNotice();
     }
 
@@ -135,10 +132,10 @@ public class Cover extends AppCompatActivity {
                 }catch (IOException e) {
                     e.printStackTrace();
                 }
-                if(imgs == tot){
-                    launchHome();
-                    imgs = 0;
-                }
+            }
+            if(imgs == tot){
+                launchHome();
+                imgs = 0;
             }
         }
     }
@@ -199,12 +196,13 @@ public class Cover extends AppCompatActivity {
 
     public void launchHome(){
         new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        Intent i = new Intent(Cover.this, homepage.class);
-                        startActivity(i);
-                        finish();
-                    }
-                }, 3000);
+            new Runnable() {
+                public void run() {
+                    Intent i = new Intent(Cover.this, homepage.class);
+                    startActivity(i);
+                    finish();
+                }
+            }, 3000
+        );
     }
 }

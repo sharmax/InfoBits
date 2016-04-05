@@ -17,11 +17,13 @@
         android:textSize="16sp"
         android:layout_below="@+id/Info" />
     <WebView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/Info"
+        android:layout_below="@+id/Talk"
         android:id="@+id/Table"
         android:visibility="gone"
         android:layout_marginTop="10dp"
-        android:background="#e0dfeb"></WebView>
+        android:background="#e0dfeb"
+        android:minHeight="100dp"
+        android:scrollbars="horizontal"/>
 </RelativeLayout>

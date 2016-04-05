@@ -33,4 +33,6 @@
     <string name="title_activity_ebooks">E-Books</string>
     <string name="intech">Intech</string>
     <string name="openaccess">openAccess</string>
+    <string name="menu_user_account">Account</string>
+    <string name="menu_user_logout">Log Out</string>
 </resources>

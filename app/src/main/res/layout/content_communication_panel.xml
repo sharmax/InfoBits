@@ -104,15 +104,18 @@
         android:layout_height="wrap_content"
         android:id="@+id/convList"
         android:background="#eee"
-        android:stackFromBottom="true"
+        android:stackFromBottom="false"
         android:scrollbars="vertical"
         android:layout_margin="10dp"
         android:clickable="false"
         android:cacheColorHint="#211D70"
         android:divider="#211d70"
         android:dividerHeight="2dp"
-        android:layout_above="@+id/convMenu"
-        android:focusable="false" />
+        android:focusable="false"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="100dp"
+        android:smoothScrollbar="false" />
 
     <RelativeLayout
         android:layout_width="match_parent"
