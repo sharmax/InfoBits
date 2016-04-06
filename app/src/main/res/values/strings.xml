@@ -35,4 +35,11 @@
     <string name="openaccess">openAccess</string>
     <string name="menu_user_account">Account</string>
     <string name="menu_user_logout">Log Out</string>
+    <string name="drawer_menu_home">Home</string>
+    <string name="drawer_menu_os">One Search</string>
+    <string name="drawer_menu_ibb">InfoBITS Bulletin</string>
+    <string name="drawer_menu_lf">Lost and Found</string>
+    <string name="drawer_menu_qp">Question Papers</string>
+    <string name="drawer_menu_odb">Online Databases</string>
+    <string name="drawer_menu_opac">WEB OPAC</string>
 </resources>

@@ -4,37 +4,37 @@
     <group android:checkableBehavior="single" android:id="@+id/homegrp">
         <item
             android:id="@+id/home_id"
-            android:title="Home"
+            android:title="@string/drawer_menu_home"
             android:icon="@mipmap/infobits"
             />
     </group>
     <group android:checkableBehavior="single" android:id="@+id/lservgrp">
         <item
             android:id="@+id/os_id"
-            android:title="One Search"
+            android:title="@string/drawer_menu_os"
             android:icon="@drawable/osx"
             />
         <item
             android:id="@+id/comm_id"
-            android:title="Connect With Library"
+            android:title="@string/title_activity_communication_panel"
             android:icon="@mipmap/cwl"
             />
 
         <item
             android:id="@+id/news_id"
-            android:title="Daily News"
+            android:title="@string/title_activity_daily_news"
             android:icon="@mipmap/dn"
             />
 
         <item
             android:id="@+id/ibb_id"
-            android:title="InfoBITS Bulletin"
+            android:title="@string/drawer_menu_ibb"
             android:icon="@drawable/info"
             />
 
         <item
             android:id="@+id/lf_id"
-            android:title="Lost and Found"
+            android:title="@string/drawer_menu_lf"
             android:icon="@drawable/lostandfound"
             >
         </item>
@@ -43,36 +43,36 @@
     <group android:checkableBehavior="single" android:id="@+id/lresgrp">
         <item
             android:id="@+id/qp_id"
-            android:title="Question Papers"
+            android:title="@string/drawer_menu_qp"
             android:icon="@drawable/qpxx"
             />
 
         <item
             android:id="@+id/eb_id"
-            android:title="EBooks"
+            android:title="@string/title_activity_ebooks"
             android:icon="@drawable/ebxx"
             />
 
         <item
             android:id="@+id/od_id"
-            android:title="Online Databases"
+            android:title="@string/drawer_menu_odb"
             android:icon="@drawable/odxx"
             />
 
         <item
             android:id="@+id/opac_id"
-            android:title="WEB OPAC"
-            android:icon="@drawable/opacxx"
+            android:title="@string/drawer_menu_opac"
+            android:icon="@mipmap/opac"
             />
         <item
             android:id="@+id/od_id1"
-            android:title="Online Databases"
+            android:title="@string/drawer_menu_odb"
             android:icon="@drawable/settings"
             />
 
         <item
             android:id="@+id/opac_id1"
-            android:title="WEB OPAC"
+            android:title="@string/drawer_menu_opac"
             android:icon="@drawable/settings"
             />
     </group>
