@@ -26,7 +26,6 @@ public class ebooks extends homepage implements OnClickListener{
        TextView ebscoLink = (TextView) findViewById(R.id.ebscoClickHere);
        ebscoLink.setText(Html.fromHtml("<a href=\"http://www.google.com\">CLICK HERE</a>"));
        ebscoLink.setMovementMethod(LinkMovementMethod.getInstance());
-
    }
 
     @Override

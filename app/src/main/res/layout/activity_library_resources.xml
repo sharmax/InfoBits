@@ -36,11 +36,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/imgbt_service1"
-                android:src="@drawable/opacxx"
+                android:src="@mipmap/opac"
                 android:onClick="onClickOPAC"
                 android:padding="0dp"
                 android:clickable="true"
-                android:layout_margin="12dp" />
+                android:layout_margin="12dp"
+                android:scaleType="fitCenter"
+                android:minHeight="144dp"
+                android:minWidth="144dp" />
 
             <ImageButton
                 android:layout_width="wrap_content"
@@ -123,7 +126,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/tag"
-            android:layout_marginTop="500dp"
+            android:layout_marginTop="517dp"
             android:src="@drawable/tag" />
     </android.support.design.widget.NavigationView>
 

@@ -15,13 +15,14 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.app.ProgressDialog;
 import java.util.Map;
-import java.util.HashMap;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.example.suryansh.infobits.Responses.UserSettingsResponse;
 import com.example.suryansh.infobits.network.VolleySingleton;
 import com.google.android.gms.appindexing.Action;
@@ -31,7 +32,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.VolleyError;
-
 import android.graphics.Bitmap;
 import java.io.ByteArrayOutputStream;
 import android.util.Base64;
@@ -52,10 +52,12 @@ public class user_settings extends homepage implements View.OnClickListener {
     Button updatePassword;
     TextView changePassword;
     ImageButton imageButton;
-    ImageView image;
+    NetworkImageView image;
     LinearLayout nameLayout;
     LinearLayout emailLayout;
     LinearLayout mobileLayout;
+    ProgressBar spinner;
+    private ImageLoader mImageLoader;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -72,7 +74,7 @@ public class user_settings extends homepage implements View.OnClickListener {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
 
-        image = (ImageView) findViewById(R.id.profile);
+        image = (NetworkImageView) findViewById(R.id.profile);
         mobile = (EditText) findViewById(R.id.mobileText);
         changePassword = (TextView) findViewById(R.id.changePassword);
         oldPassword = (TextInputLayout) findViewById(R.id.oldPassLayout);
@@ -85,6 +87,7 @@ public class user_settings extends homepage implements View.OnClickListener {
         nameLayout = (LinearLayout) findViewById(R.id.NameLayout);
         emailLayout = (LinearLayout)findViewById(R.id.EmailLayout);
         mobileLayout = (LinearLayout) findViewById(R.id.MobileLayout);
+        spinner = (ProgressBar)findViewById(R.id.progressBar);
 
         uploadBtn.setOnClickListener(this);
         updateMobile.setOnClickListener(this);
@@ -98,10 +101,6 @@ public class user_settings extends homepage implements View.OnClickListener {
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-
-
-
-
     }
 
     @Override
@@ -153,7 +152,6 @@ public class user_settings extends homepage implements View.OnClickListener {
         if(requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data!= null){
             Uri selectedImage = data.getData();
             image.setImageURI(selectedImage);
-
         }
     }
 
@@ -199,36 +197,34 @@ public class user_settings extends homepage implements View.OnClickListener {
 
     public void serverCalls(String type){
 
-        final ProgressDialog mDialog = new ProgressDialog(getApplicationContext());
-        mDialog.setMessage("Please wait...");
-        mDialog.setCancelable(false);
-        mDialog.show();
-
+        spinner.setVisibility(View.VISIBLE);
         // Instantiate the RequestQueue.
-        RequestQueue queue = VolleySingleton.getInstance().getRequestQueue();
+        final RequestQueue queue = VolleySingleton.getInstance().getRequestQueue();
         switch (type){
             case "User Settings":{
-              String url = apiURL + "get?username="+username +"?password="+ password;
+                String url = apiURL + "user_settings.php?username="+username +"&password="+ password;
                 // Request a string response from the provided URL.
-
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                // Display the first 500 characters of the response string.
-                                mDialog.dismiss();
-                                image.setVisibility(ImageView.VISIBLE);
-                                nameLayout.setVisibility(LinearLayout.VISIBLE);
-                                mobileLayout.setVisibility(LinearLayout.VISIBLE);
-                                emailLayout.setVisibility(LinearLayout.VISIBLE);
-                                updateUserDetails(response);
-                               // Toast.makeText(getApplicationContext(), "Response is: "+ response, Toast.LENGTH_LONG).show();
-                            }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(), "ERROR: "+ error.getMessage(), Toast.LENGTH_LONG).show();
-                    }
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            // Display the first 500 characters of the response string.
+                            spinner.setVisibility(View.GONE);
+                            image.setVisibility(ImageView.VISIBLE);
+                            nameLayout.setVisibility(LinearLayout.VISIBLE);
+                            mobileLayout.setVisibility(LinearLayout.VISIBLE);
+                            emailLayout.setVisibility(LinearLayout.VISIBLE);
+                            FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.fab);
+                            fab.setVisibility(FloatingActionButton.VISIBLE);
+                            updateUserDetails(response, queue);
+                           // Toast.makeText(getApplicationContext(), "Response is: "+ response, Toast.LENGTH_LONG).show();
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            spinner.setVisibility(View.GONE);
+                            Toast.makeText(getApplicationContext(), "ERROR: "+ error.getMessage(), Toast.LENGTH_LONG).show();
+                        }
                 });
 
                 // Add the request to the RequestQueue.
@@ -237,40 +233,44 @@ public class user_settings extends homepage implements View.OnClickListener {
             }
 
             case "Change Password":{
-                String url = apiURL + "get?username="+username +"?password="+ newPassword.getEditText().getText().toString() +"?type=0";
+                String url = apiURL + "user_settings.php?username="+username +"&password="+password+"&new_value="+ newPassword.getEditText().getText().toString() +"&change_type=0";
                 // Request a string response from the provided URL.
 
-                updateCall(url, mDialog, queue);
+                updateCall(url, queue);
                 break;
 
             }
             case "Update Mobile":{
-                String url = apiURL + "get?username="+username +"?mobile="+ mobile.getText().toString() +"?type=1";
+                String url = apiURL + "user_settings.php?username="+username +"&password="+password+"&new_value="+ mobile.getText().toString() +"&change_type=1";
                 // Request a string response from the provided URL.
 
-                updateCall(url, mDialog, queue);
+                updateCall(url, queue);
                 break;
             }
             default:
                 break;
         }
-
-
     }
 
-    private void updateUserDetails(String json){
+    private void updateUserDetails(String json, RequestQueue queue){
         UserSettingsResponse userResponse = new UserSettingsResponse(json);
         userResponse.parseJSON();
         TextView userName = (TextView) findViewById(R.id.textView2);
         userName.setText(userResponse.name);
         TextView emailID = (TextView) findViewById(R.id.textView4);
         emailID.setText(userResponse.email);
-        TextView mobileNo = (TextView) findViewById(R.id.textView6);
+        TextView mobileNo = (TextView) findViewById(R.id.mobileText);
         mobileNo.setText(userResponse.mobile);
+        mImageLoader = VolleySingleton.getInstance().getImageLoader();
+        //Image URL - This can point to any image file supported by Android
+        mImageLoader.get(userResponse.imageUrl, ImageLoader.getImageListener(image,
+                R.drawable.pp, android.R.drawable
+                        .ic_dialog_alert));
+        image.setImageUrl(userResponse.imageUrl, mImageLoader);
     }
 
     private boolean checkPasswordValidity(String password, String confirmPassword){
-        if (password == confirmPassword){
+        if (password.equals(confirmPassword)){
             return true;
         }
         else {
@@ -309,20 +309,21 @@ public class user_settings extends homepage implements View.OnClickListener {
         }
     }
 
-        private void updateCall(String url, final ProgressDialog mDialog, RequestQueue queue){
+        private void updateCall(String url, RequestQueue queue){
 
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
                             // Display the first 500 characters of the response string.
-                            mDialog.dismiss();
+                            spinner.setVisibility(View.GONE);
                             showHideEdits(true);
                             Toast.makeText(getApplicationContext(), "Response is: "+ response, Toast.LENGTH_LONG).show();
                         }
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    spinner.setVisibility(View.GONE);
                     Toast.makeText(getApplicationContext(), "ERROR: "+ error.getMessage(), Toast.LENGTH_LONG).show();
                 }
             });
@@ -341,16 +342,16 @@ public class user_settings extends homepage implements View.OnClickListener {
     }
 
     private void uploadImage(){
-        //Showing the progress dialog
-        final ProgressDialog loading = ProgressDialog.show(this,"Uploading...","Please wait...",false,false);
 
-        String url = apiURL + "get?username="+username +"?type=2";
+        final ImageLoader imageLoader = VolleySingleton.getInstance().getImageLoader();
+
+        String url = apiURL + "user_settings.php?username="+username +"&password="+password+"&change_type=2";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {
                         //Disimissing the progress dialog
-                        loading.dismiss();
+                        spinner.setVisibility(View.GONE);
                         //Showing toast message of the response
                         Toast.makeText(getApplicationContext(), s , Toast.LENGTH_LONG).show();
                     }
@@ -359,7 +360,7 @@ public class user_settings extends homepage implements View.OnClickListener {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         //Dismissing the progress dialog
-                        loading.dismiss();
+                        spinner.setVisibility(View.GONE);
 
                         //Showing toast
                         Toast.makeText(getApplicationContext(), volleyError.getMessage().toString(), Toast.LENGTH_LONG).show();
@@ -394,6 +395,6 @@ public class user_settings extends homepage implements View.OnClickListener {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(Intent.createChooser(galleryIntent, "Select Picture"), RESULT_LOAD_IMAGE);
     }
-    }
+}
 
 

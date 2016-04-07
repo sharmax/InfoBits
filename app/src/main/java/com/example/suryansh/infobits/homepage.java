@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,18 +46,20 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
     JSONObject internal;
     ArrayList<String> urls = new ArrayList<>();
     ArrayList<Bitmap> images = new ArrayList<>();
-    public final static String username = "library";
-    public final static String password = "123456789";
-    public final static String usercat = "Student";
+    MenuItem cat;
+    public final static String username = "3321";
+    public final static String name = "Giridhar M. Kunkur";
+    public final static String password = "Ishanaishu89";
+    public final static String usercat = "Admin";
+    public final static String email = "giridhar.kunkur@pilani.bits-pilani.ac.in";
     public final static String apiURL = "http://172.21.1.15/apis/";
-    public final static String imageApiURL = "http://172.21.1.15/uploads/";
+    //public final static String imageApiURL = "http://172.21.1.15/uploads/";
     File dir;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
-        
         toolbar = (Toolbar)findViewById(R.id.nav_toolbar);
         drawerlayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         setSupportActionBar(toolbar);
@@ -69,6 +72,13 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
         actionBarDrawerToggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
+        cat = navigationView.getMenu().getItem(0);
+        cat.setChecked(true);
+        navigationView.setItemIconTintList(null);
+        View navHeader = navigationView.getHeaderView(0);
+        ((TextView) navHeader.findViewById(R.id.name)).setText(name);
+        ((TextView) navHeader.findViewById(R.id.email)).setText(email);
+        ((ImageView) navHeader.findViewById(R.id.profile)).setImageResource(R.drawable.gk);
         dbhandler = new DBHandler(this,null,null);
         internal = dbhandler.selectData(2,"1 ORDER BY id ASC");
         getNotices();
@@ -83,7 +93,12 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
     @Override
     public boolean onCreateOptionsMenu (Menu menu){
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu_user, menu);
+        if(username.isEmpty()){
+            menuInflater.inflate(R.menu.menu_no_user, menu);
+        }
+        else{
+            menuInflater.inflate(R.menu.menu_user, menu);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -117,7 +132,8 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
         if (id == R.id.home_id) {
             // Handle the camera action
         } else if (id == R.id.os_id) {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://search.ebscohost.com/login.aspx?authtype=uid&user=bits2015&password=pilani&profile=eds"));
+            Intent browserIntent
+                    = new Intent(Intent.ACTION_VIEW, Uri.parse("http://search.ebscohost.com/login.aspx?authtype=uid&user=bits2015&password=pilani&profile=eds"));
             startActivity(browserIntent);
         } else if (id == R.id.comm_id) {
             Intent i = new Intent(homepage.this, ConnectWithLibrary.class);
@@ -126,8 +142,6 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
             Intent i = new Intent(homepage.this, DailyNews.class);
             startActivity(i);
         } else if (id == R.id.ibb_id) {
-
-        } else if (id == R.id.ill_id) {
 
         } else if (id == R.id.lf_id) {
 
@@ -140,16 +154,14 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
         }else if (id == R.id.eb_id) {
             Intent i = new Intent(homepage.this, ebooks.class);
             startActivity(i);
-
         }else if (id == R.id.od_id) {
 
         }else if (id == R.id.opac_id) {
 
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        return true;
+        return false;
     }
 
         //Methods to handle button clicks on homescreen

@@ -6,14 +6,13 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:id="@+id/profile"
-        android:src="@drawable/pp"
         android:padding="10dp"
         />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Suryansh Rastogi"
+        android:text=""
         android:layout_toRightOf="@+id/profile"
         android:layout_marginTop="10dp"
         android:textSize="20dp"
@@ -27,7 +26,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="suryanshr@xyzmail.com"
+        android:text=""
         android:layout_toRightOf="@+id/profile"
         android:layout_below="@+id/name"
         android:textSize="16sp"
