@@ -46,6 +46,8 @@ public class Cover extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dbhandler = new DBHandler(this,null,null);
+        internal = dbhandler.selectData(2,"1 ORDER BY id ASC");
         setContentView(R.layout.activity_cover);
         dir = getFilesDir();
         spinner = (ProgressBar) findViewById(R.id.progressBar);
