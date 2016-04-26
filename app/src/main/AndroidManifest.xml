@@ -1,74 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.suryansh.infobits" >
+    package="com.example.suryansh.infobits">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
-        android:allowBackup="true"
         android:name=".MyApplication"
+        android:allowBackup="true"
         android:icon="@mipmap/infobits"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".Cover"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait">
-        </activity>
-
-        <activity
-            android:name=".homepage"
-            android:label="@string/app_name"
-            android:logo="@mipmap/infobits"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity
+            android:name=".homepage"
+            android:label="@string/app_name"
+            android:logo="@mipmap/infobits"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".LibRes"
             android:label="@string/libres"
             android:logo="@mipmap/libr"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.suryansh.infobits.homepage" />
         </activity>
-
         <activity
             android:name=".ConnectWithLibrary"
             android:label="@string/title_activity_communication_panel"
             android:parentActivityName=".homepage"
-            android:theme="@style/AppTheme.NoActionBar" android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.suryansh.infobits.homepage" />
         </activity>
-
         <activity
             android:name=".DailyNews"
             android:label="@string/title_activity_daily_news"
             android:parentActivityName=".homepage"
-            android:theme="@style/AppTheme.NoActionBar" android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.suryansh.infobits.homepage" />
         </activity>
-
         <activity
             android:name=".CommForms"
             android:label="CommForm"
             android:parentActivityName=".ConnectWithLibrary"
-            android:theme="@style/AppTheme.NoActionBar" android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.suryansh.infobits.homepage" />
@@ -77,7 +73,8 @@
             android:name=".login"
             android:label="@string/Login"
             android:parentActivityName=".homepage"
-            android:theme="@style/AppTheme.NoActionBar" android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.suryansh.infobits.homepage" />
@@ -86,7 +83,8 @@
             android:name=".user_settings"
             android:label="@string/title_activity_user_settings"
             android:parentActivityName=".homepage"
-            android:theme="@style/AppTheme.NoActionBar" android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.suryansh.infobits.homepage" />
@@ -95,7 +93,8 @@
             android:name=".signup"
             android:label="@string/Signup"
             android:parentActivityName=".homepage"
-            android:theme="@style/AppTheme.NoActionBar" android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.suryansh.infobits.homepage" />
@@ -104,7 +103,8 @@
             android:name=".ebooks"
             android:label="@string/title_activity_ebooks"
             android:parentActivityName=".homepage"
-            android:theme="@style/AppTheme.NoActionBar" android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.suryansh.infobits.homepage" />
@@ -113,7 +113,8 @@
             android:name=".downloadable_links"
             android:label="@string/title_activity_ebooks"
             android:parentActivityName=".ebooks"
-            android:theme="@style/AppTheme.NoActionBar" android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.suryansh.infobits.homepage" />
@@ -136,6 +137,7 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
+        <activity android:name=".forgot_password"></activity>
     </application>
 
 </manifest>

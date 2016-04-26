@@ -1,56 +1,87 @@
 package com.example.suryansh.infobits;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.regex.Pattern;
 
 public class homepage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     Toolbar toolbar;
     ViewPager viewPager;
-    Swipe_adapter adapter;
+    Swipe_Adapter adapter;
     DrawerLayout drawerlayout;
     ActionBarDrawerToggle actionBarDrawerToggle;
-
-    public final static String username = "library";
-    public final static String password = "123456789";
-    public final static String usercat = "Student";
+    DBHandler dbhandler;
+    JSONObject internal;
+    ArrayList<String> urls = new ArrayList<>();
+    ArrayList<Bitmap> images = new ArrayList<>();
+    MenuItem cat;
+    public final static String username = "3321";
+    public final static String name = "Giridhar M. Kunkur";
+    public final static String password = "Ishanaishu89";
+    public final static String usercat = "Admin";
+    public final static String email = "giridhar.kunkur@pilani.bits-pilani.ac.in";
     public final static String apiURL = "http://172.21.1.15/apis/";
+    //public final static String imageApiURL = "http://172.21.1.15/uploads/";
+    File dir;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
-        
         toolbar = (Toolbar)findViewById(R.id.nav_toolbar);
         drawerlayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         setSupportActionBar(toolbar);
-
-
+        dir = getFilesDir();
         viewPager = (ViewPager) findViewById(R.id.view_pager);
-        adapter = new Swipe_adapter(this);
-        viewPager.setAdapter(adapter);
         drawerlayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerlayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         drawerlayout.setDrawerListener(actionBarDrawerToggle);
-
         drawerlayout.setDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
+        cat = navigationView.getMenu().getItem(0);
+        cat.setChecked(true);
+        navigationView.setItemIconTintList(null);
+        View navHeader = navigationView.getHeaderView(0);
+        ((TextView) navHeader.findViewById(R.id.name)).setText(name);
+        ((TextView) navHeader.findViewById(R.id.email)).setText(email);
+        ((ImageView) navHeader.findViewById(R.id.profile)).setImageResource(R.drawable.gk);
+        dbhandler = new DBHandler(this,null,null);
+        internal = dbhandler.selectData(2,"1 ORDER BY id ASC");
+        getNotices();
     }
 
     @Override
@@ -62,7 +93,12 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
     @Override
     public boolean onCreateOptionsMenu (Menu menu){
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu_user, menu);
+        if(username.isEmpty()){
+            menuInflater.inflate(R.menu.menu_no_user, menu);
+        }
+        else{
+            menuInflater.inflate(R.menu.menu_user, menu);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -96,7 +132,8 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
         if (id == R.id.home_id) {
             // Handle the camera action
         } else if (id == R.id.os_id) {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://search.ebscohost.com/login.aspx?authtype=uid&user=bits2015&password=pilani&profile=eds"));
+            Intent browserIntent
+                    = new Intent(Intent.ACTION_VIEW, Uri.parse("http://search.ebscohost.com/login.aspx?authtype=uid&user=bits2015&password=pilani&profile=eds"));
             startActivity(browserIntent);
         } else if (id == R.id.comm_id) {
             Intent i = new Intent(homepage.this, ConnectWithLibrary.class);
@@ -107,8 +144,6 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
         } else if (id == R.id.ibb_id) {
             Intent i = new Intent(homepage.this, infoBitsBulletin.class);
             startActivity(i);
-        } else if (id == R.id.ill_id) {
-
         } else if (id == R.id.lf_id) {
 
         } else if (id == R.id.qp_id) {
@@ -120,16 +155,14 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
         }else if (id == R.id.eb_id) {
             Intent i = new Intent(homepage.this, ebooks.class);
             startActivity(i);
-
         }else if (id == R.id.od_id) {
 
         }else if (id == R.id.opac_id) {
 
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        return true;
+        return false;
     }
 
         //Methods to handle button clicks on homescreen
@@ -172,5 +205,98 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
         }
     }
 
+    public void getNotices(){
+        urls.clear();
+        images.clear();
+        internal = dbhandler.selectData(2,"1 ORDER BY id ASC");
+        Iterator iter = internal.keys();
+        try {
+            String url = "";
+            while(iter.hasNext()){
+                String key = iter.next().toString();
+                JSONObject data = (JSONObject) internal.get(key);
+                File image = new File(dir, data.get("image").toString());
+                FileInputStream fileInput = new FileInputStream(image);
+                images.add(BitmapFactory.decodeStream(fileInput));
+                try{
+                    url = URLDecoder.decode(data.get("link").toString(), "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                Boolean m = Pattern.compile("^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$").matcher(url).find();
+                if(!url.isEmpty()) {
+                    if (url.contains("http://")) {
+                        if (!url.contains("www.")) {
+                            if (!m) {
+                                url = "http://www." + url.substring(url.indexOf("http://") + 7);
+                            }
+                        }
+                    } else {
+                        if (url.contains("www.") || m) {
+                            url = "http://" + url;
+                        } else {
+                            url = "http://www." + url;
+                        }
+                    }
+                }
+                urls.add(url);
+                fileInput.close();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        adapter = new Swipe_Adapter(this, images, urls);
+        viewPager.setAdapter(adapter);
+        viewPager.setVisibility(View.VISIBLE);
+    }
 
+    public class Swipe_Adapter extends PagerAdapter {
+        private ArrayList<Bitmap> image_resources = new ArrayList<>();
+        private ArrayList<String> urls = new ArrayList<>();
+        private Context ctx;
+        private LayoutInflater layoutinflator;
+
+        public Swipe_Adapter(Context ctx, ArrayList<Bitmap> images,  ArrayList<String> urls){
+            this.ctx = ctx;
+            this.image_resources = images;
+            this.urls = urls;
+        }
+
+        @Override
+        public int getCount() {
+            return image_resources.size();
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return (view == (RelativeLayout)object);
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, final int position) {
+            layoutinflator =(LayoutInflater)ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View item_view = layoutinflator.inflate(R.layout.swipe_image,container,false);
+            ImageView imageView = (ImageView) item_view.findViewById(R.id.image_view);
+            imageView.setImageBitmap(image_resources.get(position));
+            imageView.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    String url = urls.get(viewPager.getCurrentItem());
+                    if(!url.isEmpty()) {
+                        Intent browserIntent = new Intent("android.intent.action.VIEW", Uri.parse(url));
+                        startActivity(browserIntent);
+                    }
+                }
+            });
+            container.addView(item_view);
+            return item_view;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            container.removeView((RelativeLayout)object);
+        }
+    }
 }

@@ -21,10 +21,10 @@ public class UserSettingsResponse {
         JSONObject jsonObject=null;
         try {
             jsonObject = new JSONObject(json);
-            imageUrl = jsonObject.getString("image_url");
-            name = jsonObject.getString("name");
-            email = jsonObject.getString("email");
-            mobile = jsonObject.getString("mobile");
+            imageUrl = jsonObject.getString("Image");
+            name = "library";//jsonObject.getString("name");
+            email = jsonObject.getString("email_id");
+            mobile = jsonObject.getString("mobile_number");
 
         } catch (JSONException e) {
             e.printStackTrace();

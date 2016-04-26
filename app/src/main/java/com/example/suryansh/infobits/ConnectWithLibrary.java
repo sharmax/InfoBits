@@ -13,11 +13,13 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
@@ -42,7 +44,7 @@ public class ConnectWithLibrary extends homepage {
 
     DrawerLayout drawerlayout;
     NavigationView navigationView;
-    int cat;
+    int cat, n;
     ListView convlist;
     DBHandler dbhandler;
     TextView msg;
@@ -59,15 +61,6 @@ public class ConnectWithLibrary extends homepage {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        Bundle b = getIntent().getExtras();
-//        if(b != null && b.containsKey("cat")) {
-//            try {
-//                catint = b.getInt("cat");
-//                category = cats[catint - 1];
-//            } catch (NullPointerException e) {
-//                e.printStackTrace();
-//            }
-//        }
         setContentView(R.layout.activity_communication_panel);
         spinner = (ProgressBar) findViewById(R.id.progressBar1);
         convlist = (ListView) findViewById(R.id.convList);
@@ -77,7 +70,12 @@ public class ConnectWithLibrary extends homepage {
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
         setSupportActionBar(toolbar);
         navigationView.setNavigationItemSelectedListener(this);
+        View navHeader = navigationView.getHeaderView(0);
+        ((TextView) navHeader.findViewById(R.id.name)).setText(name);
+        ((TextView) navHeader.findViewById(R.id.email)).setText(email);
+        ((ImageView) navHeader.findViewById(R.id.profile)).setImageResource(R.drawable.gk);
         cat = navigationView.getMenu().getItem(0).getItemId();
+        navigationView.setItemIconTintList(null);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerlayout,toolbar,R.string.drawer_open,R.string.drawer_close);
         drawerlayout.setDrawerListener(actionBarDrawerToggle);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -215,8 +213,11 @@ public class ConnectWithLibrary extends homepage {
                 new String[] { "info","talk" },
                 new int[] {android.R.id.text1, android.R.id.text2
         });
-        convlist.setVisibility(View.VISIBLE);
         convlist.setAdapter(adapter);
+//        if(catint == 1){
+//            convlist.getChildAt(1).setMinimumHeight(n * 200);
+//        }
+        convlist.setVisibility(View.VISIBLE);
     }
 
     public boolean isConnected(){
@@ -522,9 +523,9 @@ public class ConnectWithLibrary extends homepage {
             start = 0;
             category = cats[catint - 1];
         }
-        setComm(true);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+        setComm(true);
         return true;
     }
 
@@ -592,6 +593,13 @@ public class ConnectWithLibrary extends homepage {
             HashMap<String,String> data = talks.get(position);
             holder.info.setText(data.get("info"));
             if(data.get("talk").contains("<table>")){
+                n = 0;
+                int start = data.get("talk").indexOf("<tr>");
+                while(start >= 0){
+                    start = data.get("talk").indexOf("<tr>", start + 4);
+                    n++;
+                }
+                holder.table.setMinimumHeight(350 + (n-1)*250);
                 holder.talk.setVisibility(View.GONE);
                 holder.table.loadData(data.get("talk"),"text/html",null);
                 holder.table.setVisibility(View.VISIBLE);
@@ -604,4 +612,11 @@ public class ConnectWithLibrary extends homepage {
             return vi;
         }
     }
+
+//    public int getCorrectPixels(int pixels){
+//        float dips = 2 * pixels/5;
+//        float scale = ConnectWithLibrary.this.getResources().getDisplayMetrics().density;
+//        pixels = (int) ((int) dips * scale);
+//        return pixels;
+//    }
 }

@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
     <item
-        android:id="@+id/user"
-        android:title="@string/menu_user_account"
+        android:id="@+id/login"
+        android:title="Log In"
         app:showAsAction="never"
-        />
+        ></item>
     <item
-        android:id="@+id/logout"
-        android:title="@string/menu_user_logout"
+        android:id="@+id/signup"
+        android:title="Sign Up"
         app:showAsAction="never"
-        />
+        ></item>
 </menu>
