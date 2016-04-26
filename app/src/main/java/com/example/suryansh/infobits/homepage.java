@@ -105,7 +105,8 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
             Intent i = new Intent(homepage.this, DailyNews.class);
             startActivity(i);
         } else if (id == R.id.ibb_id) {
-
+            Intent i = new Intent(homepage.this, infoBitsBulletin.class);
+            startActivity(i);
         } else if (id == R.id.ill_id) {
 
         } else if (id == R.id.lf_id) {
