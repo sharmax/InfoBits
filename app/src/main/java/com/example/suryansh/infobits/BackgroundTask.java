@@ -71,7 +71,7 @@ public class BackgroundTask extends AsyncTask<String,Void,String>{
                 httpURLConnection.setRequestMethod("POST");
                 httpURLConnection.setDoOutput(true);
                 httpURLConnection.setDoInput(true);
-                OutputStream outputStream =httpURLConnection.getOutputStream();
+                OutputStream outputStream = httpURLConnection.getOutputStream();
                 BufferedWriter bufferedWriter =new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
                 String NAME = params[1];
                 String BITSID = params[2];
@@ -97,7 +97,6 @@ public class BackgroundTask extends AsyncTask<String,Void,String>{
                 httpURLConnection.disconnect();
                 Thread.sleep(5000);
                 return stringBuilder.toString().trim();
-
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -135,11 +134,6 @@ public class BackgroundTask extends AsyncTask<String,Void,String>{
                 httpURLConnection.disconnect();
                 Thread.sleep(5000);
                 return stringBuilder.toString().trim();
-
-
-
-
-
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (ProtocolException e) {
@@ -206,19 +200,14 @@ public class BackgroundTask extends AsyncTask<String,Void,String>{
             }else if (code.equals("reg_false")) {
                 showDialog("Registration Failed",message,code);
             }else if(code.equals("login_true")){
-
                 Intent intent = new Intent(activity,homepage.class);
                 intent.putExtra("message",message);
                 activity.startActivity(intent);
-
             } else if(code.equals("login_false")){
                 showDialog("Login failed...",message,code);
             }else if(code.equals("reset_true")) {
-            showDialog("Password Reset Succesful....",message,code);
+                showDialog("Password Reset Succesful....",message,code);
             }
-
-
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -236,9 +225,6 @@ public class BackgroundTask extends AsyncTask<String,Void,String>{
                     activity.finish();
                 }
             });
-
-
-
         }
         else if(code.equals("login_false")){
 

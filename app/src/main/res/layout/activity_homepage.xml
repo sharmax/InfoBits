@@ -45,7 +45,8 @@
             android:layout_below="@+id/homeicons"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:fadingEdge="horizontal" />
+            android:fadingEdge="horizontal"
+            android:visibility="gone" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -105,7 +106,8 @@
                 android:layout_below="@+id/imgbt_service1"
                 android:scaleType="fitCenter"
                 android:minHeight="96dp"
-                android:minWidth="96dp" />
+                android:minWidth="96dp"
+                android:background="#211d70" />
 
             <ImageButton
                 android:layout_width="wrap_content"
@@ -136,6 +138,36 @@
                 android:minHeight="96dp"
                 android:minWidth="96dp"
                 android:scaleType="fitCenter" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="200dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="No Notices to Show"
+            android:id="@+id/no_notice"
+            android:textAlignment="center"
+            android:gravity="center_vertical"
+            android:layout_below="@+id/homeicons"
+            android:layout_alignParentBottom="true" />
+
+        <RelativeLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#fff"
+            android:id="@+id/pagination"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:visibility="gone">
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/paginationGroup"
+                android:layout_centerInParent="true">
+
+            </RadioGroup>
         </RelativeLayout>
 
 

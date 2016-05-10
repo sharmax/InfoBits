@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:padding="5dp"
+        android:background="#eee">
+
+        <ImageView
+            android:layout_width="125dp"
+            android:layout_height="158dp"
+            android:id="@+id/book"
+            android:scaleType="fitXY"
+            android:layout_margin="10dp" />
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="100dp"
+            android:id="@+id/book_of_the_week"
+            android:src="@drawable/book_of_the_week"
+            android:scaleType="fitXY"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="10dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reserve Now!"
+            android:id="@+id/reserve"
+            android:layout_below="@+id/book_of_the_week"
+            android:layout_alignLeft="@+id/book_of_the_week"
+            android:layout_alignStart="@+id/book_of_the_week"
+            android:background="@color/colorPrimary"
+            android:layout_alignRight="@+id/book_of_the_week"
+            android:layout_alignEnd="@+id/book_of_the_week"
+            android:textColor="#211d70"
+            android:textSize="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/title"
+            android:layout_below="@+id/reserve"
+            android:layout_alignLeft="@+id/book"
+            android:layout_alignStart="@+id/book"
+            android:textSize="18sp"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_marginTop="10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/author"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_below="@+id/title"
+            android:layout_alignLeft="@+id/title"
+            android:layout_marginTop="10dp"
+            android:textSize="18sp" />
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar"
+            android:progressTint="@color/colorPrimaryDark"
+            android:layout_alignRight="@+id/reserve"
+            android:indeterminate="false"
+            android:layout_alignBottom="@+id/reserve"
+            android:translationZ="20dp"
+            android:minHeight="20dp"
+            android:maxHeight="20dp"
+            android:maxWidth="20dp"
+            android:minWidth="20dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginRight="15dp"
+            android:visibility="gone" />
+    </RelativeLayout>
+</RelativeLayout>

@@ -33,16 +33,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/newsList"
-        android:background="#eee"
-        android:scrollbars="vertical"
+            android:scrollbars="vertical"
         android:layout_margin="10dp"
         android:clickable="true"
         android:cacheColorHint="#211D70"
         android:divider="#211d70"
         android:dividerHeight="2dp"
-        android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:layout_below="@+id/search_message" />
+            android:layout_below="@+id/search_message"
+            android:background="#eee" />
 
         <TextView
         android:layout_width="wrap_content"

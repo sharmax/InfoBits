@@ -114,8 +114,8 @@
         android:focusable="false"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="100dp"
-        android:smoothScrollbar="false" />
+        android:smoothScrollbar="false"
+        android:layout_above="@+id/convMenu" />
 
     <RelativeLayout
         android:layout_width="match_parent"

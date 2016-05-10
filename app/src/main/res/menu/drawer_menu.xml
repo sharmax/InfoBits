@@ -41,11 +41,11 @@
     </group>
 
     <group android:checkableBehavior="single" android:id="@+id/lresgrp">
-        <item
+       <!-- <item
             android:id="@+id/qp_id"
             android:title="@string/drawer_menu_qp"
             android:icon="@drawable/qpxx"
-            />
+            />-->
 
         <item
             android:id="@+id/eb_id"

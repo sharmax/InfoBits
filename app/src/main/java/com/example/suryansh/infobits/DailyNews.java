@@ -51,59 +51,65 @@ public class DailyNews extends homepage{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_daily_news);
-        dialog = new Dialog(DailyNews.this);
-        spinner = (ProgressBar) findViewById(R.id.progressBar);
-        newscast = (ListView) findViewById(R.id.newsList);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        msg = (TextView) findViewById(R.id.message);
-        smsg = (TextView) findViewById(R.id.search_message);
-        setSupportActionBar(toolbar);
-        search = (FloatingActionButton) findViewById(R.id.search);
-        refresh = (FloatingActionButton) findViewById(R.id.refresh);
-        search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.setContentView(R.layout.newssearch);
-                dialog.setTitle("Search News ...");
-                dialog.show();
-                start = ((DatePicker) dialog.findViewById(R.id.startDatePicker));
-                end = ((DatePicker) dialog.findViewById(R.id.endDatePicker));
-                Date today = new Date();
-                Date last = new Date(0);
-                try {
-                    last = df.parse("1900-01-01");
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                start.setMaxDate(today.getTime() + 19800000);
-                end.setMaxDate(today.getTime() + 19800000);
-                start.setMinDate(last.getTime());
-                start.setMinDate(last.getTime());
-            }
-        });
-        refresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setNews(true);
-            }
-        });
-        newscast.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (!urls.get(position).isEmpty()) {
-                    if (!urls.get(position).equals("header")) {
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(urls.get(position)));
-                        startActivity(browserIntent);
+        if(username.isEmpty()){
+            Toast.makeText(this,"Please Login to Access Services and Resources of BITS Library",Toast.LENGTH_LONG).show();
+            finish();
+        }
+        else {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_daily_news);
+            dialog = new Dialog(DailyNews.this);
+            spinner = (ProgressBar) findViewById(R.id.progressBar);
+            newscast = (ListView) findViewById(R.id.newsList);
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            msg = (TextView) findViewById(R.id.message);
+            smsg = (TextView) findViewById(R.id.search_message);
+            setSupportActionBar(toolbar);
+            search = (FloatingActionButton) findViewById(R.id.search);
+            refresh = (FloatingActionButton) findViewById(R.id.refresh);
+            search.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.setContentView(R.layout.newssearch);
+                    dialog.setTitle("Search News ...");
+                    dialog.show();
+                    start = ((DatePicker) dialog.findViewById(R.id.startDatePicker));
+                    end = ((DatePicker) dialog.findViewById(R.id.endDatePicker));
+                    Date today = new Date();
+                    Date last = new Date(0);
+                    try {
+                        last = df.parse("1900-01-01");
+                    } catch (ParseException e) {
+                        e.printStackTrace();
                     }
-                } else {
-                    Toast.makeText(DailyNews.this, "No Link Available!", Toast.LENGTH_SHORT).show();
+                    start.setMaxDate(today.getTime() + 19800000);
+                    end.setMaxDate(today.getTime() + 19800000);
+                    start.setMinDate(last.getTime());
+                    start.setMinDate(last.getTime());
                 }
-            }
-        });
-        dbhandler = new DBHandler(this,null,null);
-        setNews(true);
+            });
+            refresh.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    setNews(true);
+                }
+            });
+            newscast.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    if (!urls.get(position).isEmpty()) {
+                        if (!urls.get(position).equals("header")) {
+                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(urls.get(position)));
+                            startActivity(browserIntent);
+                        }
+                    } else {
+                        Toast.makeText(DailyNews.this, "No Link Available!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+            dbhandler = new DBHandler(this, null, null);
+            setNews(true);
+        }
     }
 
     public void setNews(boolean update){
