@@ -52,7 +52,7 @@ public class login extends AppCompatActivity {
     public void OnClick_sign_in(View view) {
 
 
-        //if username and passwor fields are not empty. then do this.
+        //if username and password fields are not empty. then do this.
         String UserName =username.getText().toString();
         String Password =password.getText().toString();
         Context context = getApplicationContext();

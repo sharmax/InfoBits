@@ -49,7 +49,8 @@ public class LibRes extends homepage{
     }
 
     public void onClickOD(View view) {
-
+        Intent i = new Intent(LibRes.this, OnlineDb.class);
+        startActivity(i);
     }
 
     public void onClickEB(View view) {
