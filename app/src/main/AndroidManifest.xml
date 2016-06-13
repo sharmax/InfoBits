@@ -139,7 +139,8 @@
             android:value="@integer/google_play_services_version" />
 
         <activity android:name=".forgot_password" />
-        <activity android:name=".OnlineDb"></activity>
+        <activity android:name=".OnlineDb" />
+        <activity android:name=".Responses.LibService"></activity>
     </application>
 
 </manifest>
