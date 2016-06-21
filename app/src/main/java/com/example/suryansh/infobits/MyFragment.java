@@ -14,9 +14,11 @@ import android.widget.TextView;
 public class MyFragment extends Fragment{
 
     public static final String EXTRA_MESSAGE = "EXTRA_MESSAGE";
+    public static String [] bookNameList;
+    public static String [] bookImages;
+    public static String [] journalNameList;
+    public static String [] journalImages;
 
-    public static String [] prgmNameList={"Let Us C","c++","JAVA","Jsp"};
-    public static int [] prgmImages={R.drawable.ebxx,R.drawable.ebxx,R.drawable.ebxx,R.drawable.ebxx};
     public static final MyFragment newInstance(String message)
     {
         MyFragment f = new MyFragment();
@@ -34,8 +36,15 @@ public class MyFragment extends Fragment{
         GridView newArrivals = (GridView) v.findViewById(R.id.newArrivalsGrid);
         GridView journals = (GridView) v.findViewById(R.id.journalsGrid);
 
-        newArrivals.setAdapter(new CustomAdapter(this.getContext(), prgmNameList,prgmImages));
-        journals.setAdapter(new CustomAdapter(this.getContext(), prgmNameList,prgmImages));
+        newArrivals.setAdapter(new CustomAdapter(this.getContext(), bookNameList,bookImages));
+        journals.setAdapter(new CustomAdapter(this.getContext(), bookNameList,bookImages));
         return v;
+    }
+
+    public void setList(String[]journalList, String[]bookList, String[]bookImages, String[]journalImages){
+        this.bookNameList = bookList;
+        this.bookImages = bookImages;
+        this.journalImages = journalImages;
+        this.journalNameList = journalList;
     }
 }

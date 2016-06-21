@@ -10,17 +10,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+import com.example.suryansh.infobits.network.VolleySingleton;
+
 public class CustomAdapter extends BaseAdapter{
 
     String [] result;
     Context context;
-    int [] imageId;
+    String [] imageUrl;
+
+    private ImageLoader mImageLoader;
     private static LayoutInflater inflater=null;
-    public CustomAdapter(Context c, String[] prgmNameList, int[] prgmImages) {
+    public CustomAdapter(Context c, String[] prgmNameList, String[] prgmImages) {
         // TODO Auto-generated constructor stub
         result=prgmNameList;
         context=c;
-        imageId=prgmImages;
+        imageUrl=prgmImages;
         inflater = ( LayoutInflater )context.
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -47,7 +53,7 @@ public class CustomAdapter extends BaseAdapter{
     public class Holder
     {
         TextView tv;
-        ImageView img;
+        NetworkImageView image;
     }
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
@@ -57,10 +63,16 @@ public class CustomAdapter extends BaseAdapter{
 
         rowView = inflater.inflate(R.layout.infobits_customcell, null);
         holder.tv=(TextView) rowView.findViewById(R.id.bookTitle);
-        holder.img=(ImageView) rowView.findViewById(R.id.bookImage);
+        holder.image=(NetworkImageView) rowView.findViewById(R.id.bookImage);
 
         holder.tv.setText(result[position]);
-        holder.img.setImageResource(imageId[position]);
+        final ImageLoader imageLoader = VolleySingleton.getInstance().getImageLoader();
+        //Image URL - This can point to any image file supported by Android
+
+        mImageLoader.get(imageUrl[position], ImageLoader.getImageListener(holder.image,
+                R.drawable.ebxx, android.R.drawable
+                        .ic_dialog_alert));
+        holder.image.setImageUrl(imageUrl[position], mImageLoader);
 
         rowView.setOnClickListener(new OnClickListener() {
 

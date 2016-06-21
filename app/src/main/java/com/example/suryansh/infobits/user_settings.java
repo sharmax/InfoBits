@@ -1,6 +1,9 @@
 package com.example.suryansh.infobits;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -94,7 +97,13 @@ public class user_settings extends homepage implements View.OnClickListener {
         updatePassword.setOnClickListener(this);
         imageButton.setOnClickListener(this);
 
-        serverCalls("User Settings");
+        if (isConnected()) {
+            spinner.setVisibility(View.VISIBLE);
+            serverCalls("User Settings");
+        } else {
+            Toast.makeText(getApplicationContext(), "Not Connected to BITS Intranet!", Toast.LENGTH_LONG).show();
+        }
+
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -120,7 +129,13 @@ public class user_settings extends homepage implements View.OnClickListener {
             case R.id.update1:
                 Snackbar.make(v, "Mobile number update Server call", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                serverCalls("Update Mobile");
+                if (isConnected()) {
+                    spinner.setVisibility(View.VISIBLE);
+                    serverCalls("Update Mobile");
+                } else {
+                    Toast.makeText(getApplicationContext(), "Not Connected to BITS Intranet!", Toast.LENGTH_LONG).show();
+                }
+
                 break;
 
             case R.id.update2:
@@ -128,7 +143,13 @@ public class user_settings extends homepage implements View.OnClickListener {
                         .setAction("Action", null).show();
                 boolean validity = checkPasswordValidity(newPassword.getEditText().getText().toString(), confirmPassword.getEditText().getText().toString());
                 if (validity){
-                    serverCalls("Change Password");
+                    if (isConnected()) {
+                        spinner.setVisibility(View.VISIBLE);
+                        serverCalls("Change Password");
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Not Connected to BITS Intranet!", Toast.LENGTH_LONG).show();
+                    }
+
                 }
                 break;
 
@@ -136,7 +157,12 @@ public class user_settings extends homepage implements View.OnClickListener {
                 Snackbar.make(v, "Upload Image Server call", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
 
+                if (isConnected()) {
+                    spinner.setVisibility(View.VISIBLE);
                     uploadImage();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Not Connected to BITS Intranet!", Toast.LENGTH_LONG).show();
+                }
                 break;
             case R.id.imageButton:
                     showFileChooser();
@@ -339,6 +365,12 @@ public class user_settings extends homepage implements View.OnClickListener {
         byte[] imageBytes = baos.toByteArray();
         String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
         return encodedImage;
+    }
+
+    public boolean isConnected(){
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
     }
 
     private void uploadImage(){
