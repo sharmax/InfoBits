@@ -152,6 +152,8 @@ public class infoBitsBulletin extends homepage {
             String[] bookImageList = new String[4];
             String[] journalNameList = new String[4];
             String[] journalImageList = new String[4];
+            String[] journalLinks = new String[4];
+            String[] bookLinks = new String[4];
 
             for(int j = 0; j < 4; j++){
 
@@ -161,9 +163,11 @@ public class infoBitsBulletin extends homepage {
                 bookImageList[j] = (String) book.get("image");
                 journalNameList[j] = (String) journal.get("type");
                 journalImageList[j] = (String) journal.get("image");
+                bookLinks[j] = (String) book.get("url");
+                journalLinks[j] = (String)journal.get("url");
             }
 
-            fragment.newInstance("Fragment").setList(journalNameList,bookNameList,bookImageList,journalImageList);
+            fragment.newInstance("Fragment").setList(journalNameList,bookNameList,bookImageList,journalImageList, bookLinks, journalLinks);
             fList.add(MyFragment.newInstance("Fragment "+i));
         }
         return fList;
