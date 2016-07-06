@@ -140,7 +140,7 @@
 
         <activity android:name=".forgot_password" />
         <activity android:name=".OnlineDb" />
-        <activity android:name=".Responses.LibService"></activity>
+        <activity android:name=".Responses.LibService2"></activity>
     </application>
 
 </manifest>

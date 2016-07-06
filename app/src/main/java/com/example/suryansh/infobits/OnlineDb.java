@@ -21,7 +21,6 @@ public class OnlineDb extends homepage {
         ,"Emerald","HEDBIB","IEEE","IME","ISID","IOP","ISI Web", "J-Gate","JSTOR","MathSciNet","OUP","Portland Press",
                 "Project Euclid","Project Muse","Proquest Online","RSC", "Springer","Science Direct","SciFinder","SIAM","Taylor & Francis","Wiley Interscience"};
         final String[] DbLinks = {"acm.org", "aip.org", "asme.org", "ieee.org"};
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_online_db);
         ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, OnlineDb);
         ListView listView = (ListView) findViewById(R.id.onlineDb);

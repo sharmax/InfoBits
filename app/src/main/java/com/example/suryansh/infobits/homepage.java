@@ -35,6 +35,11 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -76,13 +81,18 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
     public final static String apiURL = "http://172.21.1.15/apis/";
     //public final static String imageApiURL = "http://172.21.1.15/uploads/";
     File dir;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
-        toolbar = (Toolbar)findViewById(R.id.nav_toolbar);
-        drawerlayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        toolbar = (Toolbar) findViewById(R.id.nav_toolbar);
+        drawerlayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         setSupportActionBar(toolbar);
         dir = getFilesDir();
         viewPager = (ViewPager) findViewById(R.id.view_pager);
@@ -100,31 +110,33 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
         ((TextView) navHeader.findViewById(R.id.name)).setText(name);
         ((TextView) navHeader.findViewById(R.id.email)).setText(email);
         ((ImageView) navHeader.findViewById(R.id.profile)).setImageResource(R.drawable.gk);
-        dbhandler = new DBHandler(this,null,null);
-        internal = dbhandler.selectData(2,"1 ORDER BY id ASC");
+        dbhandler = new DBHandler(this, null, null);
+        internal = dbhandler.selectData(2, "1 ORDER BY id ASC");
         getNotices();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
-    protected void onPostCreate (Bundle savedInstanceState){
+    protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         actionBarDrawerToggle.syncState();
     }
 
     @Override
-    public boolean onCreateOptionsMenu (Menu menu){
+    public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        if(username.isEmpty()){
+        if (username.isEmpty()) {
             menuInflater.inflate(R.menu.menu_no_user, menu);
-        }
-        else{
+        } else {
             menuInflater.inflate(R.menu.menu_user, menu);
         }
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected (MenuItem item){
+    public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
         switch (item.getItemId()) {
             case R.id.user:
@@ -172,13 +184,12 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
             qpI.putExtra("title", "Question Papers");
             qpI.putExtra("reference", "Question Papers");
             startActivity(qpI);
-
-        }*/else if (id == R.id.eb_id) {
+        }*/ else if (id == R.id.eb_id) {
             Intent i = new Intent(homepage.this, ebooks.class);
             startActivity(i);
-        }else if (id == R.id.od_id) {
+        } else if (id == R.id.od_id) {
 
-        }else if (id == R.id.opac_id) {
+        } else if (id == R.id.opac_id) {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://172.21.1.37"));
             startActivity(browserIntent);
         }
@@ -187,7 +198,7 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
         return false;
     }
 
-        //Methods to handle button clicks on homescreen
+    //Methods to handle button clicks on homescreen
 
     public void onClickLibr(View view) {
         Intent i = new Intent(homepage.this, LibRes.class);
@@ -195,6 +206,8 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
     }
 
     public void onClickLibs(View view) {
+        Intent i = new Intent(homepage.this, LibService.class);
+        startActivity(i);
 
     }
 
@@ -314,13 +327,13 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
                 rbtn.setText("");
                 if (Build.VERSION.SDK_INT >= 21)
                     rbtn.setButtonTintList(this.getResources().getColorStateList(R.color.colorPrimaryDark));
-                else if(Build.VERSION.SDK_INT >= 23)
+                else if (Build.VERSION.SDK_INT >= 23)
                     rbtn.setButtonTintList(this.getResources().getColorStateList(R.color.colorPrimaryDark, this.getTheme()));
                 rbtn.setChecked(false);
                 pagination.add(i, rbtn);
                 pagin.addView(rbtn, i, pagin.getLayoutParams());
-                if(i == 0)
-                    pagin.check(i+1);
+                if (i == 0)
+                    pagin.check(i + 1);
             }
             findViewById(R.id.pagination).setVisibility(View.VISIBLE);
             viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
@@ -338,6 +351,46 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
         }
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "homepage Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://com.example.suryansh.infobits/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "homepage Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://com.example.suryansh.infobits/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
+    }
+
     public class Swipe_Adapter extends PagerAdapter {
         private ArrayList<Bitmap> image_resources = new ArrayList<>();
         private ArrayList<String> urls = new ArrayList<>();
@@ -346,7 +399,7 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
         private Context ctx;
         private LayoutInflater layoutinflator;
 
-        public Swipe_Adapter(Context ctx, ArrayList<Bitmap> images,  ArrayList<String> urls, String[] botw, String[] news){
+        public Swipe_Adapter(Context ctx, ArrayList<Bitmap> images, ArrayList<String> urls, String[] botw, String[] news) {
             this.ctx = ctx;
             this.image_resources = images;
             this.urls = urls;
@@ -356,26 +409,25 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
 
         @Override
         public int getCount() {
-            if(news[0].isEmpty()){
+            if (news[0].isEmpty()) {
                 return image_resources.size();
-            }
-            else{
+            } else {
                 return image_resources.size() + 1;
             }
         }
 
         @Override
         public boolean isViewFromObject(View view, Object object) {
-            return (view == (RelativeLayout)object);
+            return (view == (RelativeLayout) object);
         }
 
         @Override
         public Object instantiateItem(ViewGroup container, final int position) {
-            layoutinflator =(LayoutInflater)ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            layoutinflator = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View item_view;
-            if(botw[0].isEmpty()){
-                if(news[0].isEmpty()){
-                    item_view = layoutinflator.inflate(R.layout.swipe_image,container,false);
+            if (botw[0].isEmpty()) {
+                if (news[0].isEmpty()) {
+                    item_view = layoutinflator.inflate(R.layout.swipe_image, container, false);
                     ImageView imageView = (ImageView) item_view.findViewById(R.id.image_view);
                     imageView.setImageBitmap(image_resources.get(position));
                     imageView.setOnClickListener(new View.OnClickListener() {
@@ -388,24 +440,22 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
                             }
                         }
                     });
-                }
-                else{
-                    if(position == image_resources.size()){
-                        item_view = layoutinflator.inflate(R.layout.daily_news_notice,container,false);
+                } else {
+                    if (position == image_resources.size()) {
+                        item_view = layoutinflator.inflate(R.layout.daily_news_notice, container, false);
                         TextView[] newsviews = {(TextView) findViewById(R.id.news1), (TextView) findViewById(R.id.news2), (TextView) findViewById(R.id.news3)};
-                        for(int i = 0; i < 3; i++){
+                        for (int i = 0; i < 3; i++) {
                             newsviews[i].setText(news[i]);
                         }
-                        item_view.setOnClickListener(new View.OnClickListener(){
+                        item_view.setOnClickListener(new View.OnClickListener() {
                             @Override
-                            public void onClick(View v){
+                            public void onClick(View v) {
                                 Intent i = new Intent(homepage.this, DailyNews.class);
                                 startActivity(i);
                             }
                         });
-                    }
-                    else{
-                        item_view = layoutinflator.inflate(R.layout.swipe_image,container,false);
+                    } else {
+                        item_view = layoutinflator.inflate(R.layout.swipe_image, container, false);
                         ImageView imageView = (ImageView) item_view.findViewById(R.id.image_view);
                         imageView.setImageBitmap(image_resources.get(position));
                         imageView.setOnClickListener(new View.OnClickListener() {
@@ -420,10 +470,9 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
                         });
                     }
                 }
-            }
-            else{
-                if(news[0].isEmpty()){
-                    if(position == 0) {
+            } else {
+                if (news[0].isEmpty()) {
+                    if (position == 0) {
                         item_view = layoutinflator.inflate(R.layout.book_of_the_week, container, false);
                         ImageView imageView = (ImageView) item_view.findViewById(R.id.book);
                         imageView.setImageBitmap(image_resources.get(position));
@@ -452,9 +501,8 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
                                 }
                             }
                         });
-                    }
-                    else{
-                        item_view = layoutinflator.inflate(R.layout.swipe_image,container,false);
+                    } else {
+                        item_view = layoutinflator.inflate(R.layout.swipe_image, container, false);
                         ImageView imageView = (ImageView) item_view.findViewById(R.id.image_view);
                         imageView.setImageBitmap(image_resources.get(position));
                         imageView.setOnClickListener(new View.OnClickListener() {
@@ -468,9 +516,8 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
                             }
                         });
                     }
-                }
-                else{
-                    if(position == 0) {
+                } else {
+                    if (position == 0) {
                         item_view = layoutinflator.inflate(R.layout.book_of_the_week, container, false);
                         ImageView imageView = (ImageView) item_view.findViewById(R.id.book);
                         imageView.setImageBitmap(image_resources.get(position));
@@ -499,23 +546,21 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
                                 }
                             }
                         });
-                    }
-                    else if(position == image_resources.size()){
-                        item_view = layoutinflator.inflate(R.layout.daily_news_notice,container,false);
+                    } else if (position == image_resources.size()) {
+                        item_view = layoutinflator.inflate(R.layout.daily_news_notice, container, false);
                         TextView[] newsviews = {(TextView) item_view.findViewById(R.id.news1), (TextView) item_view.findViewById(R.id.news2), (TextView) item_view.findViewById(R.id.news3)};
-                        for(int i = 0; i < 3; i++){
+                        for (int i = 0; i < 3; i++) {
                             newsviews[i].setText("\u2022" + news[i]);
                         }
-                        item_view.setOnClickListener(new View.OnClickListener(){
+                        item_view.setOnClickListener(new View.OnClickListener() {
                             @Override
-                            public void onClick(View v){
+                            public void onClick(View v) {
                                 Intent i = new Intent(homepage.this, DailyNews.class);
                                 startActivity(i);
                             }
                         });
-                    }
-                    else{
-                        item_view = layoutinflator.inflate(R.layout.swipe_image,container,false);
+                    } else {
+                        item_view = layoutinflator.inflate(R.layout.swipe_image, container, false);
                         ImageView imageView = (ImageView) item_view.findViewById(R.id.image_view);
                         imageView.setImageBitmap(image_resources.get(position));
                         imageView.setOnClickListener(new View.OnClickListener() {
@@ -537,17 +582,18 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
-            container.removeView((RelativeLayout)object);
+            container.removeView((RelativeLayout) object);
         }
     }
 
-    private class APICall extends AsyncTask<String,Integer,String> {
+    private class APICall extends AsyncTask<String, Integer, String> {
 
         String err;
         String urls;
+
         @Override
-        protected String doInBackground(String[] params){
-            String urlString= params[0];
+        protected String doInBackground(String[] params) {
+            String urlString = params[0];
             urls = urlString;
             StringBuilder responseStrBuilder = new StringBuilder();
             String inputStr;
@@ -557,7 +603,7 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
                 BufferedReader streamReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
                 while ((inputStr = streamReader.readLine()) != null)
                     responseStrBuilder.append(inputStr);
-            } catch (Exception e ) {
+            } catch (Exception e) {
                 err = "Network Error! Ensure you're connected to BITS Intranet";
             }
             return responseStrBuilder.toString();
@@ -567,31 +613,29 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
         protected void onPostExecute(String result) {
             resPBar.setVisibility(View.GONE);
             reserveB.setClickable(true);
-            if(!result.isEmpty()) {
+            if (!result.isEmpty()) {
                 try {
                     JSONObject json = new JSONObject(result);
-                    if(json.get("err_message").toString().isEmpty()){
-                        if(!json.get("message").toString().isEmpty()){
-                            Toast.makeText(homepage.this,json.get("message").toString(),Toast.LENGTH_LONG).show();
+                    if (json.get("err_message").toString().isEmpty()) {
+                        if (!json.get("message").toString().isEmpty()) {
+                            Toast.makeText(homepage.this, json.get("message").toString(), Toast.LENGTH_LONG).show();
                         }
-                    }
-                    else{
-                        Toast.makeText(homepage.this,json.get("err_message").toString(),Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(homepage.this, json.get("err_message").toString(), Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
-                    Toast.makeText(homepage.this,e.getMessage(),Toast.LENGTH_LONG).show();
+                    Toast.makeText(homepage.this, e.getMessage(), Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 }
-            }
-            else{
-                if(!err.isEmpty()){
+            } else {
+                if (!err.isEmpty()) {
                     Toast.makeText(homepage.this, err, Toast.LENGTH_LONG).show();
                 }
             }
         }
     }
 
-    public boolean isConnected(){
+    public boolean isConnected() {
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();

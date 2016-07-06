@@ -3,7 +3,9 @@ package com.example.suryansh.infobits.Responses;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class LibService extends AppCompatActivity {
+import com.example.suryansh.infobits.R;
+
+public class LibService2 extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
