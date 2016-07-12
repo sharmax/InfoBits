@@ -40,6 +40,16 @@
                 android:value="com.example.suryansh.infobits.homepage" />
         </activity>
         <activity
+            android:name=".LibService"
+            android:label="@string/libservice"
+            android:logo="@mipmap/libs"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.suryansh.infobits.homepage" />
+        </activity>
+        <activity
             android:name=".ConnectWithLibrary"
             android:label="@string/title_activity_communication_panel"
             android:parentActivityName=".homepage"
@@ -140,7 +150,7 @@
 
         <activity android:name=".forgot_password" />
         <activity android:name=".OnlineDb" />
-        <activity android:name=".Responses.LibService"></activity>
+        <activity android:name=".Responses.LibService2"></activity>
     </application>
 
 </manifest>

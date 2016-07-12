@@ -18,12 +18,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/DBscroll"
-        android:layout_below="@+id/tx_onlinedb"
-        >
+
         <ListView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -33,5 +28,5 @@
 
 
 
-    </ScrollView>
+
 </RelativeLayout>

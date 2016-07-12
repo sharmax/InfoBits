@@ -2,6 +2,7 @@
     <string name="app_name">Library</string>
     <string name="homepage">InfoBITS</string>
     <string name="libres">Library Resources</string>
+    <string name="libservice">Library Services</string>
     <string name="Username">Username</string>
     <string name="Password">Password</string>
     <string name="emptystring" />
