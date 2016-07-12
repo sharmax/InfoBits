@@ -47,9 +47,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by SowmyaY on 26/04/16.
- */
 public class infoBitsBulletin extends homepage {
 
     private Toolbar mToolbar;
