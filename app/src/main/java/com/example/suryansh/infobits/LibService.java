@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
 public class LibService extends homepage {
 
     DrawerLayout drawerlayout;
