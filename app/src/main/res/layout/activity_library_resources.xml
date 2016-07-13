@@ -35,7 +35,7 @@
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/imgbt_service1"
+                android:id="@+id/taylorFrancis"
                 android:src="@mipmap/opac"
                 android:onClick="onClickOPAC"
                 android:scaleType="fitCenter"
@@ -47,34 +47,34 @@
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/imgbt_service2"
+                android:id="@+id/scienceDirect"
                 android:src="@drawable/odxii"
                 android:onClick="onClickOD"
                 android:clickable="true"
                 android:background="#211d70"
                 android:layout_marginTop="25dp"
                 android:layout_marginBottom="25dp"
-                android:layout_toRightOf="@+id/imgbt_service1" />
+                android:layout_toRightOf="@+id/taylorFrancis" />
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/imgbt_service4"
+                android:id="@+id/openAccess"
                 android:onClick="onClickEB"
                 android:src="@drawable/ebxii"
                 android:background="#211d70"
-                android:layout_below="@+id/imgbt_service1"
+                android:layout_below="@+id/taylorFrancis"
                 android:layout_margin="25dp" />
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/imgbt_service5"
+                android:id="@+id/springer"
                 android:onClick="onClickIR"
                 android:src="@drawable/irxii"
                 android:background="#211d70"
-                android:layout_alignLeft="@+id/imgbt_service2"
-                android:layout_alignTop="@+id/imgbt_service4" />
+                android:layout_alignLeft="@+id/scienceDirect"
+                android:layout_alignTop="@+id/openAccess" />
 
         </RelativeLayout>
 
