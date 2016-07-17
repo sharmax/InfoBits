@@ -1,17 +1,21 @@
 package com.example.suryansh.infobits;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 public class LibService extends homepage {
 
@@ -34,7 +38,19 @@ public class LibService extends homepage {
         View navHeader = navigationView.getHeaderView(0);
         ((TextView) navHeader.findViewById(R.id.name)).setText(name);
         ((TextView) navHeader.findViewById(R.id.email)).setText(email);
-        ((ImageView) navHeader.findViewById(R.id.profile)).setImageResource(R.drawable.gk);
+        ((TextView) navHeader.findViewById(R.id.name)).setText(name);
+        ((TextView) navHeader.findViewById(R.id.email)).setText(email);
+        File profilepic = new File(dir, avatar);
+        try {
+            fileInput = new FileInputStream(profilepic);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        if(fileInput == null){
+            ((ImageView) navHeader.findViewById(R.id.profile)).setImageResource(R.mipmap.logo);
+        }else{
+            ((ImageView) navHeader.findViewById(R.id.profile)).setImageBitmap(BitmapFactory.decodeStream(fileInput));
+        }
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerlayout,toolbar,R.string.drawer_open,R.string.drawer_close);
         drawerlayout.setDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();

@@ -41,6 +41,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -50,7 +51,9 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.regex.Pattern;
+import android.content.SharedPreferences;
 
 public class homepage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -68,13 +71,16 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
     ArrayList<Bitmap> images = new ArrayList<>();
     MenuItem cat;
     RadioGroup pagin;
-    public final static String username = "3321";
-    public final static String name = "Giridhar M. Kunkur";
-    public final static String password = "Ishanaishu89";
-    public final static String usercat = "Admin";
-    public final static String email = "giridhar.kunkur@pilani.bits-pilani.ac.in";
+    SharedPreferences login_info;
+    SharedPreferences.Editor edit_login_info;
+    Map<String, ?> user;
+    public static String username, name, password, usercat, email, avatar;
+    public static FileInputStream fileInput = null;
+//    public final static String apiURL = "http://192.168.3.11:80/infoBITS/apis/";
+//    public final static String imageApiURL = "http://192.168.3.11:80/infoBITS/uploads/";
     public final static String apiURL = "http://172.21.1.15/apis/";
-    //public final static String imageApiURL = "http://172.21.1.15/uploads/";
+    public final static String imageApiURL = "http://172.21.1.15/uploads/";
+    public final static String openURL = "http://universe.bits-pilani.ac.in:12354/";
     File dir;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -86,6 +92,17 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
+        login_info = getSharedPreferences("login_info", Context.MODE_PRIVATE);
+        edit_login_info = login_info.edit();
+        user = login_info.getAll();
+        if(!user.isEmpty()){
+            username = user.get("username").toString();
+            name = user.get("name").toString();
+            password = user.get("password").toString();;
+            usercat = user.get("category").toString();
+            email = user.get("email").toString();
+            avatar = user.get("avatar").toString();
+        }
         toolbar = (Toolbar) findViewById(R.id.nav_toolbar);
         drawerlayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         setSupportActionBar(toolbar);
@@ -102,9 +119,26 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
         cat.setChecked(true);
         navigationView.setItemIconTintList(null);
         View navHeader = navigationView.getHeaderView(0);
-        ((TextView) navHeader.findViewById(R.id.name)).setText(name);
-        ((TextView) navHeader.findViewById(R.id.email)).setText(email);
-        ((ImageView) navHeader.findViewById(R.id.profile)).setImageResource(R.drawable.gk);
+        if(user.isEmpty()) {
+            ((TextView) navHeader.findViewById(R.id.name)).setText("Guest User");
+            ((ImageView) navHeader.findViewById(R.id.profile)).setImageResource(R.mipmap.logo);
+        }
+        else{
+            ((TextView) navHeader.findViewById(R.id.name)).setText(name);
+            ((TextView) navHeader.findViewById(R.id.email)).setText(email);
+            File profilepic = new File(dir, avatar);
+            try {
+                fileInput = new FileInputStream(profilepic);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            if(fileInput == null){
+                ((ImageView) navHeader.findViewById(R.id.profile)).setImageResource(R.mipmap.logo);
+            }else{
+                ((ImageView) navHeader.findViewById(R.id.profile)).setImageBitmap(BitmapFactory.decodeStream(fileInput));
+            }
+
+        }
         dbhandler = new DBHandler(this, null, null);
         internal = dbhandler.selectData(2, "1 ORDER BY id ASC");
         getNotices();
@@ -122,7 +156,7 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        if (username.isEmpty()) {
+        if (user.isEmpty()) {
             menuInflater.inflate(R.menu.menu_no_user, menu);
         } else {
             menuInflater.inflate(R.menu.menu_user, menu);
@@ -142,12 +176,16 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
                 Intent i12 = new Intent(homepage.this, login.class);
                 startActivity(i12);
                 break;
-            case R.id.signup:
-                Intent i13 = new Intent(homepage.this, signup.class);
-                startActivity(i13);
-                break;
+//            case R.id.signup:
+//                Intent i13 = new Intent(homepage.this, signup.class);
+//                startActivity(i13);
+//                break;
             case R.id.logout:
-                Toast.makeText(getApplicationContext(), "logout is selected", Toast.LENGTH_LONG).show();
+                edit_login_info.clear();
+                edit_login_info.apply();
+                finishAffinity();
+                Intent i14 = new Intent(homepage.this, homepage.class);
+                startActivity(i14);
                 break;
         }
         return true;
@@ -157,36 +195,36 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        if (id == R.id.home_id) {
-            // Handle the camera action
-        } else if (id == R.id.os_id) {
-            Intent browserIntent
-                    = new Intent(Intent.ACTION_VIEW, Uri.parse("http://search.ebscohost.com/login.aspx?authtype=uid&user=bits2015&password=pilani&profile=eds"));
-            startActivity(browserIntent);
-        } else if (id == R.id.comm_id) {
-            Intent i = new Intent(homepage.this, ConnectWithLibrary.class);
-            startActivity(i);
-        } else if (id == R.id.news_id) {
-            Intent i = new Intent(homepage.this, DailyNews.class);
-            startActivity(i);
-        } else if (id == R.id.ibb_id) {
-            Intent i = new Intent(homepage.this, infoBitsBulletin.class);
-            startActivity(i);
-        } else if (id == R.id.lf_id) {
-
-        } /*else if (id == R.id.qp_id) {
+        if(user.isEmpty()){
+            LogInToast();
+        }
+        else{
+            Intent i = null;
+            if (id == R.id.home_id) {
+                // Handle the camera action
+            } else if (id == R.id.os_id) {
+                i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://search.ebscohost.com/login.aspx?authtype=uid&user=bits2015&password=pilani&profile=eds"));
+            } else if (id == R.id.comm_id) {
+                i = new Intent(homepage.this, ConnectWithLibrary.class);
+            } else if (id == R.id.news_id) {
+                i = new Intent(homepage.this, DailyNews.class);
+            } else if (id == R.id.ibb_id) {
+                i = new Intent(homepage.this, infoBitsBulletin.class);
+            } else if (id == R.id.lf_id) {
+                i = new Intent(homepage.this, lfmsAllItems.class);
+            } /*else if (id == R.id.qp_id) {
             Intent qpI = new Intent(homepage.this, downloadable_links.class);
             qpI.putExtra("title", "Question Papers");
             qpI.putExtra("reference", "Question Papers");
             startActivity(qpI);
         }*/ else if (id == R.id.eb_id) {
-            Intent i = new Intent(homepage.this, ebooks.class);
+                i = new Intent(homepage.this, ebooks.class);
+            } else if (id == R.id.od_id) {
+                i = new Intent(homepage.this, OnlineDb.class);
+            } else if (id == R.id.opac_id) {
+                i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://172.21.1.37"));
+            }
             startActivity(i);
-        } else if (id == R.id.od_id) {
-
-        } else if (id == R.id.opac_id) {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://172.21.1.37"));
-            startActivity(browserIntent);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -196,33 +234,63 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
     //Methods to handle button clicks on homescreen
 
     public void onClickLibr(View view) {
-        Intent i = new Intent(homepage.this, LibRes.class);
-        startActivity(i);
+        if(user.isEmpty()){
+            LogInToast();
+        }
+        else{
+            Intent i = new Intent(homepage.this, LibRes.class);
+            startActivity(i);
+        }
     }
 
     public void onClickLibs(View view) {
-        Intent i = new Intent(homepage.this, LibService.class);
-        startActivity(i);
+        if(user.isEmpty()){
+            LogInToast();
+        }
+        else{
+            Intent i = new Intent(homepage.this, LibService.class);
+            startActivity(i);
+        }
     }
 
     public void onClickOs(View view) {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://search.ebscohost.com/login.aspx?authtype=uid&user=bits2015&password=pilani&profile=eds"));
-        startActivity(browserIntent);
+        if(user.isEmpty()){
+            LogInToast();
+        }
+        else {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://search.ebscohost.com/login.aspx?authtype=uid&user=bits2015&password=pilani&profile=eds"));
+            startActivity(browserIntent);
+        }
     }
 
     public void onClickDN(View view) {
-        Intent i = new Intent(homepage.this, DailyNews.class);
-        startActivity(i);
+        if(user.isEmpty()){
+            LogInToast();
+        }
+        else {
+            Intent i = new Intent(homepage.this, DailyNews.class);
+            startActivity(i);
+        }
     }
 
     public void onClickOPAC(View view) {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://172.21.1.37"));
-        startActivity(browserIntent);
+        if(user.isEmpty()){
+            LogInToast();
+        }
+        else {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://172.21.1.37"));
+            startActivity(browserIntent);
+        }
     }
 
     public void onClickCWL(View view) {
-        Intent i = new Intent(homepage.this, ConnectWithLibrary.class);
-        startActivity(i);
+        if(user.isEmpty()){
+            LogInToast();
+        }
+        else {
+            Intent i = new Intent(homepage.this, ConnectWithLibrary.class);
+            startActivity(i);
+        }
     }
 
     @Override
@@ -327,7 +395,7 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
                 pagination.add(i, rbtn);
                 pagin.addView(rbtn, i, pagin.getLayoutParams());
                 if (i == 0)
-                    pagin.check(i + 1);
+                    pagin.check(i+1);
             }
             findViewById(R.id.pagination).setVisibility(View.VISIBLE);
             viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
@@ -444,8 +512,13 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
                         item_view.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent i = new Intent(homepage.this, DailyNews.class);
-                                startActivity(i);
+                                if(user.isEmpty()){
+                                    LogInToast();
+                                }
+                                else {
+                                    Intent i = new Intent(homepage.this, DailyNews.class);
+                                    startActivity(i);
+                                }
                             }
                         });
                     } else {
@@ -477,7 +550,7 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
                         reserveB.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if (username.isEmpty()) {
+                                if (user.isEmpty()) {
                                     Toast.makeText(homepage.this, "Please Log In to Reserve Book!", Toast.LENGTH_LONG).show();
                                 } else {
                                     try {
@@ -522,7 +595,7 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
                         reserveB.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if (username.isEmpty()) {
+                                if (user.isEmpty()) {
                                     Toast.makeText(homepage.this, "Please Log In to Reserve Book!", Toast.LENGTH_LONG).show();
                                 } else {
                                     try {
@@ -549,8 +622,13 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
                         item_view.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent i = new Intent(homepage.this, DailyNews.class);
-                                startActivity(i);
+                                if(user.isEmpty()){
+                                    LogInToast();
+                                }
+                                else {
+                                    Intent i = new Intent(homepage.this, DailyNews.class);
+                                    startActivity(i);
+                                }
                             }
                         });
                     } else {
@@ -632,6 +710,15 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
     public boolean isConnected() {
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.isConnected();
+        if(networkInfo != null && networkInfo.isConnected()){
+            return true;
+        }else{
+            Toast.makeText(homepage.this, "Not Connected to BITS Intranet!", Toast.LENGTH_LONG).show();
+            return false;
+        }
+    }
+
+    public void LogInToast(){
+        Toast.makeText(this, "Please Login to Access!", Toast.LENGTH_LONG).show();
     }
 }

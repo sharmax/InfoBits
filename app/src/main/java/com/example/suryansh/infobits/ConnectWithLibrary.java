@@ -3,8 +3,7 @@ package com.example.suryansh.infobits;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -13,7 +12,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +26,9 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
@@ -60,120 +61,125 @@ public class ConnectWithLibrary extends homepage {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if(username.isEmpty()){
-            Toast.makeText(this,"Please Login to Access Services and Resources of BITS Library",Toast.LENGTH_LONG).show();
-            finish();
+
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_communication_panel);
+        spinner = (ProgressBar) findViewById(R.id.progressBar1);
+        convlist = (ListView) findViewById(R.id.convList);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        msg = (TextView) findViewById(R.id.message);
+        drawerlayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        setSupportActionBar(toolbar);
+        navigationView.setNavigationItemSelectedListener(this);
+        View navHeader = navigationView.getHeaderView(0);
+        ((TextView) navHeader.findViewById(R.id.name)).setText(name);
+        ((TextView) navHeader.findViewById(R.id.email)).setText(email);
+        File profilepic = new File(dir, avatar);
+        try {
+            fileInput = new FileInputStream(profilepic);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
-        else {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_communication_panel);
-            spinner = (ProgressBar) findViewById(R.id.progressBar1);
-            convlist = (ListView) findViewById(R.id.convList);
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            msg = (TextView) findViewById(R.id.message);
-            drawerlayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-            navigationView = (NavigationView) findViewById(R.id.navigation_view);
-            setSupportActionBar(toolbar);
-            navigationView.setNavigationItemSelectedListener(this);
-            View navHeader = navigationView.getHeaderView(0);
-            ((TextView) navHeader.findViewById(R.id.name)).setText(name);
-            ((TextView) navHeader.findViewById(R.id.email)).setText(email);
-            ((ImageView) navHeader.findViewById(R.id.profile)).setImageResource(R.drawable.gk);
-            cat = navigationView.getMenu().getItem(0).getItemId();
-            navigationView.setItemIconTintList(null);
-            actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerlayout, toolbar, R.string.drawer_open, R.string.drawer_close);
-            drawerlayout.setDrawerListener(actionBarDrawerToggle);
-            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent i = new Intent(ConnectWithLibrary.this, CommForms.class);
-                    Bundle b = new Bundle();
-                    b.putInt("cat", catint);
-                    i.putExtras(b);
-                    startActivityForResult(i, 1);
-                }
-            });
-            FloatingActionButton prev = (FloatingActionButton) findViewById(R.id.prev);
-            prev.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (start > 0) {
-                        start = start - 4;
-                        printComms();
-                    }
-                }
-            });
-            FloatingActionButton next = (FloatingActionButton) findViewById(R.id.next);
-            next.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (total > start + 4) {
-                        start = start + 4;
-                        printComms();
-                    }
-                }
-            });
-            FloatingActionButton back = (FloatingActionButton) findViewById(R.id.back);
-            back.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    setComm(false);
-                }
-            });
-            FloatingActionButton reply = (FloatingActionButton) findViewById(R.id.reply);
-            reply.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (status.equals("open")) {
-                        findViewById(R.id.replyLayout).setVisibility(View.VISIBLE);
-                    } else {
-                        Toast.makeText(ConnectWithLibrary.this, "The conversation has been terminated by Administrator", Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
-            FloatingActionButton send = (FloatingActionButton) findViewById(R.id.send);
-            send.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    String replied = ((EditText) findViewById(R.id.replyText)).getText().toString().replace(" ", "%20");
-                    try {
-                        urlString = apiURL + actString + ".php?username=" + username + "&password=" + password + "&action=reply&id=" + id + "&cat=" + catint + "&reply=" + URLEncoder.encode(replied, "UTF-8");
-                    } catch (UnsupportedEncodingException e) {
-                        Toast.makeText(ConnectWithLibrary.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                    if (isConnected()) {
-                        findViewById(R.id.convList).setVisibility(View.GONE);
-                        findViewById(R.id.convMenu).setVisibility(View.GONE);
-                        findViewById(R.id.replyLayout).setVisibility(View.GONE);
-                        spinner.setVisibility(View.VISIBLE);
-                        new APICall().execute(urlString);
-                    } else {
-                        Toast.makeText(ConnectWithLibrary.this, "Not Connected to BITS Intranet!", Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
-            FloatingActionButton delete = (FloatingActionButton) findViewById(R.id.delete);
-            delete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    urlString = apiURL + actString + ".php?username=" + username + "&password=" + password + "&action=delete&id=" + id + "&cat=" + catint;
-                    if (isConnected()) {
-                        findViewById(R.id.convList).setVisibility(View.GONE);
-                        findViewById(R.id.convMenu).setVisibility(View.GONE);
-                        findViewById(R.id.replyLayout).setVisibility(View.GONE);
-                        spinner.setVisibility(View.VISIBLE);
-                        new APICall().execute(urlString);
-                    } else {
-                        Toast.makeText(ConnectWithLibrary.this, "Not Connected to BITS Intranet!", Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
-            actionBarDrawerToggle.syncState();
-            dbhandler = new DBHandler(this, null, null);
-            setComm(true);
-            // Delete data after 2 months
+        if(fileInput == null){
+            ((ImageView) navHeader.findViewById(R.id.profile)).setImageResource(R.mipmap.logo);
+        }else{
+            ((ImageView) navHeader.findViewById(R.id.profile)).setImageBitmap(BitmapFactory.decodeStream(fileInput));
         }
+        cat = navigationView.getMenu().getItem(0).getItemId();
+        navigationView.setItemIconTintList(null);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerlayout, toolbar, R.string.drawer_open, R.string.drawer_close);
+        drawerlayout.setDrawerListener(actionBarDrawerToggle);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(ConnectWithLibrary.this, CommForms.class);
+                Bundle b = new Bundle();
+                b.putInt("cat", catint);
+                i.putExtras(b);
+                startActivityForResult(i, 1);
+            }
+        });
+        FloatingActionButton prev = (FloatingActionButton) findViewById(R.id.prev);
+        prev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (start > 0) {
+                    start = start - 4;
+                    printComms();
+                }
+            }
+        });
+        FloatingActionButton next = (FloatingActionButton) findViewById(R.id.next);
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (total > start + 4) {
+                    start = start + 4;
+                    printComms();
+                }
+            }
+        });
+        FloatingActionButton back = (FloatingActionButton) findViewById(R.id.back);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setComm(false);
+            }
+        });
+        FloatingActionButton reply = (FloatingActionButton) findViewById(R.id.reply);
+        reply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (status.equals("open")) {
+                    findViewById(R.id.replyLayout).setVisibility(View.VISIBLE);
+                } else {
+                    Toast.makeText(ConnectWithLibrary.this, "The conversation has been terminated by Administrator", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+        FloatingActionButton send = (FloatingActionButton) findViewById(R.id.send);
+        send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String replied = ((EditText) findViewById(R.id.replyText)).getText().toString().replace(" ", "%20");
+                try {
+                    urlString = apiURL + actString + ".php?username=" + username + "&password=" + password + "&action=reply&id=" + id + "&cat=" + catint + "&reply=" + URLEncoder.encode(replied, "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    Toast.makeText(ConnectWithLibrary.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+                if (isConnected()) {
+                    findViewById(R.id.convList).setVisibility(View.GONE);
+                    findViewById(R.id.convMenu).setVisibility(View.GONE);
+                    findViewById(R.id.replyLayout).setVisibility(View.GONE);
+                    spinner.setVisibility(View.VISIBLE);
+                    new APICall().execute(urlString);
+                } else {
+                    Toast.makeText(ConnectWithLibrary.this, "Not Connected to BITS Intranet!", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+        FloatingActionButton delete = (FloatingActionButton) findViewById(R.id.delete);
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                urlString = apiURL + actString + ".php?username=" + username + "&password=" + password + "&action=delete&id=" + id + "&cat=" + catint;
+                if (isConnected()) {
+                    findViewById(R.id.convList).setVisibility(View.GONE);
+                    findViewById(R.id.convMenu).setVisibility(View.GONE);
+                    findViewById(R.id.replyLayout).setVisibility(View.GONE);
+                    spinner.setVisibility(View.VISIBLE);
+                    new APICall().execute(urlString);
+                } else {
+                    Toast.makeText(ConnectWithLibrary.this, "Not Connected to BITS Intranet!", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+        actionBarDrawerToggle.syncState();
+        dbhandler = new DBHandler(this, null, null);
+        setComm(true);
+        // Delete data after 2 months
     }
 
     public void setComm(Boolean update){
@@ -221,12 +227,6 @@ public class ConnectWithLibrary extends homepage {
 //            convlist.getChildAt(1).setMinimumHeight(n * 200);
 //        }
         convlist.setVisibility(View.VISIBLE);
-    }
-
-    public boolean isConnected(){
-        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.isConnected();
     }
 
     public void conversation1(View view){

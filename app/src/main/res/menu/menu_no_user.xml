@@ -6,9 +6,9 @@
         android:title="Log In"
         app:showAsAction="never"
         ></item>
-    <item
-        android:id="@+id/signup"
-        android:title="Sign Up"
-        app:showAsAction="never"
-        ></item>
+    <!--<item-->
+        <!--android:id="@+id/signup"-->
+        <!--android:title="Sign Up"-->
+        <!--app:showAsAction="never"-->
+        <!--&gt;</item>-->
 </menu>
