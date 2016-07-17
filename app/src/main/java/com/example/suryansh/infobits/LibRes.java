@@ -1,6 +1,7 @@
 package com.example.suryansh.infobits;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -12,6 +13,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 public class LibRes extends homepage{
 
@@ -34,7 +39,17 @@ public class LibRes extends homepage{
         View navHeader = navigationView.getHeaderView(0);
         ((TextView) navHeader.findViewById(R.id.name)).setText(name);
         ((TextView) navHeader.findViewById(R.id.email)).setText(email);
-        ((ImageView) navHeader.findViewById(R.id.profile)).setImageResource(R.drawable.gk);
+        File profilepic = new File(dir, avatar);
+        try {
+            fileInput = new FileInputStream(profilepic);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        if(fileInput == null){
+            ((ImageView) navHeader.findViewById(R.id.profile)).setImageResource(R.mipmap.logo);
+        }else{
+            ((ImageView) navHeader.findViewById(R.id.profile)).setImageBitmap(BitmapFactory.decodeStream(fileInput));
+        }
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerlayout,toolbar,R.string.drawer_open,R.string.drawer_close);
         drawerlayout.setDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();

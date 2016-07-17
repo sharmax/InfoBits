@@ -1,11 +1,8 @@
 package com.example.suryansh.infobits;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -51,65 +48,59 @@ public class DailyNews extends homepage{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if(username.isEmpty()){
-            Toast.makeText(this,"Please Login to Access Services and Resources of BITS Library",Toast.LENGTH_LONG).show();
-            finish();
-        }
-        else {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_daily_news);
-            dialog = new Dialog(DailyNews.this);
-            spinner = (ProgressBar) findViewById(R.id.progressBar);
-            newscast = (ListView) findViewById(R.id.newsList);
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            msg = (TextView) findViewById(R.id.message);
-            smsg = (TextView) findViewById(R.id.search_message);
-            setSupportActionBar(toolbar);
-            search = (FloatingActionButton) findViewById(R.id.search);
-            refresh = (FloatingActionButton) findViewById(R.id.refresh);
-            search.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialog.setContentView(R.layout.newssearch);
-                    dialog.setTitle("Search News ...");
-                    dialog.show();
-                    start = ((DatePicker) dialog.findViewById(R.id.startDatePicker));
-                    end = ((DatePicker) dialog.findViewById(R.id.endDatePicker));
-                    Date today = new Date();
-                    Date last = new Date(0);
-                    try {
-                        last = df.parse("1900-01-01");
-                    } catch (ParseException e) {
-                        e.printStackTrace();
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_daily_news);
+        dialog = new Dialog(DailyNews.this);
+        spinner = (ProgressBar) findViewById(R.id.progressBar);
+        newscast = (ListView) findViewById(R.id.newsList);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        msg = (TextView) findViewById(R.id.message);
+        smsg = (TextView) findViewById(R.id.search_message);
+        setSupportActionBar(toolbar);
+        search = (FloatingActionButton) findViewById(R.id.search);
+        refresh = (FloatingActionButton) findViewById(R.id.refresh);
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.setContentView(R.layout.newssearch);
+                dialog.setTitle("Search News ...");
+                dialog.show();
+                start = ((DatePicker) dialog.findViewById(R.id.startDatePicker));
+                end = ((DatePicker) dialog.findViewById(R.id.endDatePicker));
+                Date today = new Date();
+                Date last = new Date(0);
+                try {
+                    last = df.parse("1900-01-01");
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                start.setMaxDate(today.getTime() + 19800000);
+                end.setMaxDate(today.getTime() + 19800000);
+                start.setMinDate(last.getTime());
+                start.setMinDate(last.getTime());
+            }
+        });
+        refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setNews(true);
+            }
+        });
+        newscast.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (!urls.get(position).isEmpty()) {
+                    if (!urls.get(position).equals("header")) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(urls.get(position)));
+                        startActivity(browserIntent);
                     }
-                    start.setMaxDate(today.getTime() + 19800000);
-                    end.setMaxDate(today.getTime() + 19800000);
-                    start.setMinDate(last.getTime());
-                    start.setMinDate(last.getTime());
+                } else {
+                    Toast.makeText(DailyNews.this, "No Link Available!", Toast.LENGTH_SHORT).show();
                 }
-            });
-            refresh.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    setNews(true);
-                }
-            });
-            newscast.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if (!urls.get(position).isEmpty()) {
-                        if (!urls.get(position).equals("header")) {
-                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(urls.get(position)));
-                            startActivity(browserIntent);
-                        }
-                    } else {
-                        Toast.makeText(DailyNews.this, "No Link Available!", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-            dbhandler = new DBHandler(this, null, null);
-            setNews(true);
-        }
+            }
+        });
+        dbhandler = new DBHandler(this, null, null);
+        setNews(true);
     }
 
     public void setNews(boolean update){
@@ -186,7 +177,11 @@ public class DailyNews extends homepage{
             msg.setVisibility(View.VISIBLE);
             message = "";
         } else if (i == 0) {
-            msg.setText(R.string.no_news);
+            if(action.equals("search")){
+                msg.setText(R.string.no_news);
+            }else{
+                msg.setText(R.string.no_news_for_week);
+            }
             msg.setVisibility(View.VISIBLE);
         }
     }
@@ -266,12 +261,6 @@ public class DailyNews extends homepage{
         smsg.setVisibility(View.VISIBLE);
         spinner.setVisibility(View.GONE);
         search_message = "";
-    }
-
-    public boolean isConnected(){
-        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.isConnected();
     }
 
     public void updateInternalData(JSONObject json){

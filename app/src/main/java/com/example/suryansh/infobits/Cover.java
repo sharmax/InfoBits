@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,6 +35,8 @@ public class Cover extends AppCompatActivity {
 
     public final static String apiURL = "http://172.21.1.15/apis/";
     public final static String imageApiURL = "http://172.21.1.15/uploads/";
+//    public final static String apiURL = "http://192.168.3.11:80/infoBITS/apis/";
+//    public final static String imageApiURL = "http://192.168.3.11:80/infoBITS/uploads/";
     String actString = "notices";
     int imgs;
     ProgressBar spinner;
@@ -85,7 +88,6 @@ public class Cover extends AppCompatActivity {
             if(!result.isEmpty()) {
                 try {
                     JSONObject json = new JSONObject(result);
-                    //msg.append(json.toString() + "\n");
                     updateImageData(json, type);
                 } catch (Exception e) {
                     Toast.makeText(Cover.this,e.getMessage(),Toast.LENGTH_LONG).show();
@@ -160,10 +162,16 @@ public class Cover extends AppCompatActivity {
         }
     }
 
-    public boolean isConnected(){
+    public boolean isConnected() {
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.isConnected();
+        if(networkInfo != null && networkInfo.isConnected()){
+            return true;
+        }else{
+            Toast.makeText(Cover.this, "Not Connected to BITS Intranet!", Toast.LENGTH_LONG).show();
+            launchHome();
+            return false;
+        }
     }
 
     public void updateImageData(JSONObject json, String type){
@@ -280,10 +288,6 @@ public class Cover extends AppCompatActivity {
         if(isConnected()) {
             new APICall().execute(urlString);
             new APICall().execute(newsString);
-        }
-        else{
-            Toast.makeText(Cover.this,"Not Connected to BITS Intranet!",Toast.LENGTH_LONG).show();
-            launchHome();
         }
     }
 

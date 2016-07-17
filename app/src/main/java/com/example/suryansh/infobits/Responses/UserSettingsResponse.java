@@ -1,5 +1,5 @@
 package com.example.suryansh.infobits.Responses;
-import org.json.JSONArray;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 /**
@@ -18,11 +18,11 @@ public class UserSettingsResponse {
     }
 
     public void parseJSON(){
-        JSONObject jsonObject=null;
+        JSONObject jsonObject;
         try {
             jsonObject = new JSONObject(json);
             imageUrl = jsonObject.getString("Image");
-            name = "library";//jsonObject.getString("name");
+            name = jsonObject.getString("name");
             email = jsonObject.getString("email_id");
             mobile = jsonObject.getString("mobile_number");
 
