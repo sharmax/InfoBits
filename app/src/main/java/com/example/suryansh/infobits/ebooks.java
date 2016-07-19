@@ -18,13 +18,13 @@ public class ebooks extends homepage implements OnClickListener{
    @Override
    protected void onCreate (Bundle savedInstanceState){
        super.onCreate(savedInstanceState);
-       setContentView(R.layout.ebooks);
+       setContentView(R.layout.ebooks1);
 
        toolbar = (Toolbar) findViewById(R.id.toolbar);
        setSupportActionBar(toolbar);
 
        TextView ebscoLink = (TextView) findViewById(R.id.ebscoClickHere);
-       ebscoLink.setText(Html.fromHtml("<a href=\"http://www.google.com\">CLICK HERE</a>"));
+       ebscoLink.setText(Html.fromHtml("<a href=\"https://ecm.ebscohost.com/User/Login\">CLICK HERE</a>"));
        ebscoLink.setMovementMethod(LinkMovementMethod.getInstance());
    }
 
@@ -36,7 +36,7 @@ public class ebooks extends homepage implements OnClickListener{
                 startActivity(ebscoIntent);
                 break;
 
-            case R.id.taylorFranics:
+            case R.id.taylorFrancis:
                 Intent TFIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.tandfebooks.com/page/openaccess#listofOAtitles"));
                 startActivity(TFIntent);
                 break;

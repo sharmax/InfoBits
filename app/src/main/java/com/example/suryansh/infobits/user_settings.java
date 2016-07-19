@@ -100,11 +100,7 @@ public class user_settings extends homepage implements View.OnClickListener {
         if (isConnected()) {
             spinner.setVisibility(View.VISIBLE);
             serverCalls("User Settings");
-        } else {
-            Toast.makeText(getApplicationContext(), "Not Connected to BITS Intranet!", Toast.LENGTH_LONG).show();
         }
-
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         // ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -228,7 +224,7 @@ public class user_settings extends homepage implements View.OnClickListener {
         final RequestQueue queue = VolleySingleton.getInstance().getRequestQueue();
         switch (type){
             case "User Settings":{
-                String url = apiURL + "user_settings.php?username="+username +"&password="+ password;
+                String url = apiURL + "user_settings.php?username=" + username +"&password=" + password;
                 // Request a string response from the provided URL.
 
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -298,8 +294,7 @@ public class user_settings extends homepage implements View.OnClickListener {
         mImageLoader = VolleySingleton.getInstance().getImageLoader();
         //Image URL - This can point to any image file supported by Android
         mImageLoader.get(userResponse.imageUrl, ImageLoader.getImageListener(image,
-                R.drawable.pp, android.R.drawable
-                        .ic_dialog_alert));
+                R.drawable.pp, R.mipmap.logo));
         image.setImageUrl(userResponse.imageUrl, mImageLoader);
     }
 
@@ -373,12 +368,6 @@ public class user_settings extends homepage implements View.OnClickListener {
         byte[] imageBytes = baos.toByteArray();
         String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
         return encodedImage;
-    }
-
-    public boolean isConnected(){
-        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.isConnected();
     }
 
     private void uploadImage(){

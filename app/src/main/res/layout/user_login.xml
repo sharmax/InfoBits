@@ -5,26 +5,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#fff">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar"
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:id="@+id/nav_toolbar" app:logo="@mipmap/infobits"
+        android:background="@color/colorPrimaryDark"
+        android:minHeight="?attr/actionBarSize"
         android:fitsSystemWindows="true"
-        android:layout_height="@dimen/app_bar_height"
-        android:layout_width="match_parent"
-        android:theme="@style/AppTheme.AppBarOverlay"
-        android:title="@string/Login"
-        android:baselineAligned="false"
-        android:background="@color/colorPrimaryDark">
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_width="match_parent"
-            app:layout_collapseMode="pin"
-            android:title="@string/Login"
-            android:textColor="#FFF"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            android:indeterminate="false" />
-    </android.support.design.widget.AppBarLayout>
+    </android.support.v7.widget.Toolbar>
 
     <RelativeLayout
         android:orientation="vertical"
@@ -32,7 +21,7 @@
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:background="#ddd"
-        android:layout_below="@+id/app_bar"
+        android:layout_below="@+id/nav_toolbar"
         android:layout_margin="10dp"
         android:id="@+id/CommForm">
 
@@ -52,59 +41,110 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sign in"
-            android:textColor="#001589"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="20dp"
-            android:backgroundTint="@color/colorPrimaryDark"
             android:id="@+id/bt_signin"
             style="@style/Base.Widget.AppCompat.Button.Borderless"
             android:onClick="OnClick_sign_in"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
+            android:background="@color/colorPrimary"
             android:layout_below="@+id/pass"
-            android:layout_marginTop="40dp"
-            />
+            android:layout_centerHorizontal="true"
+            android:layout_margin="10dp" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Forgot Password"
-            android:textColor="#001589"
-            android:backgroundTint="@color/colorPrimaryDark"
+            android:text="Forgot Password?"
+            android:textColor="@color/colorPrimaryDark"
             style="@style/Base.Widget.AppCompat.Button.Borderless"
             android:textSize="20dp"
             android:id="@+id/bt_forgot"
             android:onClick="OnClick_forgot_pass"
-            android:layout_below="@+id/bt_signin"
             android:layout_centerHorizontal="true"
-            />
+            android:layout_below="@+id/bt_signin" />
 
         <EditText
-            android:layout_width="350dp"
-            android:layout_height="50dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/pass"
             android:layout_gravity="right"
             android:textColor="@color/colorPrimaryDark"
             android:background="#fff"
-            android:padding="5dp"
+            android:padding="10dp"
             android:textSize="25sp"
             android:hint="Password"
             android:layout_below="@+id/email"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="15dp" />
+            android:layout_margin="10dp"
+            android:password="true" />
 
         <EditText
-            android:layout_width="350dp"
-            android:layout_height="50dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/email"
             android:layout_gravity="right"
             android:textColor="@color/colorPrimaryDark"
             android:background="#fff"
-            android:padding="5dp"
+            android:padding="10dp"
             android:textSize="25sp"
-            android:hint="Bits Mail"
+            android:hint="Username"
             android:layout_below="@+id/bookLayout"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp" />
+            android:layout_margin="10dp" />
+
+        <Button
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="REGISTER"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20dp"
+            android:id="@+id/register"
+            android:onClick="userReg"
+            android:layout_below="@+id/bt_forgot"
+            android:layout_centerHorizontal="true" />
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar"
+            android:progressTint="@color/colorPrimaryDark"
+            android:secondaryProgressTint="#fff"
+            android:visibility="visible"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:layout_below="@+id/register"
+            android:layout_centerHorizontal="true"
+            android:padding="10dp"
+            android:layout_alignLeft="@+id/bt_signin"
+            android:layout_alignRight="@+id/bt_signin" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/showPass"
+            android:layout_alignRight="@+id/pass"
+            android:layout_alignEnd="@+id/pass"
+            android:src="@android:drawable/ic_menu_view"
+            android:background="#fff"
+            android:layout_alignTop="@+id/pass"
+            android:layout_alignBottom="@+id/pass"
+            android:layout_toRightOf="@+id/bt_forgot"
+            android:layout_toEndOf="@+id/bt_forgot"
+            android:onClick="showPass" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/textView13"
+            android:layout_below="@+id/register"
+            android:layout_alignLeft="@+id/pass"
+            android:layout_alignStart="@+id/pass"
+            android:layout_alignParentBottom="true"
+            android:layout_alignRight="@+id/showPass"
+            android:layout_alignEnd="@+id/showPass"
+            android:visibility="gone" />
 
 
     </RelativeLayout>

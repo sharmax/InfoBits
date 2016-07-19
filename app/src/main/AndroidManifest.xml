@@ -99,16 +99,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.suryansh.infobits.homepage" />
         </activity>
-        <activity
-            android:name=".signup"
-            android:label="@string/Signup"
-            android:parentActivityName=".homepage"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.suryansh.infobits.homepage" />
-        </activity>
+        <!--<activity-->
+            <!--android:name=".signup"-->
+            <!--android:label="@string/Signup"-->
+            <!--android:parentActivityName=".homepage"-->
+            <!--android:screenOrientation="portrait"-->
+            <!--android:theme="@style/AppTheme.NoActionBar">-->
+            <!--<meta-data-->
+                <!--android:name="android.support.PARENT_ACTIVITY"-->
+                <!--android:value="com.example.suryansh.infobits.homepage" />-->
+        <!--</activity>-->
         <activity
             android:name=".ebooks"
             android:label="@string/title_activity_ebooks"
@@ -132,7 +132,7 @@
         <activity
             android:name=".infoBitsBulletin"
             android:label="@string/title_infoBits"
-            android:parentActivityName=".ebooks"
+            android:parentActivityName=".homepage"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
@@ -149,8 +149,21 @@
             android:value="@integer/google_play_services_version" />
 
         <activity android:name=".forgot_password" />
-        <activity android:name=".OnlineDb" />
-        <activity android:name=".Responses.LibService2"></activity>
+        <activity android:name=".OnlineDb"
+            android:label="@string/online_db"
+            android:parentActivityName=".homepage"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.suryansh.infobits.homepage" />
+        </activity>
+        <activity android:name=".lfmsAllItems"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme"
+            android:logo="@mipmap/lost">
+        </activity>
+        <activity android:name=".Claim"></activity>
     </application>
 
 </manifest>
