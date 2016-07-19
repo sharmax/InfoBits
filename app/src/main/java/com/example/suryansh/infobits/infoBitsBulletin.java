@@ -1,6 +1,8 @@
 package com.example.suryansh.infobits;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -63,15 +65,11 @@ public class infoBitsBulletin extends homepage {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_infobitsbulletin);
 
-        List<Fragment> fragments = getFragments();
-        mAdapter = new MyPagerAdapter(getSupportFragmentManager(), fragments);
         mToolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(mToolbar);
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
         mPager = (ViewPager) findViewById(R.id.pager);
         listView = (ListView) findViewById(R.id.listView);
-        mPager.setAdapter(mAdapter);
-        mTabLayout.setTabsFromPagerAdapter(mAdapter);
 
         String[] news = new String[]{"news1", "news2", "news3", "news4", "news5",};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
@@ -99,14 +97,48 @@ public class infoBitsBulletin extends homepage {
                 ois.close();
                 fis.close();
 
+                List<Fragment> fragments = getFragments();
+                mAdapter = new MyPagerAdapter(getSupportFragmentManager(), fragments);
+                mPager.setAdapter(mAdapter);
+                mTabLayout.setTabsFromPagerAdapter(mAdapter);
+                mTabLayout.setupWithViewPager(mPager);
+                mPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
                 System.out.println(map);
             }
         } catch (Exception e) {
+            System.out.println(e);
+            mPager.setVisibility(View.INVISIBLE);
+            mTabLayout.setVisibility(View.INVISIBLE);
+            listView.setVisibility(View.INVISIBLE);
 
+          //  AlertDialog.Builder alertDialog = new AlertDialog.Builder()
+            AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(
+                    this);
+
+            // Setting Dialog Title
+                alertDialog2.setTitle("Not Connected to Intranet");
+
+            // Setting Dialog Message
+                alertDialog2.setMessage("Connect to intranet and try again");
+
+            // Setting Icon to Dialog
+                alertDialog2.setIcon(R.drawable.delete);
+
+            // Setting Negative "Yes" Btn
+                alertDialog2.setNegativeButton("OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Write your code here to execute after dialog
+                            finish();
+                            Toast.makeText(getApplicationContext(),
+                                    "Closed Bulletin", Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                    });
+
+            // Showing Alert Dialog
+            alertDialog2.show();
         }
-        mTabLayout.setupWithViewPager(mPager);
-        mPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
-
 
     }
 

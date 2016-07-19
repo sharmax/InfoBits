@@ -230,16 +230,16 @@ public class user_settings extends homepage implements View.OnClickListener {
             case "User Settings":{
                 String url = apiURL + "user_settings.php?username="+username +"&password="+ password;
                 // Request a string response from the provided URL.
+
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            // Display the first 500 characters of the response string.
                             spinner.setVisibility(View.GONE);
-                            image.setVisibility(ImageView.VISIBLE);
                             nameLayout.setVisibility(LinearLayout.VISIBLE);
-                            mobileLayout.setVisibility(LinearLayout.VISIBLE);
                             emailLayout.setVisibility(LinearLayout.VISIBLE);
+                            image.setVisibility(ImageView.VISIBLE);
+                            mobileLayout.setVisibility(LinearLayout.VISIBLE);
                             FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.fab);
                             fab.setVisibility(FloatingActionButton.VISIBLE);
                             updateUserDetails(response, queue);
@@ -249,6 +249,14 @@ public class user_settings extends homepage implements View.OnClickListener {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             spinner.setVisibility(View.GONE);
+                            nameLayout.setVisibility(LinearLayout.VISIBLE);
+                            emailLayout.setVisibility(LinearLayout.VISIBLE);
+                            TextView userName = (TextView) findViewById(R.id.textView2);
+                            userName.setText(name);
+                            TextView emailID = (TextView) findViewById(R.id.textView4);
+                            emailID.setText(email);
+//                            TextView mobileNo = (TextView) findViewById(R.id.mobileText);
+//                            mobileNo.setText(userResponse.mobile);
                             Toast.makeText(getApplicationContext(), "ERROR: "+ error.getMessage(), Toast.LENGTH_LONG).show();
                         }
                 });
