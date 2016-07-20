@@ -75,6 +75,21 @@ public class infoBitsBulletin extends homepage {
                     serverCalls(file);
                 } else {
                     Toast.makeText(getApplicationContext(), "Not Connected to BITS Intranet!", Toast.LENGTH_LONG).show();
+
+                    FileInputStream fis = new FileInputStream(file);
+                    ObjectInputStream ois = new ObjectInputStream(fis);
+                    map = (Map) ois.readObject();
+
+                    ois.close();
+                    fis.close();
+
+                    List<Fragment> fragments = getFragments();
+                    mAdapter = new MyPagerAdapter(getSupportFragmentManager(), fragments);
+                    mPager.setAdapter(mAdapter);
+                    mTabLayout.setTabsFromPagerAdapter(mAdapter);
+                    mTabLayout.setupWithViewPager(mPager);
+                    mPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+                    System.out.println(map);
                 }
 
             } else {
@@ -253,6 +268,7 @@ public class infoBitsBulletin extends homepage {
                     Toast.makeText(getApplicationContext(),
                             "Error: " + e.getMessage(),
                             Toast.LENGTH_LONG).show();
+
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -266,7 +282,45 @@ public class infoBitsBulletin extends homepage {
                 spinner.setVisibility(View.GONE);
                 Toast.makeText(getApplicationContext(),
                         error.getMessage(), Toast.LENGTH_SHORT).show();
-                // hide the progress dialog
+
+                FileInputStream fis = null;
+                try {
+                    fis = new FileInputStream(file);
+                } catch (FileNotFoundException e1) {
+                    e1.printStackTrace();
+                }
+                ObjectInputStream ois = null;
+                try {
+                    ois = new ObjectInputStream(fis);
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+                try {
+                    map = (Map) ois.readObject();
+                } catch (ClassNotFoundException e1) {
+                    e1.printStackTrace();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+
+                try {
+                    ois.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+                try {
+                    fis.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+
+                List<Fragment> fragments = getFragments();
+                mAdapter = new MyPagerAdapter(getSupportFragmentManager(), fragments);
+                mPager.setAdapter(mAdapter);
+                mTabLayout.setTabsFromPagerAdapter(mAdapter);
+                mTabLayout.setupWithViewPager(mPager);
+                mPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+                System.out.println(map);
 
             }
         });

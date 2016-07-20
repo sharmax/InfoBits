@@ -2,6 +2,7 @@ package com.example.suryansh.infobits;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -21,6 +22,10 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.Map;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -247,12 +252,23 @@ public class user_settings extends homepage implements View.OnClickListener {
                             spinner.setVisibility(View.GONE);
                             nameLayout.setVisibility(LinearLayout.VISIBLE);
                             emailLayout.setVisibility(LinearLayout.VISIBLE);
+                            image.setVisibility(ImageView.VISIBLE);
                             TextView userName = (TextView) findViewById(R.id.textView2);
                             userName.setText(name);
                             TextView emailID = (TextView) findViewById(R.id.textView4);
                             emailID.setText(email);
-//                            TextView mobileNo = (TextView) findViewById(R.id.mobileText);
-//                            mobileNo.setText(userResponse.mobile);
+                            File profilepic = new File(dir, avatar);
+                            try {
+                                fileInput = new FileInputStream(profilepic);
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                            if(fileInput == null){
+                                image.setImageResource(R.mipmap.logo);
+                            }else{
+                                image.setImageBitmap(BitmapFactory.decodeStream(fileInput));
+                            }
+//
                             Toast.makeText(getApplicationContext(), "ERROR: "+ error.getMessage(), Toast.LENGTH_LONG).show();
                         }
                 });
