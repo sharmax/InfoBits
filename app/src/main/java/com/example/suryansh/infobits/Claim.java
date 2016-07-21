@@ -7,12 +7,10 @@ import org.json.JSONObject;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,25 +21,16 @@ public class Claim extends homepage {
     Button btnSave;
     String sno;
     private ProgressDialog pDialog;
-    JSONParser jsonParser = new JSONParser();
-    private static final String url_item_detials = "http://172.21.1.31:8080/android_connect/get_item_details.php";
-    private static final String url_update_item = "http://172.21.1.31:8080/android_connect/update_item.php";
-    private static final String TAG_SUCCESS = "success";
-    private static final String TAG_ITEM = "item";
-    private static final String TAG_ID = "sno";
-    private static final String TAG_NAME = "particulars";
+    private static final String url_update_item = apiURL + "/update_item.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_claim);
-
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
         btnSave = (Button) findViewById(R.id.btnSave);
         txtName = (EditText) findViewById(R.id.inputName);
         Intent i = getIntent();
-        sno = i.getStringExtra(TAG_ID);
+        sno = i.getStringExtra("brand");
         new GetItemDetails().execute();
         btnSave.setOnClickListener(new View.OnClickListener() {
 
@@ -71,9 +60,8 @@ public class Claim extends homepage {
                 Map kv = null;
                 kv.put("sno", sno);
                 params1.add(kv);
-                //JSONObject json = jsonParser.makeHttpRequest(url_item_detials, "GET", params1);
                 Log.d("Single Item Details", json.toString());
-                success = json.getInt(TAG_SUCCESS);
+                success = json.getInt("sno");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -85,10 +73,10 @@ public class Claim extends homepage {
             // dismiss the dialog once got all details
             if (success == 1) {
                 try {
-                    JSONArray itemObj = json.getJSONArray(TAG_ITEM); // JSON Array
+                    JSONArray itemObj = json.getJSONArray("brand"); // JSON Array
                     JSONObject item = itemObj.getJSONObject(0);
                     txtName = (EditText) findViewById(R.id.inputName);
-                    txtName.setText(item.getString(TAG_NAME));
+                    txtName.setText(item.getString("particulars"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -112,8 +100,8 @@ public class Claim extends homepage {
             super.onPreExecute();
             name1 = txtName.getText().toString();
             Map kv = null;
-            kv.put(TAG_ID, sno);
-            kv.put(TAG_NAME, name1);
+            kv.put("sno", sno);
+            kv.put("particulars", name1);
             params.add(kv);
             pDialog = new ProgressDialog(Claim.this);
             pDialog.setMessage("Saving product ...");
@@ -139,7 +127,7 @@ public class Claim extends homepage {
 
             // check json success tag
             try {
-                int success = json.getInt(TAG_SUCCESS);
+                int success = json.getInt("sno");
 
                 if (success == 1) {
                     // successfully updated

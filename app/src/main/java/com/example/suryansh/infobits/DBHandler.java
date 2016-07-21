@@ -1,16 +1,10 @@
 package com.example.suryansh.infobits;
 
-/**
- * Created by Abhishek on 1/24/2016.
- */
-
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.Cursor;
 import android.content.Context;
 import android.content.ContentValues;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -18,10 +12,10 @@ public class DBHandler extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "bitslib.db";
-    private static final String[] TABLES = {"communications","newsfeed","noticeboard","book_of_the_month"};
-    private static final String[][] COLUMNS = {{"bitsid","category","name","topic","date","time","admins","talk","cat","status"},{"news_type","title","url","date","added_by","newspaper","keywords","pages"},{"image","link"},{"title","author","image"}};
-    private static final String[][] TYPES = {{"varchar(12)","varchar(20)","varchar(40)","text","varchar(10)","varchar(10)","text","text","varchar(10)","varchar(10)"},{"varchar(5)","text","text","date","varchar(10)","text","text","varchar(20)"},{"text","text"},{"text","text","text"}};
-    private static final int[][] VAR_COLUMNS = {{6,7,9},{},{},{}};
+    private static final String[] TABLES = {"communications","newsfeed","noticeboard","book_of_the_month","lfms"};
+    private static final String[][] COLUMNS = {{"bitsid","category","name","topic","date","time","admins","talk","cat","status"},{"news_type","title","url","date","added_by","newspaper","keywords","pages"},{"image","link"},{"title","author","image"},{"particulars","brand","found_by","status"}};
+    private static final String[][] TYPES = {{"varchar(12)","varchar(20)","varchar(40)","text","varchar(10)","varchar(10)","text","text","varchar(10)","varchar(10)"},{"varchar(5)","text","text","date","varchar(10)","text","text","varchar(20)"},{"text","text"},{"text","text","text"},{"varchar(50)","varchar(20)","varchar(30)","int"}};
+    private static final int[][] VAR_COLUMNS = {{6,7,9},{},{},{},{3}};
 
     public DBHandler(Context context, String name, SQLiteDatabase.CursorFactory factory) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);

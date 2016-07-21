@@ -1,93 +1,64 @@
 package com.example.suryansh.infobits;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.util.Log;
-import android.view.Menu;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListAdapter;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import org.json.JSONArray;
+import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
-
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Iterator;
 
-public class lfmsAllItems extends ListActivity {
+public class lfmsAllItems extends homepage {
 
-    // Progress Dialog
     private ProgressDialog pDialog;
-
-    // Creating JSON Parser object
-    JSONParser jParser = new JSONParser();
-
-    ArrayList<HashMap<String, String>> ItemsList;
-
-    // url to get all items list
-    private static String url_all_items = "http://172.21.1.31:8080/android_connect/get_all_items.php";
-
-    // JSON Node names
-    private static final String TAG_SUCCESS = "success";
-    private static final String TAG_ITEMS = "items";
-    private static final String TAG_ID = "sno";
-    private static final String TAG_NAME = "particulars";
-
-    // itemss JSONArray
-    JSONArray items = null;
+    String message = "", actString = "get_all_items", urlString = "";
+    ArrayList<HashMap<String, String>> ItemsList = new ArrayList<HashMap<String, String>>();
+    ListView lv;
+    TextView msg;
+    DBHandler dbhandler;
+    JSONObject internal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lfms_all_items);
-
-        // Hashmap for ListView
-        ItemsList = new ArrayList<HashMap<String, String>>();
-        new LoadAllItems().execute();
-        ListView lv = getListView();
-        lv.setOnItemClickListener(new OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                // getting values from selected ListItem
-                String Item_id = ((TextView) view.findViewById(R.id.sno)).getText().toString();
-
-                // Starting new intent
-                Intent in = new Intent(getApplicationContext(), Claim.class);
-                // sending pid to next activity
-                in.putExtra(TAG_ID, Item_id);
-
-                // starting new activity and expecting some response back
-                startActivityForResult(in, 100);
-            }
-        });
+        lv = (ListView) findViewById(R.id.list);
+        msg = (TextView) findViewById(R.id.message);
+        dbhandler = new DBHandler(this, null, null);
+        internal = dbhandler.selectData(4,"1 ORDER BY id DESC");
+        if(isConnected()){
+            urlString = apiURL + actString + ".php?username=" + username + "&password=" + password;
+            new APICall().execute(urlString);
+        }
+        else{
+            setList(internal);
+        }
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == 100) {
-            Intent intent = getIntent();
-            finish();
-            startActivity(intent);
         }
-
     }
 
-    class LoadAllItems extends AsyncTask<String, String, String> {
+    private class APICall extends AsyncTask<String,Integer,String> {
 
-        JSONObject json;
+        String err;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -97,66 +68,152 @@ public class lfmsAllItems extends ListActivity {
             pDialog.setCancelable(false);
             pDialog.show();
         }
-        protected String doInBackground(String... args) {
-            // Building Parameters
-            List<Map> params = new ArrayList<Map>();
-            // getting JSON string from URL
-//            JSONObject json = jParser.makeHttpRequest(url_all_items, "GET", params);
 
-            // Check your log cat for JSON reponse
-            Log.d("All items: ", json.toString());
+        @Override
+        protected String doInBackground(String[] params) {
+            String urlString= params[0];
+            StringBuilder responseStrBuilder = new StringBuilder();
+            String inputStr;
 
             try {
-                // Checking for SUCCESS TAG
-                int success = json.getInt(TAG_SUCCESS);
-
-                if (success == 1) {
-
-                    items = json.getJSONArray(TAG_ITEMS);
-
-                    for (int i = 0; i < items.length(); i++) {
-                        JSONObject c = items.getJSONObject(i);
-
-                        // Storing each json item in variable
-                        String id = c.getString(TAG_ID);
-                        String name = c.getString(TAG_NAME);
-
-                        // creating new HashMap
-                        HashMap<String, String> map = new HashMap<String, String>();
-
-                        // adding each child node to HashMap key => value
-                        map.put(TAG_ID, id);
-                        map.put(TAG_NAME, name);
-
-                        // adding HashList to ArrayList
-                        ItemsList.add(map);
-                    }
-                } else {
-
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
+                URL url = new URL(urlString);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                BufferedReader streamReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
+                while ((inputStr = streamReader.readLine()) != null)
+                    responseStrBuilder.append(inputStr);
+            } catch (Exception e ) {
+                err = "Network Error! Ensure you're connected to BITS Intranet";
             }
-            return null;
+            return responseStrBuilder.toString();
         }
 
-        protected void onPostExecute(String file_url) {
-
-            if(pDialog != null)
-                pDialog.dismiss();
-
-            runOnUiThread(new Runnable() {
-                public void run() {
-
-                    ListAdapter adapter = new SimpleAdapter(
-                            lfmsAllItems.this, ItemsList,
-                            R.layout.list_item, new String[] { TAG_ID,
-                            TAG_NAME},
-                            new int[] { R.id.sno, R.id.name });
-                    // updating listview
-                    setListAdapter(adapter);
+        @Override
+        protected void onPostExecute(String result) {
+            if(!result.isEmpty()) {
+                try {
+                    JSONObject json = new JSONObject(result);
+                    updateInternalData(json);
+                } catch (Exception e) {
+                    Toast.makeText(lfmsAllItems.this,e.getMessage(),Toast.LENGTH_LONG).show();
                 }
-            });
+            }
+            else{
+                if(!err.isEmpty()){
+                    Toast.makeText(lfmsAllItems.this,err,Toast.LENGTH_LONG).show();
+                }
+                setList(internal);
+            }
+            if (pDialog != null)
+                pDialog.dismiss();
+        }
+    }
+
+    public void updateInternalData(JSONObject json){
+        try{
+            if(json.has("err_message") && !json.get("err_message").toString().isEmpty()){
+                Toast.makeText(lfmsAllItems.this, json.get("err_message").toString(), Toast.LENGTH_LONG).show();
+            }
+            if(json.has("message") && !json.get("message").toString().isEmpty()){
+                message = json.get("message").toString();
+            }
+            if(message.isEmpty() && !json.get("data").toString().equals("[]")){
+                JSONObject data = (JSONObject) json.get("data");
+                Iterator<String> iter = data.keys();
+                while(iter.hasNext()) {
+                    String key = iter.next();
+                    JSONObject dataval = (JSONObject) data.get(key);
+                    if (!internal.has(key)) {
+                        String[] addvalues = {key, dataval.get("particulars").toString(), dataval.get("brand").toString(), dataval.get("found_by").toString(), dataval.get("status").toString()};
+                        dbhandler.addData(4, addvalues);
+                    }
+                    else{
+                        internal.remove(key);
+                    }
+                }
+                setList(data);
+                Iterator<String> intiter = internal.keys();
+                while(intiter.hasNext()){
+                    dbhandler.deleteData(4, Integer.parseInt(intiter.next()));
+                }
+            }
+        } catch (JSONException e) {
+            Toast.makeText(lfmsAllItems.this,e.toString(),Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void setList(JSONObject json){
+        try{
+            Iterator<String> iter = json.keys();
+            while(iter.hasNext()) {
+                String key = iter.next();
+                JSONObject data = (JSONObject) json.get(key);
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put("sno", key);
+                map.put("status", data.get("status").toString());
+                map.put("brand", data.get("brand").toString());
+                map.put("particulars", data.get("particulars").toString());
+                ItemsList.add(map);
+            }
+        } catch (JSONException e) {
+            Toast.makeText(lfmsAllItems.this,e.toString(),Toast.LENGTH_LONG).show();
+        }
+        showList();
+    }
+
+    public void showList(){
+        if(message.isEmpty()){
+            MyAdapter adapter = new MyAdapter(getApplicationContext(), ItemsList);
+            lv.setAdapter(adapter);
+        }
+        else{
+            lv.setVisibility(View.GONE);
+            msg.setVisibility(View.VISIBLE);
+            msg.setText(message);
+        }
+    }
+
+    public class MyAdapter extends ArrayAdapter<HashMap<String, String>> {
+
+        private ArrayList<HashMap<String, String>> lf;
+        public MyAdapter(Context context, ArrayList<HashMap<String, String>> items) {
+            super(context,0, items);
+            lf = items;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View v = convertView;
+
+            final HashMap i = lf.get(position);
+            if (i != null) {
+                v = getLayoutInflater().inflate(R.layout.list_item, null);
+                ((TextView) v.findViewById(R.id.sno)).setText(i.get("sno").toString());
+                TextView brand = (TextView) v.findViewById(R.id.brand);
+                if(i.get("brand").toString().isEmpty()){
+                    brand.setVisibility(View.GONE);
+                }
+                else{
+                    brand.setText(i.get("brand").toString());
+                }
+                ((TextView) v.findViewById(R.id.name)).setText(i.get("particulars").toString());
+                if(i.get("status") == "0"){
+                    v.findViewById(R.id.claimed).setVisibility(View.VISIBLE);
+                    v.setBackgroundColor(Color.rgb(192,192,192));
+                    v.setClickable(false);
+                }
+                else{
+                    v.setClickable(true);
+                    v.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent in = new Intent(getApplicationContext(), Claim.class);
+                            in.putExtra("sno", i.get("sno").toString());
+                            startActivityForResult(in, 100);
+                        }
+                    });
+                }
+            }
+            return v;
         }
     }
 }

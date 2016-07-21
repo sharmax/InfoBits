@@ -36,9 +36,9 @@ public class LibService extends homepage {
         cat = navigationView.getMenu().getItem(0);
         cat.setChecked(true);
         View navHeader = navigationView.getHeaderView(0);
-        ((TextView) navHeader.findViewById(R.id.name)).setText(name);
+        ((TextView) navHeader.findViewById(R.id.brand)).setText(name);
         ((TextView) navHeader.findViewById(R.id.email)).setText(email);
-        ((TextView) navHeader.findViewById(R.id.name)).setText(name);
+        ((TextView) navHeader.findViewById(R.id.brand)).setText(name);
         ((TextView) navHeader.findViewById(R.id.email)).setText(email);
         File profilepic = new File(dir, avatar);
         try {
