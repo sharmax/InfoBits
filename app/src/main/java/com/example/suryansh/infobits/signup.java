@@ -21,7 +21,7 @@ public class signup extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        name = (EditText)findViewById(R.id.name);
+        name = (EditText)findViewById(R.id.brand);
         bitsid = (EditText)findViewById(R.id.bitsid);
         bitsmail = (EditText)findViewById(R.id.bitsmail);
         pass = (EditText)findViewById(R.id.pass);
