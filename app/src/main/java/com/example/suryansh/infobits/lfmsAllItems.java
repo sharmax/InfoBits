@@ -1,11 +1,13 @@
 package com.example.suryansh.infobits;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -38,6 +40,8 @@ public class lfmsAllItems extends homepage {
         setContentView(R.layout.activity_lfms_all_items);
         lv = (ListView) findViewById(R.id.list);
         msg = (TextView) findViewById(R.id.message);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         dbhandler = new DBHandler(this, null, null);
         internal = dbhandler.selectData(4,"1 ORDER BY id DESC");
         if(isConnected()){
@@ -46,13 +50,6 @@ public class lfmsAllItems extends homepage {
         }
         else{
             setList(internal);
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == 100) {
         }
     }
 
@@ -123,7 +120,7 @@ public class lfmsAllItems extends homepage {
                     String key = iter.next();
                     JSONObject dataval = (JSONObject) data.get(key);
                     if (!internal.has(key)) {
-                        String[] addvalues = {key, dataval.get("particulars").toString(), dataval.get("brand").toString(), dataval.get("found_by").toString(), dataval.get("status").toString()};
+                        String[] addvalues = {key, dataval.get("particulars").toString(), dataval.get("brand").toString(), dataval.get("date").toString(), dataval.get("time").toString(), dataval.get("status").toString()};
                         dbhandler.addData(4, addvalues);
                     }
                     else{
@@ -172,6 +169,22 @@ public class lfmsAllItems extends homepage {
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+            case (1) : {
+                if (resultCode == Activity.RESULT_OK) {
+                    String newText = data.getStringExtra("update");
+                    if(newText.equals(1)){
+                        setList(dbhandler.selectData(4,"1 ORDER BY id DESC"));
+                    }
+                }
+                break;
+            }
+        }
+    }
+
     public class MyAdapter extends ArrayAdapter<HashMap<String, String>> {
 
         private ArrayList<HashMap<String, String>> lf;
@@ -196,7 +209,7 @@ public class lfmsAllItems extends homepage {
                     brand.setText(i.get("brand").toString());
                 }
                 ((TextView) v.findViewById(R.id.name)).setText(i.get("particulars").toString());
-                if(i.get("status") == "0"){
+                if(i.get("status").toString().equals("0")){
                     v.findViewById(R.id.claimed).setVisibility(View.VISIBLE);
                     v.setBackgroundColor(Color.rgb(192,192,192));
                     v.setClickable(false);

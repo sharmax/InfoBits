@@ -1,108 +1,79 @@
 package com.example.suryansh.infobits;
 
+import android.app.Activity;
 import android.os.Bundle;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.util.Log;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import android.widget.TextView;
+import android.widget.Toast;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-public class Claim extends homepage {
+public class Claim extends lfmsAllItems {
 
-    EditText txtName;
-    Button btnSave;
-    String sno;
+    TextView particulars, found;
+    Button claim;
+    public static String sno;
+    JSONObject details;
     private ProgressDialog pDialog;
-    private static final String url_update_item = apiURL + "/update_item.php";
+    private static final String url_update_item = apiURL + "/update_item.php?username=" + username + "&password=" + password + "&sno=";
+    SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"), ndf = new SimpleDateFormat("MMM dd yyyy hh:mm a");
+    Date date;
+    Integer success;
+    DBHandler dbhandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_claim);
-        btnSave = (Button) findViewById(R.id.btnSave);
-        txtName = (EditText) findViewById(R.id.inputName);
-        Intent i = getIntent();
-        sno = i.getStringExtra("brand");
-        new GetItemDetails().execute();
-        btnSave.setOnClickListener(new View.OnClickListener() {
-
+        claim = (Button) findViewById(R.id.claim);
+        particulars = (TextView) findViewById(R.id.particulars);
+        found = (TextView) findViewById(R.id.found);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.nav_toolbar);
+        setSupportActionBar(toolbar);
+        Bundle b = getIntent().getExtras();
+        sno = b.get("sno").toString();
+        dbhandler = new DBHandler(this, null, null);
+        try {
+            details = ((JSONObject) dbhandler.selectData(4,"id = " + sno).get(sno));
+            particulars.setText("Particulars: " + details.get("particulars").toString() + "\n\nBrand: " + details.get("brand").toString());
+            String found_at = details.get("date").toString() + " " + details.get("time").toString();
+            try {
+                date = df.parse(found_at);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            found.setText("Found: " + ndf.format(date));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        claim.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                new SaveItemDetails().execute();
+                if(isConnected()){
+                    new SaveItemDetails().execute(url_update_item + sno);
+                }
             }
         });
     }
 
-    class GetItemDetails extends AsyncTask<String, String, String> {
+    class SaveItemDetails extends AsyncTask<String, Integer, String> {
 
-        JSONObject json;
-        int success;
+        String err;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(Claim.this);
-            pDialog.setMessage("Loading Item details. Please wait...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(true);
-            pDialog.show();
-        }
-        protected String doInBackground(String... params) {
-            try {
-                List<Map> params1 = new ArrayList<Map>();
-                Map kv = null;
-                kv.put("sno", sno);
-                params1.add(kv);
-                Log.d("Single Item Details", json.toString());
-                success = json.getInt("sno");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-
-        protected void onPostExecute(String file_url) {
-            // dismiss the dialog once got all details
-            if (success == 1) {
-                try {
-                    JSONArray itemObj = json.getJSONArray("brand"); // JSON Array
-                    JSONObject item = itemObj.getJSONObject(0);
-                    txtName = (EditText) findViewById(R.id.inputName);
-                    txtName.setText(item.getString("particulars"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-            pDialog.dismiss();
-
-        }
-    }
-
-
-    class SaveItemDetails extends AsyncTask<String, String, String> {
-
-        /**
-         * Before starting background thread Show Progress Dialog
-         * */
-        JSONObject json;
-        String name1;
-        List<Map> params = new ArrayList<Map>();
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            name1 = txtName.getText().toString();
-            Map kv = null;
-            kv.put("sno", sno);
-            kv.put("particulars", name1);
-            params.add(kv);
             pDialog = new ProgressDialog(Claim.this);
             pDialog.setMessage("Saving product ...");
             pDialog.setIndeterminate(false);
@@ -110,47 +81,64 @@ public class Claim extends homepage {
             pDialog.show();
         }
 
-        /**
-         * Saving product
-         * */
-        protected String doInBackground(String... args) {
-            // getting updated data from EditTexts
-            //String name = args[0];
-            //String price = args[1];
-            //String description = args[2];
-            // Building Parameters
+        @Override
+        protected String doInBackground(String[] params) {
+            String urlString= params[0];
+            StringBuilder responseStrBuilder = new StringBuilder();
+            String inputStr;
 
-
-            // sending modified data through http request
-            // Notice that update product url accepts POST method
-//            json = jsonParser.makeHttpRequest(url_update_item,"POST", params);
-
-            // check json success tag
             try {
-                int success = json.getInt("sno");
-
-                if (success == 1) {
-                    // successfully updated
-                    Intent i = getIntent();
-                    // send result code 100 to notify about product update
-                    setResult(100, i);
-                    finish();
-                } else {
-                    // failed to update product
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
+                URL url = new URL(urlString);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                BufferedReader streamReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
+                while ((inputStr = streamReader.readLine()) != null)
+                    responseStrBuilder.append(inputStr);
+            } catch (Exception e ) {
+                err = "Network Error! Ensure you're connected to BITS Intranet";
             }
-            return null;
+            return responseStrBuilder.toString();
         }
 
-
-        /**
-         * After completing background task Dismiss the progress dialog
-         * **/
-        protected void onPostExecute(String file_url) {
-            // dismiss the dialog once product updated
+        @Override
+        protected void onPostExecute(String result) {
+            if (!result.isEmpty()) {
+                try {
+                    JSONObject json = new JSONObject(result);
+                    updateStatus(json);
+                } catch (Exception e) {
+                    Toast.makeText(Claim.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            } else {
+                if (!err.isEmpty()) {
+                    Toast.makeText(Claim.this, err, Toast.LENGTH_LONG).show();
+                }
+            }
             pDialog.dismiss();
+        }
+    }
+
+    public void updateStatus(JSONObject json){
+        try{
+            if(json.has("err_message") && !json.get("err_message").toString().isEmpty()){
+                Toast.makeText(Claim.this, json.get("err_message").toString(), Toast.LENGTH_LONG).show();
+            }
+            else if(json.has("message") && !json.get("message").toString().isEmpty()){
+                Toast.makeText(Claim.this, json.get("message").toString(), Toast.LENGTH_LONG).show();
+                if(json.has("success") && !json.get("success").toString().isEmpty()){
+                    success = Integer.parseInt(json.get("success").toString());
+                    String[] status = {"0"};
+                    dbhandler.updateData(4,status,Integer.parseInt(sno));
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(Claim.this, "3", Toast.LENGTH_LONG).show();
+        }
+        if(success == 1){
+            Intent resultIntent = new Intent(Claim.this,lfmsAllItems.class);
+            resultIntent.putExtra("update", success);
+            setResult(Activity.RESULT_OK, resultIntent);
+            finish();
         }
     }
 }

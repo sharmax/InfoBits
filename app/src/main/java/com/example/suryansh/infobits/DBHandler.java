@@ -13,9 +13,9 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "bitslib.db";
     private static final String[] TABLES = {"communications","newsfeed","noticeboard","book_of_the_month","lfms"};
-    private static final String[][] COLUMNS = {{"bitsid","category","name","topic","date","time","admins","talk","cat","status"},{"news_type","title","url","date","added_by","newspaper","keywords","pages"},{"image","link"},{"title","author","image"},{"particulars","brand","found_by","status"}};
-    private static final String[][] TYPES = {{"varchar(12)","varchar(20)","varchar(40)","text","varchar(10)","varchar(10)","text","text","varchar(10)","varchar(10)"},{"varchar(5)","text","text","date","varchar(10)","text","text","varchar(20)"},{"text","text"},{"text","text","text"},{"varchar(50)","varchar(20)","varchar(30)","int"}};
-    private static final int[][] VAR_COLUMNS = {{6,7,9},{},{},{},{3}};
+    private static final String[][] COLUMNS = {{"bitsid","category","name","topic","date","time","admins","talk","cat","status"},{"news_type","title","url","date","added_by","newspaper","keywords","pages"},{"image","link"},{"title","author","image"},{"particulars","brand","date","time","status"}};
+    private static final String[][] TYPES = {{"varchar(12)","varchar(20)","varchar(40)","text","varchar(10)","varchar(10)","text","text","varchar(10)","varchar(10)"},{"varchar(5)","text","text","date","varchar(10)","text","text","varchar(20)"},{"text","text"},{"text","text","text"},{"varchar(50)","varchar(20)","varchar(10)","varchar(10)","varchar(1)"}};
+    private static final int[][] VAR_COLUMNS = {{6,7,9},{},{},{},{4}};
 
     public DBHandler(Context context, String name, SQLiteDatabase.CursorFactory factory) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);

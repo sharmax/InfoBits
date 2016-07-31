@@ -41,10 +41,10 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:id="@+id/view_pager"
-            android:padding="0dp"
+            android:padding="0dip"
             android:layout_below="@+id/homeicons"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dip"
+            android:layout_marginBottom="10dip"
             android:fadingEdge="horizontal"
             android:visibility="gone" />
 
@@ -64,7 +64,7 @@
                 android:onClick="onClickOs"
                 android:padding="0dp"
                 android:clickable="true"
-                android:layout_margin="12dp" />
+                android:layout_margin="12dip" />
 
             <ImageButton
                 android:layout_width="wrap_content"
@@ -72,13 +72,13 @@
                 android:id="@+id/scienceDirect"
                 android:src="@mipmap/libr"
                 android:onClick="onClickLibr"
-                android:padding="0dp"
+                android:padding="0dip"
                 android:clickable="true"
                 android:layout_toRightOf="@+id/taylorFrancis"
-                android:minWidth="96dp"
-                android:minHeight="96dp"
+                android:minWidth="96dip"
+                android:minHeight="96dip"
                 android:scaleType="fitCenter"
-                android:layout_margin="12dp" />
+                android:layout_margin="12dip" />
 
             <ImageButton
                 android:layout_width="wrap_content"
