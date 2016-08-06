@@ -70,20 +70,20 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/imgbt_service4"
                 android:onClick="onClickEB"
-                android:src="@mipmap/lost"
+                android:src="@mipmap/lf"
                 android:background="#211d70"
                 android:layout_below="@+id/imgbt_info"
                 android:layout_margin="25dp"
                 android:minHeight="120dp"
                 android:minWidth="120dp"
-                />
+                android:scaleType="fitCenter" />
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/imgbt_service5"
                 android:onClick="onClickIR"
-                android:src="@drawable/irxii"
+                android:src="@mipmap/ibb"
                 android:background="#211d70"
                 android:layout_alignTop="@+id/imgbt_service4"
                 android:minHeight="120dp"
@@ -91,7 +91,8 @@
                 android:layout_alignRight="@+id/imgbt_news"
                 android:layout_alignEnd="@+id/imgbt_news"
                 android:layout_alignLeft="@+id/imgbt_news"
-                android:layout_alignStart="@+id/imgbt_news" />
+                android:layout_alignStart="@+id/imgbt_news"
+                android:scaleType="fitCenter" />
         </RelativeLayout>
 
 

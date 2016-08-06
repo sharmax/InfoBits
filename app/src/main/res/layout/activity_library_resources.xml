@@ -63,8 +63,8 @@
                 android:onClick="onClickEB"
                 android:src="@drawable/ebxii"
                 android:background="#211d70"
-                android:layout_below="@+id/taylorFrancis"
-                android:layout_margin="25dp" />
+                android:layout_centerVertical="true"
+                android:layout_alignLeft="@+id/taylorFrancis" />
 
             <ImageButton
                 android:layout_width="wrap_content"
