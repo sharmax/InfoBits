@@ -12,6 +12,7 @@
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:logo="@mipmap/ibb"
         android:background="@color/colorPrimaryDark"
         android:minHeight="?attr/actionBarSize"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
