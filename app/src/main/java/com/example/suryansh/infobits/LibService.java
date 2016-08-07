@@ -64,14 +64,24 @@ public class LibService extends homepage {
         return false;
     }
 
-    public void onClickBulletin(View view) {
-        Intent i = new Intent(LibService.this, infoBitsBulletin.class);
-        startActivity(i);
+    public void onClickLF(View view){
+        if(user.isEmpty()){
+            LogInToast();
+        }
+        else{
+            Intent i = new Intent(LibService.this, lfmsAllItems.class);
+            startActivity(i);
+        }
     }
 
-    public void onClickDailyNews(View view){
-        Intent i = new Intent(LibService.this, DailyNews.class);
-        startActivity(i);
+    public void onClickIBB(View view){
+        if(user.isEmpty()){
+            LogInToast();
+        }
+        else{
+            Intent i = new Intent(LibService.this, infoBitsBulletin.class);
+            startActivity(i);
+        }
     }
 
 }
