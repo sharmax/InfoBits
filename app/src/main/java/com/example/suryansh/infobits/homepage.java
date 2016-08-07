@@ -200,9 +200,7 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
         }
         else{
             Intent i = null;
-            if (id == R.id.home_id) {
-                // Handle the camera action
-            } else if (id == R.id.os_id) {
+            if (id == R.id.os_id) {
                 i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://search.ebscohost.com/login.aspx?authtype=uid&user=bits2015&password=pilani&profile=eds"));
             } else if (id == R.id.comm_id) {
                 i = new Intent(homepage.this, ConnectWithLibrary.class);

@@ -106,18 +106,15 @@
 
         <ProgressBar
             style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:id="@+id/progressBar"
-            android:progressTint="@color/colorPrimaryDark"
-            android:secondaryProgressTint="#fff"
-            android:visibility="visible"
-            android:backgroundTint="@color/colorPrimaryDark"
+            android:visibility="gone"
             android:layout_below="@+id/register"
             android:layout_centerHorizontal="true"
-            android:padding="10dp"
-            android:layout_alignLeft="@+id/bt_signin"
-            android:layout_alignRight="@+id/bt_signin" />
+            android:progressTint="@color/colorPrimaryDark"
+            android:progressTintMode="src_in"
+            android:indeterminate="false" />
 
         <ImageButton
             android:layout_width="wrap_content"

@@ -161,12 +161,12 @@
         <activity android:name=".lfmsAllItems"
             android:label="@string/lost_and_found"
             android:theme="@style/AppTheme"
-            android:logo="@mipmap/lost">
+            android:logo="@mipmap/lf">
         </activity>
         <activity android:name=".Claim"
             android:label="@string/claim_lost_item"
             android:theme="@style/AppTheme"
-            android:logo="@mipmap/lost"
+            android:logo="@mipmap/lf"
             ></activity>
     </application>
 

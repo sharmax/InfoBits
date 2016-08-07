@@ -172,17 +172,7 @@ public class lfmsAllItems extends homepage {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch(requestCode) {
-            case (1) : {
-                if (resultCode == Activity.RESULT_OK) {
-                    String newText = data.getStringExtra("update");
-                    if(newText.equals(1)){
-                        setList(dbhandler.selectData(4,"1 ORDER BY id DESC"));
-                    }
-                }
-                break;
-            }
-        }
+        recreate();
     }
 
     public class MyAdapter extends ArrayAdapter<HashMap<String, String>> {
@@ -201,14 +191,11 @@ public class lfmsAllItems extends homepage {
             if (i != null) {
                 v = getLayoutInflater().inflate(R.layout.list_item, null);
                 ((TextView) v.findViewById(R.id.sno)).setText(i.get("sno").toString());
-                TextView brand = (TextView) v.findViewById(R.id.brand);
-                if(i.get("brand").toString().isEmpty()){
-                    brand.setVisibility(View.GONE);
+                TextView nametext = ((TextView) v.findViewById(R.id.name));
+                nametext.setText("Particulars: " + i.get("particulars").toString());
+                if(!i.get("brand").toString().isEmpty()) {
+                    nametext.append("\nBrand: " + i.get("brand").toString());
                 }
-                else{
-                    brand.setText(i.get("brand").toString());
-                }
-                ((TextView) v.findViewById(R.id.name)).setText(i.get("particulars").toString());
                 if(i.get("status").toString().equals("0")){
                     v.findViewById(R.id.claimed).setVisibility(View.VISIBLE);
                     v.setBackgroundColor(Color.rgb(192,192,192));
