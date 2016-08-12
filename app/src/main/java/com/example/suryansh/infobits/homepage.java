@@ -183,9 +183,7 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
             case R.id.logout:
                 edit_login_info.clear();
                 edit_login_info.apply();
-                finishAffinity();
-                Intent i14 = new Intent(homepage.this, homepage.class);
-                startActivity(i14);
+                recreate();
                 break;
         }
         return true;

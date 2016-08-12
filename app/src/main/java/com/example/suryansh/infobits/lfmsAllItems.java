@@ -1,6 +1,5 @@
 package com.example.suryansh.infobits;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;

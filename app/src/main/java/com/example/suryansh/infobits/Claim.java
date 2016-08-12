@@ -75,7 +75,7 @@ public class Claim extends lfmsAllItems {
         protected void onPreExecute() {
             super.onPreExecute();
             pDialog = new ProgressDialog(Claim.this);
-            pDialog.setMessage("Saving product ...");
+            pDialog.setMessage("Setting Claim ...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(true);
             pDialog.show();
