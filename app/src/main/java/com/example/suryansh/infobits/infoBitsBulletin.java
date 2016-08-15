@@ -70,12 +70,12 @@ public class infoBitsBulletin extends homepage {
             File file = new File(this.getFilesDir() + "/bulletin.plist");
 
             if (!file.exists()) {
-                if (isConnected()) {
-                    spinner.setVisibility(View.VISIBLE);
+                if (!isConnected()) {
+                   // spinner.setVisibility(View.VISIBLE);
                     serverCalls(file);
                 } else {
                     Toast.makeText(getApplicationContext(), "Not Connected to BITS Intranet!", Toast.LENGTH_LONG).show();
-
+                    alertShow("Connect to intranet and try again", "Not Connected to Intranet");
                     FileInputStream fis = new FileInputStream(file);
                     ObjectInputStream ois = new ObjectInputStream(fis);
                     map = (Map) ois.readObject();
@@ -115,35 +115,40 @@ public class infoBitsBulletin extends homepage {
             mTabLayout.setVisibility(View.INVISIBLE);
             listView.setVisibility(View.INVISIBLE);
 
-          //  AlertDialog.Builder alertDialog = new AlertDialog.Builder()
-            AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(
-                    this);
+            alertShow("Connect to intranet and try again", "Not Connected to Intranet");
 
-            // Setting Dialog Title
-                alertDialog2.setTitle("Not Connected to Intranet");
-
-            // Setting Dialog Message
-                alertDialog2.setMessage("Connect to intranet and try again");
-
-            // Setting Icon to Dialog
-                alertDialog2.setIcon(R.drawable.delete);
-
-            // Setting Negative "Yes" Btn
-                alertDialog2.setNegativeButton("OK",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // Write your code here to execute after dialog
-                            finish();
-                            Toast.makeText(getApplicationContext(),
-                                    "Closed Bulletin", Toast.LENGTH_SHORT)
-                                    .show();
-                        }
-                    });
-
-            // Showing Alert Dialog
-            alertDialog2.show();
         }
 
+    }
+
+    public void alertShow(String message, String title){
+        //  AlertDialog.Builder alertDialog = new AlertDialog.Builder()
+        AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(
+                this);
+
+        // Setting Dialog Title
+        alertDialog2.setTitle(title);
+
+        // Setting Dialog Message
+        alertDialog2.setMessage(message);
+
+        // Setting Icon to Dialog
+        alertDialog2.setIcon(R.drawable.delete);
+
+        // Setting Negative "Yes" Btn
+        alertDialog2.setNegativeButton("OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Write your code here to execute after dialog
+                        finish();
+                        Toast.makeText(getApplicationContext(),
+                                "Closed Bulletin", Toast.LENGTH_SHORT)
+                                .show();
+                    }
+                });
+
+        // Showing Alert Dialog
+        alertDialog2.show();
     }
 
     @Override
@@ -235,7 +240,7 @@ public class infoBitsBulletin extends homepage {
 
     public void serverCalls(final File file){
 
-        spinner.setVisibility(View.VISIBLE);
+      //  spinner.setVisibility(View.VISIBLE);
         // Instantiate the RequestQueue.
         final RequestQueue queue = VolleySingleton.getInstance().getRequestQueue();
 
@@ -249,7 +254,7 @@ public class infoBitsBulletin extends homepage {
             public void onResponse(JSONObject response) {
 
                 try {
-                    spinner.setVisibility(View.GONE);
+                  //  spinner.setVisibility(View.GONE);
 
                     FileOutputStream fos=new FileOutputStream(file);
                     ObjectOutputStream oos=new ObjectOutputStream(fos);
@@ -268,6 +273,7 @@ public class infoBitsBulletin extends homepage {
                     Toast.makeText(getApplicationContext(),
                             "Error: " + e.getMessage(),
                             Toast.LENGTH_LONG).show();
+                    //alertShow("Connect to intranet and try again", "Not Connected to Intranet");
 
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
@@ -279,7 +285,7 @@ public class infoBitsBulletin extends homepage {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                spinner.setVisibility(View.GONE);
+              //  spinner.setVisibility(View.GONE);
                 Toast.makeText(getApplicationContext(),
                         error.getMessage(), Toast.LENGTH_SHORT).show();
 

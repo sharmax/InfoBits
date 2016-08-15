@@ -76,10 +76,10 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
     Map<String, ?> user;
     public static String username, name, password, usercat, email, avatar;
     public static FileInputStream fileInput = null;
-//    public final static String apiURL = "http://192.168.3.11:80/infoBITS/apis/";
-//    public final static String imageApiURL = "http://192.168.3.11:80/infoBITS/uploads/";
-    public final static String apiURL = "http://172.21.1.15/apis/";
-    public final static String imageApiURL = "http://172.21.1.15/uploads/";
+    public final static String apiURL = "http://192.168.2.8/infoBITS/apis/";
+    public final static String imageApiURL = "http://192.168.2.8/infoBITS/uploads/";
+//    public final static String apiURL = "http://172.21.1.15/apis/";
+//    public final static String imageApiURL = "http://172.21.1.15/uploads/";
     public final static String openURL = "http://universe.bits-pilani.ac.in:12354/";
     File dir;
     /**
@@ -195,10 +195,10 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        if(user.isEmpty()){
-            LogInToast();
-        }
-        else{
+//        if(user.isEmpty()){
+//            LogInToast();
+//        }
+//        else{
             Intent i = null;
             if (id == R.id.home_id) {
                 // Handle the camera action
@@ -225,7 +225,7 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
                 i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://172.21.1.37"));
             }
             startActivity(i);
-        }
+       // }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return false;
