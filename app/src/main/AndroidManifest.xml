@@ -159,11 +159,15 @@
                 android:value="com.example.suryansh.infobits.homepage" />
         </activity>
         <activity android:name=".lfmsAllItems"
-            android:label="@string/app_name"
+            android:label="@string/lost_and_found"
             android:theme="@style/AppTheme"
-            android:logo="@mipmap/lost">
+            android:logo="@mipmap/lf">
         </activity>
-        <activity android:name=".Claim"></activity>
+        <activity android:name=".Claim"
+            android:label="@string/claim_lost_item"
+            android:theme="@style/AppTheme"
+            android:logo="@mipmap/lf"
+            ></activity>
     </application>
 
 </manifest>

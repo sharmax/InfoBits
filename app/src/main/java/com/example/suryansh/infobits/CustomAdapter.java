@@ -70,7 +70,7 @@ public class CustomAdapter extends BaseAdapter{
         //Image URL - This can point to any image file supported by Android
 
         mImageLoader.get(imageUrl[position], ImageLoader.getImageListener(holder.image,
-                R.drawable.ebxx, android.R.drawable
+                R.drawable.ebxii, android.R.drawable
                         .ic_dialog_alert));
         holder.image.setImageUrl(imageUrl[position], mImageLoader);
 

@@ -46,4 +46,6 @@
     <string name="drawer_menu_odb">Online Databases</string>
     <string name="drawer_menu_opac">WEB OPAC</string>
     <string name="online_db">Online Databases</string>
+    <string name="claim_lost_item">Lost and Found - Claim</string>
+    <string name="lost_and_found">Lost and Found</string>
 </resources>

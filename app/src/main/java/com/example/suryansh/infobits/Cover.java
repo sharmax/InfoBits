@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,8 +34,8 @@ public class Cover extends AppCompatActivity {
 
     public final static String apiURL = "http://172.21.1.15/apis/";
     public final static String imageApiURL = "http://172.21.1.15/uploads/";
-//    public final static String apiURL = "http://192.168.3.11:80/infoBITS/apis/";
-//    public final static String imageApiURL = "http://192.168.3.11:80/infoBITS/uploads/";
+//    public final static String apiURL = "http://192.168.3.10:80/infoBITS/apis/";
+//    public final static String imageApiURL = "http://192.168.3.10:80/infoBITS/uploads/";
     String actString = "notices";
     int imgs;
     ProgressBar spinner;

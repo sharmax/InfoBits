@@ -76,10 +76,11 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
     Map<String, ?> user;
     public static String username, name, password, usercat, email, avatar;
     public static FileInputStream fileInput = null;
-    public final static String apiURL = "http://192.168.2.8/infoBITS/apis/";
-    public final static String imageApiURL = "http://192.168.2.8/infoBITS/uploads/";
-//    public final static String apiURL = "http://172.21.1.15/apis/";
-//    public final static String imageApiURL = "http://172.21.1.15/uploads/";
+//    public final static String apiURL = "http://192.168.3.10:80/infoBITS/apis/";
+//    public final static String imageApiURL = "http://192.168.3.10:80/infoBITS/uploads/";
+    public final static String apiURL = "http://172.21.1.15/apis/";
+    public final static String imageApiURL = "http://172.21.1.15/uploads/";
+
     public final static String openURL = "http://universe.bits-pilani.ac.in:12354/";
     File dir;
     /**
@@ -120,11 +121,11 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
         navigationView.setItemIconTintList(null);
         View navHeader = navigationView.getHeaderView(0);
         if(user.isEmpty()) {
-            ((TextView) navHeader.findViewById(R.id.name)).setText("Guest User");
+            ((TextView) navHeader.findViewById(R.id.brand)).setText("Guest User");
             ((ImageView) navHeader.findViewById(R.id.profile)).setImageResource(R.mipmap.logo);
         }
         else{
-            ((TextView) navHeader.findViewById(R.id.name)).setText(name);
+            ((TextView) navHeader.findViewById(R.id.brand)).setText(name);
             ((TextView) navHeader.findViewById(R.id.email)).setText(email);
             File profilepic = new File(dir, avatar);
             try {
@@ -183,9 +184,7 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
             case R.id.logout:
                 edit_login_info.clear();
                 edit_login_info.apply();
-                finishAffinity();
-                Intent i14 = new Intent(homepage.this, homepage.class);
-                startActivity(i14);
+                recreate();
                 break;
         }
         return true;
@@ -200,9 +199,7 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
         }
         else{
             Intent i = null;
-            if (id == R.id.home_id) {
-                // Handle the camera action
-            } else if (id == R.id.os_id) {
+            if (id == R.id.os_id) {
                 i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://search.ebscohost.com/login.aspx?authtype=uid&user=bits2015&password=pilani&profile=eds"));
             } else if (id == R.id.comm_id) {
                 i = new Intent(homepage.this, ConnectWithLibrary.class);

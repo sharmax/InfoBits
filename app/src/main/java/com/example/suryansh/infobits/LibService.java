@@ -36,9 +36,9 @@ public class LibService extends homepage {
         cat = navigationView.getMenu().getItem(0);
         cat.setChecked(true);
         View navHeader = navigationView.getHeaderView(0);
-        ((TextView) navHeader.findViewById(R.id.name)).setText(name);
+        ((TextView) navHeader.findViewById(R.id.brand)).setText(name);
         ((TextView) navHeader.findViewById(R.id.email)).setText(email);
-        ((TextView) navHeader.findViewById(R.id.name)).setText(name);
+        ((TextView) navHeader.findViewById(R.id.brand)).setText(name);
         ((TextView) navHeader.findViewById(R.id.email)).setText(email);
         File profilepic = new File(dir, avatar);
         try {
@@ -64,14 +64,24 @@ public class LibService extends homepage {
         return false;
     }
 
-    public void onClickBulletin(View view) {
-        Intent i = new Intent(LibService.this, infoBitsBulletin.class);
-        startActivity(i);
+    public void onClickLF(View view){
+        if(user.isEmpty()){
+            LogInToast();
+        }
+        else{
+            Intent i = new Intent(LibService.this, lfmsAllItems.class);
+            startActivity(i);
+        }
     }
 
-    public void onClickDailyNews(View view){
-        Intent i = new Intent(LibService.this, DailyNews.class);
-        startActivity(i);
+    public void onClickIBB(View view){
+        if(user.isEmpty()){
+            LogInToast();
+        }
+        else{
+            Intent i = new Intent(LibService.this, infoBitsBulletin.class);
+            startActivity(i);
+        }
     }
 
 }

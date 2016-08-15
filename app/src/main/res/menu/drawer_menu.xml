@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single" android:id="@+id/homegrp">
-        <item
-            android:id="@+id/home_id"
-            android:title="@string/drawer_menu_home"
-            android:icon="@mipmap/infobits"
-            />
-    </group>
     <group android:checkableBehavior="single" android:id="@+id/lservgrp">
         <item
             android:id="@+id/os_id"
             android:title="@string/drawer_menu_os"
-            android:icon="@drawable/osx"
+            android:icon="@mipmap/os"
             />
         <item
             android:id="@+id/comm_id"
@@ -35,7 +28,7 @@
         <item
             android:id="@+id/lf_id"
             android:title="@string/drawer_menu_lf"
-            android:icon="@drawable/lostandfound"
+            android:icon="@mipmap/lf"
             >
         </item>
     </group>
@@ -50,30 +43,19 @@
         <item
             android:id="@+id/eb_id"
             android:title="@string/title_activity_ebooks"
-            android:icon="@drawable/ebxx"
+            android:icon="@drawable/ebxii"
             />
 
         <item
             android:id="@+id/od_id"
             android:title="@string/drawer_menu_odb"
-            android:icon="@drawable/odxx"
+            android:icon="@drawable/odxii"
             />
 
         <item
             android:id="@+id/opac_id"
             android:title="@string/drawer_menu_opac"
             android:icon="@mipmap/opac"
-            />
-        <item
-            android:id="@+id/od_id1"
-            android:title="@string/drawer_menu_odb"
-            android:icon="@drawable/settings"
-            />
-
-        <item
-            android:id="@+id/opac_id1"
-            android:title="@string/drawer_menu_opac"
-            android:icon="@drawable/settings"
             />
     </group>
 </menu>

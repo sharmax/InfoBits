@@ -73,7 +73,7 @@ public class ConnectWithLibrary extends homepage {
         setSupportActionBar(toolbar);
         navigationView.setNavigationItemSelectedListener(this);
         View navHeader = navigationView.getHeaderView(0);
-        ((TextView) navHeader.findViewById(R.id.name)).setText(name);
+        ((TextView) navHeader.findViewById(R.id.brand)).setText(name);
         ((TextView) navHeader.findViewById(R.id.email)).setText(email);
         File profilepic = new File(dir, avatar);
         try {
@@ -155,8 +155,6 @@ public class ConnectWithLibrary extends homepage {
                     findViewById(R.id.replyLayout).setVisibility(View.GONE);
                     spinner.setVisibility(View.VISIBLE);
                     new APICall().execute(urlString);
-                } else {
-                    Toast.makeText(ConnectWithLibrary.this, "Not Connected to BITS Intranet!", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -171,8 +169,6 @@ public class ConnectWithLibrary extends homepage {
                     findViewById(R.id.replyLayout).setVisibility(View.GONE);
                     spinner.setVisibility(View.VISIBLE);
                     new APICall().execute(urlString);
-                } else {
-                    Toast.makeText(ConnectWithLibrary.this, "Not Connected to BITS Intranet!", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -202,10 +198,6 @@ public class ConnectWithLibrary extends homepage {
             }
             urlString = apiURL + actString + ".php?username=" + username + "&password=" + password + "&action=update&id=" + id + "&cat=" + catint;
             new APICall().execute(urlString);
-        }
-        else if(update){
-            Toast.makeText(ConnectWithLibrary.this,"Not Connected to BITS Intranet!",Toast.LENGTH_LONG).show();
-            printComms();
         }
         else{
             printComms();
