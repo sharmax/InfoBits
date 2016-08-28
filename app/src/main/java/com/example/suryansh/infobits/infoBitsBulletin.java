@@ -4,8 +4,11 @@ package com.example.suryansh.infobits;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.TabLayout;
@@ -17,17 +20,23 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.example.suryansh.infobits.Responses.Book;
 import com.example.suryansh.infobits.Responses.BulletinResponse;
+import com.example.suryansh.infobits.Responses.NewsResponse;
 import com.example.suryansh.infobits.Responses.Subject;
 import com.example.suryansh.infobits.network.VolleySingleton;
 
@@ -69,11 +78,7 @@ public class infoBitsBulletin extends homepage {
         mPager = (ViewPager) findViewById(R.id.pager);
         listView = (ListView) findViewById(R.id.listView);
         JSONObject internal = new JSONObject();
-        String[] news = new String[]{"news1", "news2", "news3", "news4", "news5",};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1, news);
-        listView.setAdapter(adapter);
-
+        listView.setVisibility(View.INVISIBLE);
         dbhandler = new DBHandler(this, null, null);
         try {
 
@@ -88,12 +93,12 @@ public class infoBitsBulletin extends homepage {
 
                 int month = cal.get(Calendar.MONTH);
                 int year = cal.get(Calendar.YEAR);
-
+                dailyNewsServerCall();
                 if (bulletinYear <  year){
                     serverCalls();
                 }else{
                     if (bulletinMonth <= month){
-                        serverCalls();
+                       // serverCalls();
                     }else{
 
                     }
@@ -270,7 +275,7 @@ public class infoBitsBulletin extends homepage {
         // Instantiate the RequestQueue.
         final RequestQueue queue = VolleySingleton.getInstance().getRequestQueue();
 
-        String url = apiURL + "bulletin.php?" + "username=" + "F2011637P" + "&password=" + "Andromeda";
+        String url = apiURL + "bulletin.php?" + "username=" + username + "&password=" + password;
         // Request a string response from the provided URL.
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(
@@ -474,6 +479,97 @@ public class infoBitsBulletin extends homepage {
                 dbhandler.addData(5, updatevalues);
             }
         }
+    }
+
+    public void dailyNewsServerCall(){
+
+        final RequestQueue queue = VolleySingleton.getInstance().getRequestQueue();
+
+        String url = apiURL + "daily_news.php?" + "username=" + username + "&password=" + password + "&action=update";
+
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(
+                url, null, new Response.Listener<JSONObject>(){
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        try {
+
+                            if(response.has("err_message") && !response.get("err_message").toString().isEmpty()){
+                                String error = response.get("err_message").toString();
+                                Toast.makeText(getApplicationContext(),response.get("err_message").toString(),Toast.LENGTH_LONG).show();
+                            }else{
+                                JSONObject data = response.getJSONObject("data");
+                                NewsResponse newsResponse = new NewsResponse(data.toString());
+                                newsResponse.parseJSON();
+
+                                Toast.makeText(getApplicationContext(), "Response: " + data, Toast.LENGTH_SHORT).show();
+
+                                final ArrayList<String> news = newsResponse.news;
+                                final ArrayList<String> links = newsResponse.urls;
+                                final ArrayList<String> newspapers = newsResponse.newsPaperAndDate;
+                                listView.setVisibility(View.VISIBLE);
+
+                                ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_2, android.R.id.text1, news) {
+                                    @Override
+                                    public View getView(int position, View convertView, ViewGroup parent) {
+                                        View view = super.getView(position, convertView, parent);
+                                        TextView text1 = (TextView) view.findViewById(android.R.id.text1);
+                                        text1.setTextColor(Color.BLACK);
+                                        TextView text2 = (TextView) view.findViewById(android.R.id.text2);
+                                        text2.setTextColor(Color.DKGRAY);
+                                        text1.setText(news.get(position).toString());
+                                        text2.setText(newspapers.get(position).toString());
+                                        return view;
+                                    }
+                                };
+//                                ArrayAdapter<String> adapter =
+//                                        new ArrayAdapter<String>(getApplicationContext(),
+//                                                android.R.layout.simple_list_item_2,
+//                                                news) {
+//
+//                                            @Override
+//                                            public View getView(int position, View convertView, ViewGroup parent) {
+//
+//                                                View view = super.getView(position, convertView, parent);
+//                                                TextView text = (TextView) view.findViewById(android.R.id.text1);
+//                                                text.setTextColor(Color.BLACK);
+//                                                return view;
+//                                            }
+//                                        };
+                                listView.setAdapter(adapter);
+                                listView.setClickable(true);
+                                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                                    @Override
+                                    public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                                        Uri uri = Uri.parse(links.get(position)); // missing 'http://' will cause crashed
+                                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                                        startActivity(intent);
+                                    }
+                                });
+                                Toast.makeText(getApplicationContext(), "Response is: "+ response, Toast.LENGTH_LONG).show();
+                            }
+
+                            // adapter.notifyDataSetChanged();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getApplicationContext(),
+                                    "Error: " + e.getMessage(),
+                                    Toast.LENGTH_LONG).show();
+
+                            //alertShow("Connect to intranet and try again", "Not Connected to Intranet");
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), "ERROR: "+ error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+        // Add the request to the RequestQueue.
+        queue.add(jsonObjReq);
     }
 }
 
