@@ -12,10 +12,30 @@ public class DBHandler extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "bitslib.db";
-    private static final String[] TABLES = {"communications","newsfeed","noticeboard","book_of_the_month","lfms"};
-    private static final String[][] COLUMNS = {{"bitsid","category","name","topic","date","time","admins","talk","cat","status"},{"news_type","title","url","date","added_by","newspaper","keywords","pages"},{"image","link"},{"title","author","image"},{"particulars","brand","date","time","status"}};
-    private static final String[][] TYPES = {{"varchar(12)","varchar(20)","varchar(40)","text","varchar(10)","varchar(10)","text","text","varchar(10)","varchar(10)"},{"varchar(5)","text","text","date","varchar(10)","text","text","varchar(20)"},{"text","text"},{"text","text","text"},{"varchar(50)","varchar(20)","varchar(10)","varchar(10)","varchar(1)"}};
-    private static final int[][] VAR_COLUMNS = {{6,7,9},{},{},{},{4}};
+    private static final String[] TABLES = {"communications","newsfeed","noticeboard","book_of_the_month","lfms", "infobits"};
+    private static final String[][] COLUMNS = {{"bitsid","category","name","topic","date","time","admins","talk","cat","status"},
+                                                {"news_type","title","url","date","added_by","newspaper","keywords","pages"},
+                                                {"image","link"},
+                                                {"title","author","image"},
+                                                {"particulars","brand","date","time","status"},
+                                                {"pic1", "pic2", "pic3", "pic4",
+                                                        "type1", "type2", "type3", "type4",
+                                                        "url1", "url2", "url3", "url4",
+                                                        "jpic1", "jpic2", "jpic3", "jpic4",
+                                                        "jtype1", "jtype2", "jtype3", "jtype4",
+                                                        "jurl1", "jurl2", "jurl3", "jurl4"}};
+    private static final String[][] TYPES = {{"varchar(12)","varchar(20)","varchar(40)","text","varchar(10)","varchar(10)","text","text","varchar(10)","varchar(10)"},
+                                             {"varchar(5)","text","text","date","varchar(10)","text","text","varchar(20)"},
+                                             {"text","text"},
+                                             {"text","text","text"},
+                                             {"varchar(50)","varchar(20)","varchar(10)","varchar(10)","varchar(1)"},
+                                             {"text", "text", "text", "text",
+                                                     "text", "text", "text", "text",
+                                                     "text", "text", "text", "text",
+                                                     "text", "text", "text", "text",
+                                                     "text", "text", "text", "text",
+                                                     "text", "text", "text", "text"}};
+    private static final int[][] VAR_COLUMNS = {{6,7,9},{},{},{},{4},{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23}};
 
     public DBHandler(Context context, String name, SQLiteDatabase.CursorFactory factory) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
@@ -113,5 +133,32 @@ public class DBHandler extends SQLiteOpenHelper {
         return json;
     }
 
+    public boolean checkTable(int table) {
+
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cur2 = db.rawQuery("select name from sqlite_master where name='"
+                + TABLES[table] + "'", null);
+
+        if (cur2.getCount() != 0) {
+            if (!cur2.isClosed())
+                cur2.close();
+            return true;
+        } else {
+            if (!cur2.isClosed())
+                cur2.close();
+            return false;
+        }
+    }
+
+    public JSONObject getData(int table){
+        SQLiteDatabase db = getWritableDatabase();
+
+        String query = "SELECT * FROM " + TABLES[table];
+        //String query = "SELECT * FROM " + TABLES[table] + " WHERE " + sql;
+        Cursor c = db.rawQuery(query, null);
+        JSONObject json = manageData(c, table);
+        db.close();
+        return json;
+    }
 
 }

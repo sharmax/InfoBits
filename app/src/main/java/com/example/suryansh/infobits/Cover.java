@@ -32,10 +32,10 @@ import java.util.concurrent.TimeoutException;
 
 public class Cover extends AppCompatActivity {
 
-    public final static String apiURL = "http://172.21.1.15/apis/";
-    public final static String imageApiURL = "http://172.21.1.15/uploads/";
-//    public final static String apiURL = "http://192.168.3.10:80/infoBITS/apis/";
-//    public final static String imageApiURL = "http://192.168.3.10:80/infoBITS/uploads/";
+    public final static String apiURL = "http://192.168.2.3/infoBITS/apis/";
+    public final static String imageApiURL = "http://192.168.2.3/infoBITS/uploads/";
+//    public final static String apiURL = "http://172.16.8.244:80/infoBITS/apis/";
+//    public final static String imageApiURL = "http://172.16.8.244:80/infoBITS/uploads/";
     String actString = "notices";
     int imgs;
     ProgressBar spinner;

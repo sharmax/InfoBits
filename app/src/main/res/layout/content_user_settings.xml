@@ -31,7 +31,6 @@
                     android:layout_toRightOf="@+id/textView2"
                     android:layout_toEndOf="@+id/textView2"
                     android:id="@+id/profile"
-                    android:src="@drawable/pp"
                     android:padding="10dp"
                     android:visibility="gone" />
 

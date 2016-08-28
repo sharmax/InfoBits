@@ -4,9 +4,10 @@ package com.example.suryansh.infobits;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -20,35 +21,43 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.suryansh.infobits.Responses.Book;
+import com.example.suryansh.infobits.Responses.BulletinResponse;
+import com.example.suryansh.infobits.Responses.Subject;
 import com.example.suryansh.infobits.network.VolleySingleton;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 public class infoBitsBulletin extends homepage {
 
+    private DBHandler dbhandler;
     private Toolbar mToolbar;
     private TabLayout mTabLayout;
     private ViewPager mPager;
     private MyPagerAdapter mAdapter;
     private ListView listView;
     ProgressBar spinner;
-    private Map<String, Object> map;
 
-    public String[] tabTitles = {"CHEMICAL", "CIVIL", "EEE", "CS", "MECH", "PHARMA", "BIO", "CHEM", "ECO", "MATH", "PHY", "HUM", "MAN"};
+    public String[] tabTitles = {"CHEMICAL", "CIVIL", "EEE", "CS", "MECH", "PHARMA", "BIO", "CHEM", "ECO", "MATHS", "PHY", "HUM", "MAN"};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,57 +68,46 @@ public class infoBitsBulletin extends homepage {
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
         mPager = (ViewPager) findViewById(R.id.pager);
         listView = (ListView) findViewById(R.id.listView);
-
+        JSONObject internal = new JSONObject();
         String[] news = new String[]{"news1", "news2", "news3", "news4", "news5",};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, news);
         listView.setAdapter(adapter);
 
+        dbhandler = new DBHandler(this, null, null);
         try {
 
-            File file = new File(this.getFilesDir() + "/bulletin.plist");
+            if (dbhandler.checkTable(5)){
 
-            if (!file.exists()) {
-                if (!isConnected()) {
-                   // spinner.setVisibility(View.VISIBLE);
-                    serverCalls(file);
-                } else {
-                    Toast.makeText(getApplicationContext(), "Not Connected to BITS Intranet!", Toast.LENGTH_LONG).show();
-                    alertShow("Connect to intranet and try again", "Not Connected to Intranet");
-                    FileInputStream fis = new FileInputStream(file);
-                    ObjectInputStream ois = new ObjectInputStream(fis);
-                    map = (Map) ois.readObject();
+                SharedPreferences sp = getSharedPreferences("bulletinMonth", Activity.MODE_PRIVATE);
+                int bulletinYear = sp.getInt("bulletinYear", 0);
+                int bulletinMonth = sp.getInt("bulletinMonth", 0);
+                Calendar cal = Calendar.getInstance();
+                java.util.Date date= new Date();
+                cal.setTime(date);
 
-                    ois.close();
-                    fis.close();
+                int month = cal.get(Calendar.MONTH);
+                int year = cal.get(Calendar.YEAR);
 
-                    List<Fragment> fragments = getFragments();
-                    mAdapter = new MyPagerAdapter(getSupportFragmentManager(), fragments);
-                    mPager.setAdapter(mAdapter);
-                    mTabLayout.setTabsFromPagerAdapter(mAdapter);
-                    mTabLayout.setupWithViewPager(mPager);
-                    mPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
-                    System.out.println(map);
+                if (bulletinYear <  year){
+                    serverCalls();
+                }else{
+                    if (bulletinMonth <= month){
+                        serverCalls();
+                    }else{
+
+                    }
                 }
 
-            } else {
-
-                FileInputStream fis = new FileInputStream(file);
-                ObjectInputStream ois = new ObjectInputStream(fis);
-                map = (Map) ois.readObject();
-
-                ois.close();
-                fis.close();
-
-                List<Fragment> fragments = getFragments();
-                mAdapter = new MyPagerAdapter(getSupportFragmentManager(), fragments);
-                mPager.setAdapter(mAdapter);
-                mTabLayout.setTabsFromPagerAdapter(mAdapter);
-                mTabLayout.setupWithViewPager(mPager);
-                mPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
-                System.out.println(map);
+            }else{
+                if (isConnected()){
+                    serverCalls();
+                }else{
+                    alertShow("Connect to intranet and try again", "Not Connected to Intranet");
+                }
             }
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println(e);
             mPager.setVisibility(View.INVISIBLE);
             mTabLayout.setVisibility(View.INVISIBLE);
@@ -121,7 +119,7 @@ public class infoBitsBulletin extends homepage {
 
     }
 
-    public void alertShow(String message, String title){
+    public void alertShow(String message, String title) {
         //  AlertDialog.Builder alertDialog = new AlertDialog.Builder()
         AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(
                 this);
@@ -176,37 +174,65 @@ public class infoBitsBulletin extends homepage {
     private List<Fragment> getFragments() {
         List<Fragment> fList = new ArrayList<Fragment>();
 
-        for (int i =0; i<13; i++){
-            MyFragment fragment = new MyFragment();
+        try {
 
-            Map<String, Object> bookMap = (Map<String, Object>) map.get(tabTitles[i]);
 
-            Map<String, Object> books = (Map<String, Object>) map.get(bookMap.get("books"));
-            Map<String, Object> journals = (Map<String, Object>) map.get(bookMap.get("journals"));
+            for (int i = 0; i < 13; i++) {
+                MyFragment fragment = new MyFragment();
 
-            String[] booksKeys = {"book1", "book2", "book3"};
-            String[] journalKeys = {"journal1", "journal2", "journal3"};
-            String[] bookNameList = new String[4];
-            String[] bookImageList = new String[4];
-            String[] journalNameList = new String[4];
-            String[] journalImageList = new String[4];
-            String[] journalLinks = new String[4];
-            String[] bookLinks = new String[4];
+                String [] cats = {"pic1", "pic2", "pic3", "pic4",
+                        "type1", "type2", "type3", "type4",
+                        "url1", "url2", "url3", "url4",
+                        "jpic1", "jpic2", "jpic3", "jpic4",
+                        "jtype1", "jtype2", "jtype3", "jtype4",
+                        "jurl1", "jurl2", "jurl3", "jurl4"};
+                String category = cats[i];
+                internal = dbhandler.getData(5);
+                //internal = dbhandler.selectData(5,"status like '%open%' and cat = '" + category + "' ORDER BY id ASC LIMIT 1");
 
-            for(int j = 0; j < 4; j++){
+                JSONObject books = internal.getJSONObject("books");
+                JSONObject journals = internal.getJSONObject("journals");
+                String[] booksKeys = {"book1", "book2", "book3, book4"};
+                String[] journalKeys = {"journal1", "journal2", "journal3, journal4"};
+                String[] bookNameList = new String[4];
+                String[] bookImageList = new String[4];
+                String[] journalNameList = new String[4];
+                String[] journalImageList = new String[4];
+                String[] journalLinks = new String[4];
+                String[] bookLinks = new String[4];
 
-                Map<String, Object> book = (Map<String, Object>) books.get(booksKeys[j]);
-                Map<String, Object> journal = (Map<String, Object>) journals.get(journalKeys[j]);
-                bookNameList[j] = (String) book.get("type");
-                bookImageList[j] = (String) book.get("image");
-                journalNameList[j] = (String) journal.get("type");
-                journalImageList[j] = (String) journal.get("image");
-                bookLinks[j] = (String) book.get("url");
-                journalLinks[j] = (String)journal.get("url");
+                for (int j = 0; j < booksKeys.length; j++) {
+                    try {
+                        JSONObject book = books.getJSONObject(booksKeys[j]);
+                        String pic = book.getString("pic");
+                        String name = book.getString("type");
+                        String url = book.getString("url");
+
+                        bookNameList[j] = name;
+                        bookImageList[j] = pic;
+                        bookLinks[j] = url;
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    JSONObject journal = books.getJSONObject(journalKeys[j]);
+                    String pic = journal.getString("pic");
+                    String name = journal.getString("type");
+                    String url = journal.getString("url");
+
+                    journalNameList[j] = name;
+                    journalImageList[j] = pic;
+                    journalLinks[j] = url;
+
+                }
+
+                fragment.newInstance("Fragment").setList(journalNameList, bookNameList, bookImageList, journalImageList, bookLinks, journalLinks);
+                fList.add(MyFragment.newInstance("Fragment " + i));
             }
-
-            fragment.newInstance("Fragment").setList(journalNameList,bookNameList,bookImageList,journalImageList, bookLinks, journalLinks);
-            fList.add(MyFragment.newInstance("Fragment "+i));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return fList;
     }
@@ -238,13 +264,13 @@ public class infoBitsBulletin extends homepage {
         }
     }
 
-    public void serverCalls(final File file){
+    public void serverCalls() {
 
-      //  spinner.setVisibility(View.VISIBLE);
+        //  spinner.setVisibility(View.VISIBLE);
         // Instantiate the RequestQueue.
         final RequestQueue queue = VolleySingleton.getInstance().getRequestQueue();
 
-        String url = apiURL+"bulletin.php/" + "get?username="+username +"?password="+ password;
+        String url = apiURL + "bulletin.php?" + "username=" + "F2011637P" + "&password=" + "Andromeda";
         // Request a string response from the provided URL.
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(
@@ -253,72 +279,54 @@ public class infoBitsBulletin extends homepage {
             @Override
             public void onResponse(JSONObject response) {
 
+                SharedPreferences sp = getSharedPreferences("bulletinMonth", Activity.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                java.util.Date date= new Date();
+
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(date);
+                int month = cal.get(Calendar.MONTH);
+                int year = cal.get(Calendar.YEAR);
+                editor.putInt("bulletinMonth", month);
+                editor.putInt("bulletinYear", year);
+                editor.commit();
+
                 try {
-                  //  spinner.setVisibility(View.GONE);
 
-                    FileOutputStream fos=new FileOutputStream(file);
-                    ObjectOutputStream oos=new ObjectOutputStream(fos);
+                    if(response.has("err_message") && !response.get("err_message").toString().isEmpty()){
+                        String error = response.get("err_message").toString();
+                        Toast.makeText(getApplicationContext(),response.get("err_message").toString(),Toast.LENGTH_LONG).show();
+                    }else{
+                        JSONObject data = response.getJSONObject("data");
+                        BulletinResponse bulletinResponse = new BulletinResponse(data.toString());
+                        bulletinResponse.parseJSON();
+                        saveToDB(bulletinResponse);
+                        List<Fragment> fragments = getFragments();
+                        mAdapter = new MyPagerAdapter(getSupportFragmentManager(), fragments);
+                        mPager.setAdapter(mAdapter);
+                        mTabLayout.setTabsFromPagerAdapter(mAdapter);
+                        mTabLayout.setupWithViewPager(mPager);
+                        mPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+                        Toast.makeText(getApplicationContext(), "Response: " + data, Toast.LENGTH_SHORT).show();
+                    }
 
-                    Map<String, Object> data = (Map<String, Object>) response.getJSONObject("data");
-                    map = data;
-                    oos.writeObject(data);
-                    oos.flush();
-                    oos.close();
-                    fos.close();
-
-
-                    mPager.getAdapter().notifyDataSetChanged();
+                   // adapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(),
                             "Error: " + e.getMessage(),
                             Toast.LENGTH_LONG).show();
-                    //alertShow("Connect to intranet and try again", "Not Connected to Intranet");
 
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    //alertShow("Connect to intranet and try again", "Not Connected to Intranet");
                 }
             }
         }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-              //  spinner.setVisibility(View.GONE);
+                //  spinner.setVisibility(View.GONE);
                 Toast.makeText(getApplicationContext(),
                         error.getMessage(), Toast.LENGTH_SHORT).show();
-
-                FileInputStream fis = null;
-                try {
-                    fis = new FileInputStream(file);
-                } catch (FileNotFoundException e1) {
-                    e1.printStackTrace();
-                }
-                ObjectInputStream ois = null;
-                try {
-                    ois = new ObjectInputStream(fis);
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-                try {
-                    map = (Map) ois.readObject();
-                } catch (ClassNotFoundException e1) {
-                    e1.printStackTrace();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-
-                try {
-                    ois.close();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-                try {
-                    fis.close();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
 
                 List<Fragment> fragments = getFragments();
                 mAdapter = new MyPagerAdapter(getSupportFragmentManager(), fragments);
@@ -326,12 +334,146 @@ public class infoBitsBulletin extends homepage {
                 mTabLayout.setTabsFromPagerAdapter(mAdapter);
                 mTabLayout.setupWithViewPager(mPager);
                 mPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
-                System.out.println(map);
+               // System.out.println(map);
 
             }
         });
         // Add the request to the RequestQueue.
         queue.add(jsonObjReq);
+    }
+
+    public void saveToDB(BulletinResponse bulletinResponse){
+
+        dbhandler.checkTable(5);
+
+        for (int i = 0; i < 13; i++) {
+            String[] updatevalues = new String[0];
+            switch (i){
+                case 0:
+                    com.example.suryansh.infobits.Responses.Subject CHEMICAL = bulletinResponse.CHEMICAL;
+                    updatevalues = new String[]{CHEMICAL.book1.pic, CHEMICAL.book2.pic, CHEMICAL.book3.pic, CHEMICAL.book4.pic,
+                            CHEMICAL.book1.type, CHEMICAL.book2.type, CHEMICAL.book3.type, CHEMICAL.book4.type,
+                            CHEMICAL.book1.url, CHEMICAL.book2.url, CHEMICAL.book3.url, CHEMICAL.book4.url,
+                            CHEMICAL.journal1.pic, CHEMICAL.journal2.pic, CHEMICAL.journal3.pic, CHEMICAL.journal4.pic,
+                            CHEMICAL.journal1.type, CHEMICAL.journal2.type, CHEMICAL.journal3.type, CHEMICAL.journal4.type,
+                            CHEMICAL.journal1.url, CHEMICAL.journal2.url, CHEMICAL.journal3.url, CHEMICAL.journal4.url};
+                    break;
+                case 1:
+                    com.example.suryansh.infobits.Responses.Subject CIVIL = bulletinResponse.CIVIL;
+                    updatevalues = new String[]{CIVIL.book1.pic, CIVIL.book2.pic, CIVIL.book3.pic, CIVIL.book4.pic,
+                            CIVIL.book1.type, CIVIL.book2.type, CIVIL.book3.type, CIVIL.book4.type,
+                            CIVIL.book1.url, CIVIL.book2.url, CIVIL.book3.url, CIVIL.book4.url,
+                            CIVIL.journal1.pic, CIVIL.journal2.pic, CIVIL.journal3.pic, CIVIL.journal4.pic,
+                            CIVIL.journal1.type, CIVIL.journal2.type, CIVIL.journal3.type, CIVIL.journal4.type,
+                            CIVIL.journal1.url, CIVIL.journal2.url, CIVIL.journal3.url, CIVIL.journal4.url};
+                    break;
+                case 2:
+                    com.example.suryansh.infobits.Responses.Subject EEE = bulletinResponse.EEE;
+                    updatevalues = new String[]{EEE.book1.pic, EEE.book2.pic, EEE.book3.pic, EEE.book4.pic,
+                            EEE.book1.type, EEE.book2.type, EEE.book3.type, EEE.book4.type,
+                            EEE.book1.url, EEE.book2.url, EEE.book3.url, EEE.book4.url,
+                            EEE.journal1.pic, EEE.journal2.pic, EEE.journal3.pic, EEE.journal4.pic,
+                            EEE.journal1.type, EEE.journal2.type, EEE.journal3.type, EEE.journal4.type,
+                            EEE.journal1.url, EEE.journal2.url, EEE.journal3.url, EEE.journal4.url};
+                    break;
+                case 3:
+                    com.example.suryansh.infobits.Responses.Subject CS = bulletinResponse.EEE;
+                    updatevalues = new String[]{CS.book1.pic, CS.book2.pic, CS.book3.pic, CS.book4.pic,
+                            CS.book1.type, CS.book2.type, CS.book3.type, CS.book4.type,
+                            CS.book1.url, CS.book2.url, CS.book3.url, CS.book4.url,
+                            CS.journal1.pic, CS.journal2.pic, CS.journal3.pic, CS.journal4.pic,
+                            CS.journal1.type, CS.journal2.type, CS.journal3.type, CS.journal4.type,
+                            CS.journal1.url, CS.journal2.url, CS.journal3.url, CS.journal4.url};
+                    break;
+                case 4:
+                    com.example.suryansh.infobits.Responses.Subject MECH = bulletinResponse.MECH;
+                    updatevalues = new String[]{MECH.book1.pic, MECH.book2.pic, MECH.book3.pic, MECH.book4.pic,
+                            MECH.book1.type, MECH.book2.type, MECH.book3.type, MECH.book4.type,
+                            MECH.book1.url, MECH.book2.url, MECH.book3.url, MECH.book4.url,
+                            MECH.journal1.pic, MECH.journal2.pic, MECH.journal3.pic, MECH.journal4.pic,
+                            MECH.journal1.type, MECH.journal2.type, MECH.journal3.type, MECH.journal4.type,
+                            MECH.journal1.url, MECH.journal2.url, MECH.journal3.url, MECH.journal4.url};
+                    break;
+                case 5:
+                    com.example.suryansh.infobits.Responses.Subject PHARMA = bulletinResponse.PHARMA;
+                    updatevalues = new String[]{PHARMA.book1.pic, PHARMA.book2.pic, PHARMA.book3.pic, PHARMA.book4.pic,
+                            PHARMA.book1.type, PHARMA.book2.type, PHARMA.book3.type, PHARMA.book4.type,
+                            PHARMA.book1.url, PHARMA.book2.url, PHARMA.book3.url, PHARMA.book4.url,
+                            PHARMA.journal1.pic, PHARMA.journal2.pic, PHARMA.journal3.pic, PHARMA.journal4.pic,
+                            PHARMA.journal1.type, PHARMA.journal2.type, PHARMA.journal3.type, PHARMA.journal4.type,
+                            PHARMA.journal1.url, PHARMA.journal2.url, PHARMA.journal3.url, PHARMA.journal4.url};
+                    break;
+                case 6:
+                    com.example.suryansh.infobits.Responses.Subject BIO = bulletinResponse.BIO;
+                    updatevalues = new String[]{BIO.book1.pic, BIO.book2.pic, BIO.book3.pic, BIO.book4.pic,
+                            BIO.book1.type, BIO.book2.type, BIO.book3.type, BIO.book4.type,
+                            BIO.book1.url, BIO.book2.url, BIO.book3.url, BIO.book4.url,
+                            BIO.journal1.pic, BIO.journal2.pic, BIO.journal3.pic, BIO.journal4.pic,
+                            BIO.journal1.type, BIO.journal2.type, BIO.journal3.type, BIO.journal4.type,
+                            BIO.journal1.url, BIO.journal2.url, BIO.journal3.url, BIO.journal4.url};
+                    break;
+                case 7:
+                    com.example.suryansh.infobits.Responses.Subject CHEM = bulletinResponse.CHEM;
+                    updatevalues = new String[]{CHEM.book1.pic, CHEM.book2.pic, CHEM.book3.pic, CHEM.book4.pic,
+                            CHEM.book1.type, CHEM.book2.type, CHEM.book3.type, CHEM.book4.type,
+                            CHEM.book1.url, CHEM.book2.url, CHEM.book3.url, CHEM.book4.url,
+                            CHEM.journal1.pic, CHEM.journal2.pic, CHEM.journal3.pic, CHEM.journal4.pic,
+                            CHEM.journal1.type, CHEM.journal2.type, CHEM.journal3.type, CHEM.journal4.type,
+                            CHEM.journal1.url, CHEM.journal2.url, CHEM.journal3.url, CHEM.journal4.url};
+                    break;
+                case 8:
+                    com.example.suryansh.infobits.Responses.Subject ECO = bulletinResponse.ECO;
+                    updatevalues = new String[]{ECO.book1.pic, ECO.book2.pic, ECO.book3.pic, ECO.book4.pic,
+                            ECO.book1.type, ECO.book2.type, ECO.book3.type, ECO.book4.type,
+                            ECO.book1.url, ECO.book2.url, ECO.book3.url, ECO.book4.url,
+                            ECO.journal1.pic, ECO.journal2.pic, ECO.journal3.pic, ECO.journal4.pic,
+                            ECO.journal1.type, ECO.journal2.type, ECO.journal3.type, ECO.journal4.type,
+                            ECO.journal1.url, ECO.journal2.url, ECO.journal3.url, ECO.journal4.url};
+                    break;
+                case 9:
+                    com.example.suryansh.infobits.Responses.Subject MATH = bulletinResponse.MATH;
+                    updatevalues = new String[]{MATH.book1.pic, MATH.book2.pic, MATH.book3.pic, MATH.book4.pic,
+                            MATH.book1.type, MATH.book2.type, MATH.book3.type, MATH.book4.type,
+                            MATH.book1.url, MATH.book2.url, MATH.book3.url, MATH.book4.url,
+                            MATH.journal1.pic, MATH.journal2.pic, MATH.journal3.pic, MATH.journal4.pic,
+                            MATH.journal1.type, MATH.journal2.type, MATH.journal3.type, MATH.journal4.type,
+                            MATH.journal1.url, MATH.journal2.url, MATH.journal3.url, MATH.journal4.url};
+                    break;
+                case 10:
+                    com.example.suryansh.infobits.Responses.Subject PHY = bulletinResponse.PHY;
+                    updatevalues = new String[]{PHY.book1.pic, PHY.book2.pic, PHY.book3.pic, PHY.book4.pic,
+                            PHY.book1.type, PHY.book2.type, PHY.book3.type, PHY.book4.type,
+                            PHY.book1.url, PHY.book2.url, PHY.book3.url, PHY.book4.url,
+                            PHY.journal1.pic, PHY.journal2.pic, PHY.journal3.pic, PHY.journal4.pic,
+                            PHY.journal1.type, PHY.journal2.type, PHY.journal3.type, PHY.journal4.type,
+                            PHY.journal1.url, PHY.journal2.url, PHY.journal3.url, PHY.journal4.url};
+                    break;
+                case 11:
+                    com.example.suryansh.infobits.Responses.Subject HUM = bulletinResponse.HUM;
+                    updatevalues = new String[]{HUM.book1.pic, HUM.book2.pic, HUM.book3.pic, HUM.book4.pic,
+                            HUM.book1.type, HUM.book2.type, HUM.book3.type, HUM.book4.type,
+                            HUM.book1.url, HUM.book2.url, HUM.book3.url, HUM.book4.url,
+                            HUM.journal1.pic, HUM.journal2.pic, HUM.journal3.pic, HUM.journal4.pic,
+                            HUM.journal1.type, HUM.journal2.type, HUM.journal3.type, HUM.journal4.type,
+                            HUM.journal1.url, HUM.journal2.url, HUM.journal3.url, HUM.journal4.url};
+                    break;
+                case 12:
+                    com.example.suryansh.infobits.Responses.Subject MAN = bulletinResponse.MAN;
+                    updatevalues = new String[]{MAN.book1.pic, MAN.book2.pic, MAN.book3.pic, MAN.book4.pic,
+                            MAN.book1.type, MAN.book2.type, MAN.book3.type, MAN.book4.type,
+                            MAN.book1.url, MAN.book2.url, MAN.book3.url, MAN.book4.url,
+                            MAN.journal1.pic, MAN.journal2.pic, MAN.journal3.pic, MAN.journal4.pic,
+                            MAN.journal1.type, MAN.journal2.type, MAN.journal3.type, MAN.journal4.type,
+                            MAN.journal1.url, MAN.journal2.url, MAN.journal3.url, MAN.journal4.url};
+                    break;
+            }
+            if (dbhandler.checkTable(5)){
+                dbhandler.updateData(5, updatevalues, i);
+            }
+            else{
+                dbhandler.addData(5, updatevalues);
+            }
+        }
     }
 }
 
