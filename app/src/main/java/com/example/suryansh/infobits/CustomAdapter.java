@@ -1,35 +1,33 @@
 package com.example.suryansh.infobits;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
-import com.example.suryansh.infobits.network.VolleySingleton;
-
-public class CustomAdapter extends BaseAdapter{
+public class CustomAdapter extends FragmentPagerAdapter{
 
     String [] result;
     Context context;
     String [] imageUrl;
+    File dir;
+    LayoutInflater inflater;
 
-    private ImageLoader mImageLoader;
-    private static LayoutInflater inflater=null;
-    public CustomAdapter(Context c, String[] prgmNameList, String[] prgmImages) {
+    public CustomAdapter(FragmentManager fm, Context c, String[] prgmNameList, String[] prgmImages) {
+        super(fm);
         // TODO Auto-generated constructor stub
-        result=prgmNameList;
-        context=c;
-        imageUrl=prgmImages;
-        inflater = ( LayoutInflater )context.
-                getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
+        result = prgmNameList;
+        context = c;
+        imageUrl = prgmImages;
     }
 
     @Override
@@ -39,9 +37,8 @@ public class CustomAdapter extends BaseAdapter{
     }
 
     @Override
-    public Object getItem(int position) {
-        // TODO Auto-generated method stub
-        return position;
+    public Fragment getItem(int position) {
+        return null;
     }
 
     @Override
@@ -50,40 +47,23 @@ public class CustomAdapter extends BaseAdapter{
         return position;
     }
 
-    public class Holder
-    {
-        TextView tv;
-        NetworkImageView image;
-    }
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        // TODO Auto-generated method stub
-        Holder holder=new Holder();
+    public Object instantiateItem(ViewGroup container, int position) {
+        super.instantiateItem(container, position);
         View rowView;
-
-        rowView = inflater.inflate(R.layout.infobits_customcell, null);
-        holder.tv=(TextView) rowView.findViewById(R.id.bookTitle);
-        holder.image=(NetworkImageView) rowView.findViewById(R.id.bookImage);
-
-        holder.tv.setText(result[position]);
-        final ImageLoader imageLoader = VolleySingleton.getInstance().getImageLoader();
-        //Image URL - This can point to any image file supported by Android
-
-        mImageLoader.get(imageUrl[position], ImageLoader.getImageListener(holder.image,
-                R.drawable.ebxii, android.R.drawable
-                        .ic_dialog_alert));
-        holder.image.setImageUrl(imageUrl[position], mImageLoader);
-
-        rowView.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                Toast.makeText(context, "You Clicked "+result[position], Toast.LENGTH_LONG).show();
-            }
-        });
-
+        dir = context.getFilesDir();
+        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        rowView = inflater.inflate(R.layout.infobits_customcell, container, false);
+        ((TextView) rowView.findViewById(R.id.bookTitle)).setText(result[position]);
+        File image = new File(dir, imageUrl[position]);
+        FileInputStream fileInput = null;
+        try {
+            fileInput = new FileInputStream(image);
+            ((ImageView) rowView.findViewById(R.id.bookImage)).setImageBitmap(BitmapFactory.decodeStream(fileInput));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        container.addView(rowView);
         return rowView;
     }
-
 }

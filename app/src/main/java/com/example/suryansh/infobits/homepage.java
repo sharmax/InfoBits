@@ -76,11 +76,8 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
     Map<String, ?> user;
     public static String username, name, password, usercat, email, avatar;
     public static FileInputStream fileInput = null;
-    public final static String apiURL = "http://192.168.2.3/infoBITS/apis/";
-    public final static String imageApiURL = "http://192.168.2.3/infoBITS/uploads/";
-//    public final static String apiURL = "http://172.21.1.15/apis/";
-//    public final static String imageApiURL = "http://172.21.1.15/uploads/";
-
+    public final static String apiURL = "http://172.21.1.15/apis/";
+    public final static String imageApiURL = "http://172.21.1.15/uploads/";
     public final static String openURL = "http://universe.bits-pilani.ac.in:12354/";
     File dir;
     /**
@@ -142,9 +139,11 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
         }
         dbhandler = new DBHandler(this, null, null);
         internal = dbhandler.selectData(2, "1 ORDER BY id ASC");
-        getNotices();
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
+        if(viewPager.getAdapter() == null)
+            getNotices();
+//        pagination.get(0).setChecked(true);
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
@@ -168,14 +167,14 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
+        Intent i = new Intent();
         switch (item.getItemId()) {
             case R.id.user:
-                Intent i11 = new Intent(homepage.this, user_settings.class);
-                startActivity(i11);
+                i = new Intent(homepage.this, user_settings.class);
                 break;
             case R.id.login:
-                Intent i12 = new Intent(homepage.this, login.class);
-                startActivity(i12);
+                i = new Intent(getApplicationContext(), login.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
 //            case R.id.signup:
 //                Intent i13 = new Intent(homepage.this, signup.class);
@@ -184,9 +183,11 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
             case R.id.logout:
                 edit_login_info.clear();
                 edit_login_info.apply();
-                recreate();
+                i = new Intent(getApplicationContext(), homepage.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
         }
+        startActivity(i);
         return true;
     }
 
@@ -194,10 +195,10 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-//        if(user.isEmpty()){
-//            LogInToast();
-//        }
-//        else{
+        if(user.isEmpty()){
+            LogInToast();
+        }
+        else{
             Intent i = null;
             if (id == R.id.os_id) {
                 i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://search.ebscohost.com/login.aspx?authtype=uid&user=bits2015&password=pilani&profile=eds"));
@@ -222,7 +223,7 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
                 i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://172.21.1.37"));
             }
             startActivity(i);
-       // }
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return false;
@@ -381,6 +382,7 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
             viewPager.setAdapter(adapter);
             viewPager.setVisibility(View.VISIBLE);
             pagin = (RadioGroup) findViewById(R.id.paginationGroup);
+            pagin.clearCheck();
             for (int i = 0; i < adapter.getCount(); i++) {
                 RadioButton rbtn = new RadioButton(this);
                 rbtn.setText("");
@@ -389,11 +391,10 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
                 else if (Build.VERSION.SDK_INT >= 23)
                     rbtn.setButtonTintList(this.getResources().getColorStateList(R.color.colorPrimaryDark, this.getTheme()));
                 rbtn.setChecked(false);
-                pagination.add(i, rbtn);
                 pagin.addView(rbtn, i, pagin.getLayoutParams());
-                if (i == 0)
-                    pagin.check(i+1);
+                pagination.add(i, rbtn);
             }
+            pagination.get(0).setChecked(true);
             findViewById(R.id.pagination).setVisibility(View.VISIBLE);
             viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
                 @Override
@@ -404,7 +405,8 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
                 @Override
                 public void onPageSelected(int position) {
                     super.onPageSelected(position);
-                    pagin.check(position + 1);
+                    pagin.clearCheck();
+                    pagination.get(position).setChecked(true);
                 }
             });
         }

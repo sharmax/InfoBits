@@ -1,37 +1,16 @@
 package com.example.suryansh.infobits.Responses;
 
-import android.util.Log;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Iterator;
-
-/**
- * Created by SowmyaY on 28/08/16.
- */
 public class BulletinResponse {
 
-    public Subject CHEMICAL;
-    public Subject CIVIL;
-    public Subject EEE;
-    public Subject CS;
-    public Subject MECH;
-    public Subject PHARMA;
-    public Subject BIO;
-    public Subject CHEM;
-    public Subject ECO;
-    public Subject MATH;
-    public Subject PHY;
-    public Subject HUM;
-    public Subject MAN;
-
+    public Subject CHEMICAL, CIVIL, EEE, CS, MECH, PHARMA, BIO, CHEM, ECO, MATH, PHY, HUM, MAN;
     public String[] tabTitles = {"CHEMICAL", "CIVIL", "EEE", "CS", "MECH", "PHARMA", "BIO", "CHEM", "ECO", "MATHS", "PHY", "HUM", "MAN"};
-
     private String json;
 
     public BulletinResponse(String json){
         this.json = json;
+        parseJSON();
     }
 
     public void parseJSON(){
@@ -41,54 +20,49 @@ public class BulletinResponse {
         try {
             jsonObject = new JSONObject(json);
             System.out.println("arr: " + jsonObject.keys());
-            Iterator<String> iter = jsonObject.keys();
+//            Iterator<String> iter = jsonObject.keys();
 
             for (int i = 0; i < tabTitles.length; i++) {
-                Subject subject = new Subject(jsonObject.getString(tabTitles[i]));
-
-                subject.parseJSON();
-
                 switch (tabTitles[i]){
                     case "CHEMICAL":
-                        CHEMICAL = subject;
+                        CHEMICAL = new Subject(jsonObject.getString(tabTitles[i]));
                         break;
                     case "CIVIL":
-                        CIVIL = subject;
+                        CIVIL = new Subject(jsonObject.getString(tabTitles[i]));
                         break;
                     case "EEE":
-                        EEE = subject;
+                        EEE = new Subject(jsonObject.getString(tabTitles[i]));
                         break;
                     case "CS":
-                        CS = subject;
+                        CS = new Subject(jsonObject.getString(tabTitles[i]));
                         break;
                     case "MECH":
-                        MECH = subject;
+                        MECH = new Subject(jsonObject.getString(tabTitles[i]));
                         break;
                     case "PHARMA":
-                        PHARMA = subject;
+                        PHARMA = new Subject(jsonObject.getString(tabTitles[i]));
                         break;
                     case "BIO":
-                        BIO = subject;
+                        BIO = new Subject(jsonObject.getString(tabTitles[i]));
                         break;
                     case "CHEM":
-                        CHEM = subject;
+                        CHEM = new Subject(jsonObject.getString(tabTitles[i]));
                         break;
                     case "ECO":
-                        ECO = subject;
+                        ECO = new Subject(jsonObject.getString(tabTitles[i]));
                         break;
                     case "MATHS":
-                        MATH = subject;
+                        MATH = new Subject(jsonObject.getString(tabTitles[i]));
                         break;
                     case "PHY":
-                        PHY = subject;
+                        PHY = new Subject(jsonObject.getString(tabTitles[i]));
                         break;
                     case "HUM":
-                        HUM = subject;
+                        HUM = new Subject(jsonObject.getString(tabTitles[i]));
                         break;
                     case "MAN":
-                        MAN = subject;
+                        MAN = new Subject(jsonObject.getString(tabTitles[i]));
                         break;
-
                 }
             }
 
