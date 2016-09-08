@@ -4,14 +4,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Book{
-    public static String pic;
-    public static String url;
-    public static String type;
+    public String pic, url, type;
 
     private String json;
 
     public Book(String json){
         this.json = json;
+        parseJSON();
     }
 
     public void parseJSON(){

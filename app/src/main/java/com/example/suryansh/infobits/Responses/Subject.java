@@ -15,11 +15,18 @@ public class Subject{
 
     private String json;
 
-    public Subject(String json){
+    void setJson(String json)
+    {
         this.json = json;
     }
 
-    public void parseJSON(){
+    public Subject(String json){
+        this.json = json;
+        parseJSON(json);
+    }
+
+    public void parseJSON(String json){
+        this.json=json;
         JSONObject jsonObject;
         try {
             jsonObject = new JSONObject(json);
@@ -29,7 +36,6 @@ public class Subject{
                 if (i<4){
                     int count = i+1;
                     Book book = new Book(jsonBook.getString("book" + count));
-                    book.parseJSON();
                     switch (i){
                         case 0:
                             book1 = book;

@@ -27,14 +27,6 @@
         app:tabSelectedTextColor="@color/colorAccent"
         app:tabMode="scrollable" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/textView14"
-        android:layout_weight="0.16"
-        android:visibility="visible" />
-
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"

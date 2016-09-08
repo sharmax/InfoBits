@@ -19,7 +19,7 @@
             android:layout_height="?attr/actionBarSize"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:layout_collapseMode="pin"
-            app:logo="@drawable/odxii"
+            app:logo="@drawable/odm"
             android:title="@string/title_activity_ebooks"
             android:textColor="#fff"/>
 

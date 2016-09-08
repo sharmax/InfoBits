@@ -6,7 +6,6 @@ import android.support.v4.util.LruCache;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
-import com.example.suryansh.infobits.MyApplication;
 
 /**
  * Created by SowmyaY on 27/03/16.
