@@ -1,61 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:weightSum="1">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.5"
-        android:orientation="vertical"
-        >
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="New Arrivals"
         android:id="@+id/textView11"
-        android:layout_gravity="center_horizontal" />
-
-    <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_gravity="center_horizontal"
+        android:background="@color/colorPrimary"
+        android:textAlignment="center" />
 
     <GridView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/newArrivalsGrid"
         android:layout_gravity="center_horizontal"
         android:numColumns="4"
-     />
-    </HorizontalScrollView>
+        android:background="@drawable/banner"
+        android:scrollIndicators="left|right"
+        android:nestedScrollingEnabled="true" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.5"
-        android:orientation="vertical"
-        >
-    <TextView
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Journals"
-        android:id="@+id/textView12"
-        android:layout_gravity="center_horizontal" />
-    <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
-    <GridView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/journalsGrid"
-        android:numColumns="4"
-         />
-    </HorizontalScrollView>
-        </LinearLayout>
+        android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Journals"
+                android:id="@+id/textView12"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/colorPrimary"
+                android:textAlignment="center" />
+
+                <GridView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/journalsGrid"
+                    android:numColumns="4"
+                    android:background="@drawable/banner"
+                    android:scrollIndicators="left|right"
+                    android:nestedScrollingEnabled="true" />
+    </LinearLayout>
 </LinearLayout>

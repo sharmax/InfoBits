@@ -1,10 +1,7 @@
 package com.example.suryansh.infobits;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -13,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,7 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -30,7 +27,6 @@ import java.util.Map;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
 import com.example.suryansh.infobits.Responses.UserSettingsResponse;
 import com.example.suryansh.infobits.network.VolleySingleton;
 import com.google.android.gms.appindexing.Action;
@@ -46,9 +42,7 @@ import android.util.Base64;
 import java.util.Hashtable;
 import com.android.volley.AuthFailureError;
 import android.graphics.drawable.BitmapDrawable;
-/**
- * Created by SowmyaY on 24/02/16.
- */
+
 public class user_settings extends homepage implements View.OnClickListener {
     private static final int RESULT_LOAD_IMAGE =1;
     EditText mobile;
@@ -60,16 +54,13 @@ public class user_settings extends homepage implements View.OnClickListener {
     Button updatePassword;
     TextView changePassword;
     ImageButton imageButton;
-    NetworkImageView image;
+    ImageView image;
     LinearLayout nameLayout;
     LinearLayout emailLayout;
     LinearLayout mobileLayout;
     ProgressBar spinner;
+    Class previous;
     private ImageLoader mImageLoader;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
     private GoogleApiClient client;
 
     @Override
@@ -78,11 +69,11 @@ public class user_settings extends homepage implements View.OnClickListener {
         setContentView(R.layout.user_settings);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
-
-        image = (NetworkImageView) findViewById(R.id.profile);
+        Bundle b = getIntent().getExtras();
+        previous = (Class) b.get("previous");
+        image = (ImageView) findViewById(R.id.profile);
         mobile = (EditText) findViewById(R.id.mobileText);
         changePassword = (TextView) findViewById(R.id.changePassword);
         oldPassword = (TextInputLayout) findViewById(R.id.oldPassLayout);
@@ -96,7 +87,17 @@ public class user_settings extends homepage implements View.OnClickListener {
         emailLayout = (LinearLayout)findViewById(R.id.EmailLayout);
         mobileLayout = (LinearLayout) findViewById(R.id.MobileLayout);
         spinner = (ProgressBar)findViewById(R.id.progressBar);
-
+        File profilepic = new File(dir, avatar);
+        try {
+            fileInput = new FileInputStream(profilepic);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        if(fileInput == null){
+            image.setImageResource(R.mipmap.logo);
+        }else{
+            image.setImageBitmap(BitmapFactory.decodeStream(fileInput));
+        }
         uploadBtn.setOnClickListener(this);
         updateMobile.setOnClickListener(this);
         updatePassword.setOnClickListener(this);
@@ -173,6 +174,13 @@ public class user_settings extends homepage implements View.OnClickListener {
         }
 
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        finish();
+        return true;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode,data);
@@ -307,11 +315,11 @@ public class user_settings extends homepage implements View.OnClickListener {
         emailID.setText(userResponse.email);
         TextView mobileNo = (TextView) findViewById(R.id.mobileText);
         mobileNo.setText(userResponse.mobile);
-        mImageLoader = VolleySingleton.getInstance().getImageLoader();
-        //Image URL - This can point to any image file supported by Android
-        mImageLoader.get(userResponse.imageUrl, ImageLoader.getImageListener(image,
-                R.drawable.pp, R.mipmap.logo));
-        image.setImageUrl(userResponse.imageUrl, mImageLoader);
+//        mImageLoader = VolleySingleton.getInstance().getImageLoader();
+//        //Image URL - This can point to any image file supported by Android
+//        mImageLoader.get(userResponse.imageUrl, ImageLoader.getImageListener(image,
+//                R.mipmap.logo, R.mipmap.logo));
+//        image.setImageUrl(userResponse.imageUrl, mImageLoader);
     }
 
     private boolean checkPasswordValidity(String password, String confirmPassword){

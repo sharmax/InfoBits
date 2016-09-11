@@ -48,4 +48,6 @@
     <string name="online_db">Online Databases</string>
     <string name="claim_lost_item">Lost and Found - Claim</string>
     <string name="lost_and_found">Lost and Found</string>
+    <string name="guest_user">Guest User</string>
+    <string name="no_news_today">No Headlines Found for Today</string>
 </resources>

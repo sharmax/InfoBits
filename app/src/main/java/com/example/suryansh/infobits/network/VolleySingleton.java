@@ -2,21 +2,18 @@ package com.example.suryansh.infobits.network;
 
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
-
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+import com.example.suryansh.infobits.Library;
 
-/**
- * Created by SowmyaY on 27/03/16.
- */
 public class VolleySingleton {
 
     private static VolleySingleton sInstance = null;
     private ImageLoader mImageLoader;
     private RequestQueue mRequestQueue;
     private VolleySingleton(){
-        mRequestQueue = Volley.newRequestQueue(MyApplication.getAppContext());
+        mRequestQueue = Volley.newRequestQueue(Library.getInstance());
         mImageLoader = new ImageLoader(mRequestQueue, new ImageLoader.ImageCache() {
             private LruCache<String, Bitmap> cache = new LruCache<>((int)Runtime.getRuntime().maxMemory()/1024/8);
             @Override
