@@ -1,31 +1,34 @@
 package com.example.suryansh.infobits;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-public class CustomAdapter extends FragmentPagerAdapter{
+public class CustomAdapter extends BaseAdapter{
 
     String [] result;
     Context context;
+    String[] links;
     String [] imageUrl;
     File dir;
     LayoutInflater inflater;
+    Integer pos;
 
-    public CustomAdapter(FragmentManager fm, Context c, String[] prgmNameList, String[] prgmImages) {
-        super(fm);
+    public CustomAdapter(Context c, String[] prgmNameList, String[] prgmImages, String[] prgmLinks) {
         // TODO Auto-generated constructor stub
         result = prgmNameList;
+        links = prgmLinks;
         context = c;
         imageUrl = prgmImages;
     }
@@ -47,23 +50,39 @@ public class CustomAdapter extends FragmentPagerAdapter{
         return position;
     }
 
+    public class Holder{
+        TextView tv;
+        ImageView iv;
+    }
+
     @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-        super.instantiateItem(container, position);
+    public View getView(int i, View view, ViewGroup viewGroup) {
         View rowView;
         dir = context.getFilesDir();
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        rowView = inflater.inflate(R.layout.infobits_customcell, container, false);
-        ((TextView) rowView.findViewById(R.id.bookTitle)).setText(result[position]);
-        File image = new File(dir, imageUrl[position]);
+        Holder holder = new Holder();
+        inflater = LayoutInflater.from(context);
+        rowView = inflater.inflate(R.layout.infobits_customcell, null);
+        holder.iv = (ImageView) rowView.findViewById(R.id.bookImage);
+        File image = new File(dir, imageUrl[i]);
         FileInputStream fileInput = null;
+        pos = i;
+
         try {
             fileInput = new FileInputStream(image);
-            ((ImageView) rowView.findViewById(R.id.bookImage)).setImageBitmap(BitmapFactory.decodeStream(fileInput));
+            holder.iv.setImageBitmap(BitmapFactory.decodeStream(fileInput));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        container.addView(rowView);
+        rowView.setOnClickListener(new View.OnClickListener(){
+            int position = pos;
+            @Override
+            public void onClick(View view) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(links[pos]));
+                context.startActivity(browserIntent);
+            }
+        });
         return rowView;
     }
+
+
 }

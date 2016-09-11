@@ -78,6 +78,8 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
     public static FileInputStream fileInput = null;
     public final static String apiURL = "http://172.21.1.15/apis/";
     public final static String imageApiURL = "http://172.21.1.15/uploads/";
+//    public final static String apiURL = "http://192.168.3.7:80/infoBITS/apis/";
+//    public final static String imageApiURL = "http://192.168.3.7:80/infoBITS/uploads/";
     public final static String openURL = "http://universe.bits-pilani.ac.in:12354/";
     File dir;
     /**
@@ -93,10 +95,11 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
         login_info = getSharedPreferences("login_info", Context.MODE_PRIVATE);
         edit_login_info = login_info.edit();
         user = login_info.getAll();
-        if(!user.isEmpty()){
+        if (!user.isEmpty()) {
             username = user.get("username").toString();
             name = user.get("name").toString();
-            password = user.get("password").toString();;
+            password = user.get("password").toString();
+            ;
             usercat = user.get("category").toString();
             email = user.get("email").toString();
             avatar = user.get("avatar").toString();
@@ -117,33 +120,33 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
         cat.setChecked(true);
         navigationView.setItemIconTintList(null);
         View navHeader = navigationView.getHeaderView(0);
-        if(user.isEmpty()) {
-            ((TextView) navHeader.findViewById(R.id.brand)).setText("Guest User");
-            ((ImageView) navHeader.findViewById(R.id.profile)).setImageResource(R.mipmap.logo);
-        }
-        else{
-            ((TextView) navHeader.findViewById(R.id.brand)).setText(name);
-            ((TextView) navHeader.findViewById(R.id.email)).setText(email);
-            File profilepic = new File(dir, avatar);
-            try {
-                fileInput = new FileInputStream(profilepic);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            if(fileInput == null){
+        if(navHeader.findViewById(R.id.brand) != null) {
+            if (user.isEmpty()) {
+                ((TextView) navHeader.findViewById(R.id.brand)).setText(R.string.guest_user);
                 ((ImageView) navHeader.findViewById(R.id.profile)).setImageResource(R.mipmap.logo);
-            }else{
-                ((ImageView) navHeader.findViewById(R.id.profile)).setImageBitmap(BitmapFactory.decodeStream(fileInput));
-            }
+            } else {
+                ((TextView) navHeader.findViewById(R.id.brand)).setText(name);
+                ((TextView) navHeader.findViewById(R.id.email)).setText(email);
+                File profilepic = new File(dir, avatar);
+                try {
+                    fileInput = new FileInputStream(profilepic);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                if (fileInput == null) {
+                    ((ImageView) navHeader.findViewById(R.id.profile)).setImageResource(R.mipmap.logo);
+                } else {
+                    ((ImageView) navHeader.findViewById(R.id.profile)).setImageBitmap(BitmapFactory.decodeStream(fileInput));
+                }
 
+            }
         }
         dbhandler = new DBHandler(this, null, null);
         internal = dbhandler.selectData(2, "1 ORDER BY id ASC");
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        if(viewPager.getAdapter() == null)
+        if (viewPager.getAdapter() == null)
             getNotices();
-//        pagination.get(0).setChecked(true);
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
@@ -166,15 +169,17 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        super.onOptionsItemSelected(item);
-        Intent i = new Intent();
+        Intent i = null;
         switch (item.getItemId()) {
             case R.id.user:
                 i = new Intent(homepage.this, user_settings.class);
+                i.putExtra("previous", this.getClass());
+                startActivityForResult(i, 0);
                 break;
             case R.id.login:
                 i = new Intent(getApplicationContext(), login.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
                 break;
 //            case R.id.signup:
 //                Intent i13 = new Intent(homepage.this, signup.class);
@@ -185,20 +190,20 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
                 edit_login_info.apply();
                 i = new Intent(getApplicationContext(), homepage.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
                 break;
         }
-        startActivity(i);
-        return true;
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        if(user.isEmpty()){
+        if (user.isEmpty()) {
             LogInToast();
-        }
-        else{
+        } else {
             Intent i = null;
             if (id == R.id.os_id) {
                 i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://search.ebscohost.com/login.aspx?authtype=uid&user=bits2015&password=pilani&profile=eds"));
@@ -232,60 +237,54 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
     //Methods to handle button clicks on homescreen
 
     public void onClickLibr(View view) {
-        if(user.isEmpty()){
+        if (user.isEmpty()) {
             LogInToast();
-        }
-        else{
+        } else {
             Intent i = new Intent(homepage.this, LibRes.class);
             startActivity(i);
         }
     }
 
     public void onClickLibs(View view) {
-        if(user.isEmpty()){
+        if (user.isEmpty()) {
             LogInToast();
-        }
-        else{
+        } else {
             Intent i = new Intent(homepage.this, LibService.class);
             startActivity(i);
         }
     }
 
     public void onClickOs(View view) {
-        if(user.isEmpty()){
+        if (user.isEmpty()) {
             LogInToast();
-        }
-        else {
+        } else {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://search.ebscohost.com/login.aspx?authtype=uid&user=bits2015&password=pilani&profile=eds"));
             startActivity(browserIntent);
         }
     }
 
     public void onClickDN(View view) {
-        if(user.isEmpty()){
+        if (user.isEmpty()) {
             LogInToast();
-        }
-        else {
+        } else {
             Intent i = new Intent(homepage.this, DailyNews.class);
             startActivity(i);
         }
     }
 
     public void onClickOPAC(View view) {
-        if(user.isEmpty()){
+        if (user.isEmpty()) {
             LogInToast();
-        }
-        else {
+        } else {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://172.21.1.37"));
             startActivity(browserIntent);
         }
     }
 
     public void onClickCWL(View view) {
-        if(user.isEmpty()){
+        if (user.isEmpty()) {
             LogInToast();
-        }
-        else {
+        } else {
             Intent i = new Intent(homepage.this, ConnectWithLibrary.class);
             startActivity(i);
         }
@@ -420,13 +419,9 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client.connect();
         Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "homepage Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
+                Action.TYPE_VIEW,
+                "homepage Page",
                 Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
                 Uri.parse("android-app://com.example.suryansh.infobits/http/host/path")
         );
         AppIndex.AppIndexApi.start(client, viewAction);
@@ -439,13 +434,9 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "homepage Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
+                Action.TYPE_VIEW,
+                "homepage Page",
                 Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
                 Uri.parse("android-app://com.example.suryansh.infobits/http/host/path")
         );
         AppIndex.AppIndexApi.end(client, viewAction);
@@ -511,10 +502,9 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
                         item_view.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if(user.isEmpty()){
+                                if (user.isEmpty()) {
                                     LogInToast();
-                                }
-                                else {
+                                } else {
                                     Intent i = new Intent(homepage.this, DailyNews.class);
                                     startActivity(i);
                                 }
@@ -616,15 +606,15 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
                         item_view = layoutinflator.inflate(R.layout.daily_news_notice, container, false);
                         TextView[] newsviews = {(TextView) item_view.findViewById(R.id.news1), (TextView) item_view.findViewById(R.id.news2), (TextView) item_view.findViewById(R.id.news3)};
                         for (int i = 0; i < 3; i++) {
-                            newsviews[i].setText("\u2022" + news[i]);
+                            String news_text = "\u2022" + news[i];
+                            newsviews[i].setText(news_text);
                         }
                         item_view.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if(user.isEmpty()){
+                                if (user.isEmpty()) {
                                     LogInToast();
-                                }
-                                else {
+                                } else {
                                     Intent i = new Intent(homepage.this, DailyNews.class);
                                     startActivity(i);
                                 }
@@ -709,15 +699,15 @@ public class homepage extends AppCompatActivity implements NavigationView.OnNavi
     public boolean isConnected() {
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        if(networkInfo != null && networkInfo.isConnected()){
+        if (networkInfo != null && networkInfo.isConnected()) {
             return true;
-        }else{
+        } else {
             Toast.makeText(homepage.this, "Not Connected to BITS Intranet!", Toast.LENGTH_LONG).show();
             return false;
         }
     }
 
-    public void LogInToast(){
+    public void LogInToast() {
         Toast.makeText(this, "Please Login to Access!", Toast.LENGTH_LONG).show();
     }
 }

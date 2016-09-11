@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.example.suryansh.infobits.infoBitsBulletin"
-    android:background="@color/bright_foreground_disabled_material_light">
+    android:scrollIndicators="bottom|top"
+    android:nestedScrollingEnabled="true">
 
 
     <android.support.v7.widget.Toolbar
@@ -17,6 +18,17 @@
         android:minHeight="?attr/actionBarSize"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/issue"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/colorPrimaryDark"
+        android:textSize="20sp"
+        android:textColor="#fff"
+        android:paddingLeft="15dp" />
+
     <android.support.design.widget.TabLayout
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
@@ -25,28 +37,39 @@
         app:tabGravity="fill"
         app:tabTextAppearance="@style/TextAppearance.Design.Tab"
         app:tabSelectedTextColor="@color/colorAccent"
+        app:tabTextColor="@color/colorPrimary"
         app:tabMode="scrollable" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.20"
+        android:layout_height="358dp"
         android:background="@color/background_floating_material_light" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="news"
+        android:text="Daily News"
         android:id="@+id/news"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:textAlignment="center"
+        android:background="@color/colorPrimary" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/message"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15dp"
+        android:visibility="gone"
+        android:textAlignment="center" />
 
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="109dp"
+        android:layout_height="wrap_content"
         android:id="@+id/listView"
-        android:layout_weight="0.02"
         android:background="@color/background_floating_material_light" />
 
 

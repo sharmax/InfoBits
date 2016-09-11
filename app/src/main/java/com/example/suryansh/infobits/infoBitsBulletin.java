@@ -19,7 +19,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -62,16 +61,13 @@ public class infoBitsBulletin extends homepage {
     private ViewPager mPager;
     private MyPagerAdapter mAdapter;
     private ListView listView;
+    private TextView mIssue, mMessage;
     Subject current_sub;
+    SharedPreferences sp;
     ProgressBar spinner;
     JSONObject internal;
     List<String> updatevalues;
-
     public String[] tabTitles = {"CHEMICAL", "CIVIL", "EEE", "CS", "MECH", "PHARMA", "BIO", "CHEM", "ECO", "MATHS", "PHY", "HUM", "MAN"};
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
     private GoogleApiClient client;
 
     @Override
@@ -80,27 +76,26 @@ public class infoBitsBulletin extends homepage {
         setContentView(R.layout.activity_infobitsbulletin);
         mToolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(mToolbar);
+        mIssue = (TextView) findViewById(R.id.issue);
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
         mPager = (ViewPager) findViewById(R.id.pager);
+        mMessage = (TextView) findViewById(R.id.message);
         listView = (ListView) findViewById(R.id.listView);
+        sp = getSharedPreferences("bulletinMonth", Activity.MODE_PRIVATE);
         dir = getFilesDir();
-        JSONObject internal = new JSONObject();
+        JSONObject internal;
         listView.setVisibility(View.INVISIBLE);
         dbhandler = new DBHandler(this, null, null);
         internal = dbhandler.selectData(5, "1 ORDER BY id ASC");
         try {
             if (internal.length() != 0) {
-
-                SharedPreferences sp = getSharedPreferences("bulletinMonth", Activity.MODE_PRIVATE);
                 int bulletinYear = sp.getInt("bulletinYear", 0);
                 int bulletinMonth = sp.getInt("bulletinMonth", 0);
                 Calendar cal = Calendar.getInstance();
                 Date date = new Date();
                 cal.setTime(date);
-
                 int month = cal.get(Calendar.MONTH);
                 int year = cal.get(Calendar.YEAR);
-                dailyNewsServerCall();
                 if (bulletinYear < year) {
                     serverCalls();
                 } else {
@@ -110,7 +105,6 @@ public class infoBitsBulletin extends homepage {
                         setFragments();
                     }
                 }
-
             } else {
                 if (isConnected()) {
                     serverCalls();
@@ -124,13 +118,10 @@ public class infoBitsBulletin extends homepage {
             mPager.setVisibility(View.INVISIBLE);
             mTabLayout.setVisibility(View.INVISIBLE);
             listView.setVisibility(View.INVISIBLE);
-
+            mMessage.setVisibility(View.VISIBLE);
+            mMessage.setText(R.string.no_news_today);
             alertShow("Connect to intranet and try again", "Not Connected to Intranet");
-
         }
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
@@ -166,112 +157,59 @@ public class infoBitsBulletin extends homepage {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         super.onCreateOptionsMenu(menu);
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private List<Fragment> getFragments() {
         List<Fragment> fList = new ArrayList<Fragment>();
 
         try {
-
-
-            for (int i = 0; i < tabTitles.length; i++) {
+            internal = dbhandler.selectData(5, "1 ORDER BY id ASC");
+            Iterator intiter = internal.keys();
+            String key;
+            while (intiter.hasNext()) {
                 MyFragment fragment = new MyFragment();
-                internal = dbhandler.selectData(5, "1 ORDER BY id ASC");
-                Iterator intiter = internal.keys();
-                String key;
+                Integer[] count = {0, 0, 0, 0, 0, 0};
                 String[] bookNameList = {"", "", "", ""};
                 String[] bookImageList = {"", "", "", ""};
                 String[] journalNameList = {"", "", "", ""};
                 String[] journalImageList = {"", "", "", ""};
                 String[] journalLinks = {"", "", "", ""};
                 String[] bookLinks = {"", "", "", ""};
-                while (intiter.hasNext()) {
-                    Integer[] count = {0, 0, 0, 0, 0, 0};
-                    JSONObject data = (JSONObject) internal.get(intiter.next().toString());
-                    Iterator iter = data.keys();
-                    while (iter.hasNext()) {
-                        key = iter.next().toString();
-                        switch (key.substring(0, key.length() - 1)) {
-                            case "pic":
-                                bookImageList[count[0]] = data.get(key).toString();
-                                count[0]++;
-                                break;
-                            case "url":
-                                bookLinks[count[1]] = data.get(key).toString();
-                                count[1]++;
-                                break;
-                            case "type":
-                                bookNameList[count[2]] = data.get(key).toString();
-                                count[2]++;
-                                break;
-                            case "jpic":
-                                journalImageList[count[3]] = data.get(key).toString();
-                                count[3]++;
-                                break;
-                            case "jurl":
-                                journalLinks[count[4]] = data.get(key).toString();
-                                count[4]++;
-                                break;
-                            case "jtype":
-                                journalNameList[count[5]] = data.get(key).toString();
-                                count[5]++;
-                                break;
-                        }
-
+                JSONObject data = (JSONObject) internal.get(intiter.next().toString());
+                Iterator iter = data.keys();
+                while (iter.hasNext()) {
+                    key = iter.next().toString();
+                    switch (key.substring(0, key.length() - 1)) {
+                        case "pic":
+                            bookImageList[count[0]] = data.get(key).toString();
+                            count[0]++;
+                            break;
+                        case "url":
+                            bookLinks[count[1]] = data.get(key).toString();
+                            count[1]++;
+                            break;
+                        case "type":
+                            bookNameList[count[2]] = data.get(key).toString();
+                            count[2]++;
+                            break;
+                        case "jpic":
+                            journalImageList[count[3]] = data.get(key).toString();
+                            count[3]++;
+                            break;
+                        case "jurl":
+                            journalLinks[count[4]] = data.get(key).toString();
+                            count[4]++;
+                            break;
+                        case "jtype":
+                            journalNameList[count[5]] = data.get(key).toString();
+                            count[5]++;
+                            break;
                     }
                 }
-//                JSONObject books = internal.getJSONObject("books");
-//                JSONObject journals = internal.getJSONObject("journals");
-//                String[] booksKeys = {"book1", "book2", "book3, book4"};
-//                String[] journalKeys = {"journal1", "journal2", "journal3, journal4"};
-
-//                for (int j = 0; j < booksKeys.length; j++) {
-//                    try {
-//                        JSONObject book = books.getJSONObject(booksKeys[j]);
-//                        String pic = book.getString("pic");
-//                        String name = book.getString("type");
-//                        String url = book.getString("url");
-//
-//                        bookNameList[j] = name;
-//                        bookImageList[j] = pic;
-//                        bookLinks[j] = url;
-//
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//
-//
-//                    JSONObject journal = books.getJSONObject(journalKeys[j]);
-//                    String pic = journal.getString("pic");
-//                    String name = journal.getString("type");
-//                    String url = journal.getString("url");
-//
-//                    journalNameList[j] = name;
-//                    journalImageList[j] = pic;
-//                    journalLinks[j] = url;
-//
-//                }
                 fragment.setList(journalNameList, bookNameList, bookImageList, journalImageList, bookLinks, journalLinks);
                 fList.add(fragment);
-//
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -280,6 +218,17 @@ public class infoBitsBulletin extends homepage {
     }
 
     public void setFragments() {
+        if(isConnected()){
+            dailyNewsServerCall();
+        }
+        else{
+            listView.setVisibility(View.GONE);
+            mMessage.setVisibility(View.VISIBLE);
+            mMessage.setText(R.string.no_news_today);
+        }
+        int bulletinIssue = sp.getInt("bulletinIssue", 0);
+        int bulletinVolume = sp.getInt("bulletinVolume", 0);
+        mIssue.setText("Issue: " + bulletinIssue + " | Volume: " + bulletinVolume);
         mAdapter = new MyPagerAdapter(getSupportFragmentManager(), getFragments());
         mPager.setAdapter(mAdapter);
         mTabLayout.setTabsFromPagerAdapter(mAdapter);
@@ -417,7 +366,6 @@ public class infoBitsBulletin extends homepage {
                 int year = cal.get(Calendar.YEAR);
                 editor.putInt("bulletinMonth", month);
                 editor.putInt("bulletinYear", year);
-                editor.commit();
 
                 try {
 
@@ -443,6 +391,10 @@ public class infoBitsBulletin extends homepage {
                                 }
                             }
                         }
+                        int issue = Integer.parseInt(response.get("issue").toString());
+                        int volume = Integer.parseInt(response.get("volume").toString());
+                        editor.putInt("bulletinIssue", issue);
+                        editor.putInt("bulletinVolume", volume);
                         BulletinResponse bulletinResponse = new BulletinResponse(data.toString());
                         saveToDB(bulletinResponse);
                     }
@@ -454,6 +406,8 @@ public class infoBitsBulletin extends homepage {
                             Toast.LENGTH_LONG).show();
                     //alertShow("Connect to intranet and try again", "Not Connected to Intranet");
                 }
+                editor.commit();
+                setFragments();
             }
         }, new Response.ErrorListener() {
 
@@ -462,11 +416,11 @@ public class infoBitsBulletin extends homepage {
                 //  spinner.setVisibility(View.GONE);
                 Toast.makeText(getApplicationContext(),
                         error.getMessage(), Toast.LENGTH_SHORT).show();
+                setFragments();
                 // System.out.println(map);
 
             }
         });
-        setFragments();
         // Add the request to the RequestQueue.
         queue.add(jsonObjReq);
     }
@@ -534,7 +488,7 @@ public class infoBitsBulletin extends homepage {
 
         final RequestQueue queue = VolleySingleton.getInstance().getRequestQueue();
 
-        String url = apiURL + "daily_news.php?" + "username=" + username + "&password=" + password + "&action=update";
+        String url = apiURL + "daily_news.php?" + "username=" + username + "&password=" + password + "&action=today";
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(
                 url, null, new Response.Listener<JSONObject>() {
@@ -544,9 +498,9 @@ public class infoBitsBulletin extends homepage {
                 try {
 
                     if (response.has("err_message") && !response.get("err_message").toString().isEmpty()) {
-                        String error = response.get("err_message").toString();
                         Toast.makeText(getApplicationContext(), response.get("err_message").toString(), Toast.LENGTH_LONG).show();
-                    } else {
+                    }
+                    else {
                         if (!response.get("data").toString().equals("[]")) {
                             JSONObject data = (JSONObject) response.get("data");
                             NewsResponse newsResponse = new NewsResponse(data.toString());
@@ -570,20 +524,6 @@ public class infoBitsBulletin extends homepage {
                                     return view;
                                 }
                             };
-                            //                                ArrayAdapter<String> adapter =
-                            //                                        new ArrayAdapter<String>(getApplicationContext(),
-                            //                                                android.R.layout.simple_list_item_2,
-                            //                                                news) {
-                            //
-                            //                                            @Override
-                            //                                            public View getView(int position, View convertView, ViewGroup parent) {
-                            //
-                            //                                                View view = super.getView(position, convertView, parent);
-                            //                                                TextView text = (TextView) view.findViewById(android.R.id.text1);
-                            //                                                text.setTextColor(Color.BLACK);
-                            //                                                return view;
-                            //                                            }
-                            //                                        };
                             listView.setAdapter(adapter);
                             listView.setClickable(true);
                             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -595,19 +535,14 @@ public class infoBitsBulletin extends homepage {
                                     startActivity(intent);
                                 }
                             });
-//                            Toast.makeText(getApplicationContext(), "Response is: " + response, Toast.LENGTH_LONG).show();
                         } else {
                             listView.setVisibility(View.GONE);
+                            mMessage.setVisibility(View.VISIBLE);
+                            mMessage.setText(response.get("message").toString());
                         }
                     }
-
-                    // adapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Toast.makeText(getApplicationContext(),
-                            "Error: " + e.getMessage(),
-                            Toast.LENGTH_LONG).show();
-
                     //alertShow("Connect to intranet and try again", "Not Connected to Intranet");
                 }
 
@@ -615,7 +550,9 @@ public class infoBitsBulletin extends homepage {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), "ERROR: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                listView.setVisibility(View.GONE);
+                mMessage.setVisibility(View.VISIBLE);
+                mMessage.setText(R.string.no_news_today);
             }
         });
 
